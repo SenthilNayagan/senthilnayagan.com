@@ -1,0 +1,5 @@
+_site/
+node_modules/
+.cache/
+pnpm-lock.yaml
+package-lock.json

@@ -1,0 +1,15 @@
+<header class="site-header">
+  <div class="wrapper site-header__inner">
+    <a class="site-header__logo" href="/">{{ site.shortTitle }}</a>
+    <nav class="site-nav" aria-label="Primary">
+      <ul class="site-nav__list">
+        {%- for item in site.nav -%}
+        <li>
+          <a href="{{ item.url }}" {% if page.url == item.url %}aria-current="page"{% endif %}>{{ item.text }}</a>
+        </li>
+        {%- endfor -%}
+      </ul>
+      {% include "components/theme-toggle.liquid" %}
+    </nav>
+  </div>
+</header>

@@ -1,0 +1,21 @@
+---
+layout: default
+pagination:
+  data: collections.tagList
+  size: 1
+  alias: tag
+permalink: "/tags/{{ tag | slugify }}/"
+eleventyComputed:
+  title: "Tag: {{ tag }}"
+  description: "Posts tagged “{{ tag }}”."
+---
+<div class="wrapper page">
+  <h1 class="page__title">Tag: {{ tag }}</h1>
+  <div class="post-list">
+    {%- assign taggedPosts = collections[tag] -%}
+    {%- for post in taggedPosts reversed -%}
+      {% include "components/post-preview.liquid" %}
+    {%- endfor -%}
+  </div>
+  <p><a href="/tags/">&larr; All tags</a></p>
+</div>

@@ -1,0 +1,15 @@
+{
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/_site": true,
+    "**/*.{png,gif,jpg,jpeg,webp,woff,woff2,mov,mp3,mp4}": true
+  },
+  "eslint.validate": ["javascript"],
+  "stylelint.enable": true,
+  "stylelint.validate": ["scss"],
+  "stylelint.configFile": ".stylelintrc.json",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit",
+    "source.fixAll.stylelint": "explicit"
+  }
+}

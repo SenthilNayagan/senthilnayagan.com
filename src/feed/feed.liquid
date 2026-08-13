@@ -1,0 +1,32 @@
+---
+permalink: /feed.xml
+layout: null
+eleventyExcludeFromCollections: true
+excludeFromSitemap: true
+---
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>{{ site.title }}</title>
+    <link>{{ site.url }}</link>
+    <atom:link href="{{ '/feed.xml' | toAbsoluteUrl }}" rel="self" type="application/rss+xml"/>
+    <description>{{ site.description }}</description>
+    <language>{{ site.language }}</language>
+    <lastBuildDate>{{ collections.posts | newestDate | rfc822Date }}</lastBuildDate>
+    {%- for post in collections.posts | limit: 20 -%}
+    <item>
+      <title>{{ post.data.title }}</title>
+      <link>{{ post.url | toAbsoluteUrl }}</link>
+      <guid isPermaLink="true">{{ post.url | toAbsoluteUrl }}</guid>
+      <pubDate>{{ post.date | rfc822Date }}</pubDate>
+      {%- if post.data.description -%}
+      <description>{{ post.data.description }}</description>
+      {%- endif -%}
+      {%- assign postTags = post.data.tags | publicTags -%}
+      {%- for tag in postTags -%}
+      <category>{{ tag }}</category>
+      {%- endfor -%}
+    </item>
+    {%- endfor -%}
+  </channel>
+</rss>

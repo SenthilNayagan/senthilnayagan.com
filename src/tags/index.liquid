@@ -1,0 +1,14 @@
+---
+title: Tags
+description: Browse posts by tag.
+layout: default
+permalink: /tags/
+---
+<div class="wrapper page">
+  <h1 class="page__title">Tags</h1>
+  <ul class="tag-list tag-list--large">
+    {%- for tag in collections.tagList -%}
+    <li><a class="tag" href="/tags/{{ tag | slugify }}/">{{ tag }}</a></li>
+    {%- endfor -%}
+  </ul>
+</div>

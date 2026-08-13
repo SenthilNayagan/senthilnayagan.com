@@ -1,0 +1,50 @@
+@use "sass:map";
+@use "sass:math";
+@use "./tokens" as *;
+
+// Breakpoint mixins
+
+@mixin breakpoint($name) {
+  $bp: map.get($tokens, "breakpoints", $name);
+  $bp: math.div($bp, 16px) * 1em;
+
+  @media screen and (min-width: $bp) {
+    @content;
+  }
+}
+
+@mixin mobile-lg {
+  @include breakpoint("mobile-lg") {
+    @content;
+  }
+}
+
+@mixin tablet-sm {
+  @include breakpoint("tablet-sm") {
+    @content;
+  }
+}
+
+@mixin tablet {
+  @include breakpoint("tablet") {
+    @content;
+  }
+}
+
+@mixin desktop {
+  @include breakpoint("desktop") {
+    @content;
+  }
+}
+
+@mixin visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

@@ -1,0 +1,18 @@
+<footer class="site-footer">
+  <div class="wrapper site-footer__inner">
+    <p>&copy; {{ "now" | date: "%Y" }} {{ site.author }}. All rights reserved.</p>
+    <ul class="site-footer__links">
+      {%- if site.social.github != "" -%}
+      <li><a href="{{ site.social.github }}" rel="me">GitHub</a></li>
+      {%- endif -%}
+      {%- if site.social.linkedin != "" -%}
+      <li><a href="{{ site.social.linkedin }}" rel="me">LinkedIn</a></li>
+      {%- endif -%}
+      {%- if site.social.twitter != "" -%}
+      <li><a href="{{ site.social.twitter }}" rel="me">X / Twitter</a></li>
+      {%- endif -%}
+      <li><a href="/feed.xml">RSS</a></li>
+      <li><a href="mailto:{{ site.email }}">Email</a></li>
+    </ul>
+  </div>
+</footer>

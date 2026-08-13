@@ -1,0 +1,33 @@
+---
+layout: default
+openGraph:
+  type: article
+---
+<article class="wrapper post">
+  <header class="post__header">
+    <h1 class="post__title">{{ title }}</h1>
+    <div class="post__meta">
+      <time datetime="{{ page.date | machineDate }}">{{ page.date | readableDate }}</time>
+      <span aria-hidden="true">&middot;</span>
+      <span>{{ content | readingTime }} min read</span>
+      {%- if lastUpdated -%}
+      <span aria-hidden="true">&middot;</span>
+      <span>Updated {{ lastUpdated | readableDate }}</span>
+      {%- endif -%}
+    </div>
+    {%- assign postTags = tags | publicTags -%}
+    {%- if postTags.size > 0 -%}
+    <ul class="tag-list">
+      {%- for tag in postTags -%}
+      <li><a class="tag" href="/tags/{{ tag | slugify }}/">{{ tag }}</a></li>
+      {%- endfor -%}
+    </ul>
+    {%- endif -%}
+  </header>
+  <div class="prose">
+    {{ content }}
+  </div>
+  <footer class="post__footer">
+    <a href="/blog/">&larr; Back to all posts</a>
+  </footer>
+</article>

@@ -1,0 +1,22 @@
+---
+permalink: /
+layout: default
+---
+<div class="wrapper">
+  <section class="intro">
+    <h1 class="intro__title">Hi, I'm {{ site.author }}.</h1>
+    <p class="intro__tagline">{{ site.tagline }}</p>
+  </section>
+  <section class="recent-posts">
+    <div class="recent-posts__header">
+      <h2>Recent posts</h2>
+      <a href="/blog/">View all &rarr;</a>
+    </div>
+    <div class="post-list">
+      {%- assign recentPosts = collections.posts | limit: 5 -%}
+      {%- for post in recentPosts -%}
+        {% include "components/post-preview.liquid" %}
+      {%- endfor -%}
+    </div>
+  </section>
+</div>

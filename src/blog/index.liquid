@@ -1,0 +1,19 @@
+---
+title: Blog
+description: All posts, newest first.
+layout: default
+pagination:
+  data: collections.posts
+  size: 10
+  alias: posts
+permalink: "{% if pagination.pageNumber == 0 %}/blog/{% else %}/blog/{{ pagination.pageNumber | plus: 1 }}/{% endif %}"
+---
+<div class="wrapper page">
+  <h1 class="page__title">Blog</h1>
+  <div class="post-list">
+    {%- for post in posts -%}
+      {% include "components/post-preview.liquid" %}
+    {%- endfor -%}
+  </div>
+  {% include "components/pagination.liquid" %}
+</div>

@@ -1,0 +1,15 @@
+{%- if pagination.pages.size > 1 -%}
+<nav class="pagination" aria-label="Pagination">
+  {%- if pagination.href.previous -%}
+  <a class="pagination__link pagination__link--prev" href="{{ pagination.href.previous }}" rel="prev">&larr; Newer</a>
+  {%- else -%}
+  <span class="pagination__link pagination__link--disabled">&larr; Newer</span>
+  {%- endif -%}
+  <span class="pagination__status">Page {{ pagination.pageNumber | plus: 1 }} of {{ pagination.pages.size }}</span>
+  {%- if pagination.href.next -%}
+  <a class="pagination__link pagination__link--next" href="{{ pagination.href.next }}" rel="next">Older &rarr;</a>
+  {%- else -%}
+  <span class="pagination__link pagination__link--disabled">Older &rarr;</span>
+  {%- endif -%}
+</nav>
+{%- endif -%}

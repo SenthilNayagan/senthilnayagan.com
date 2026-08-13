@@ -1,0 +1,32 @@
+.post-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2.25rem;
+}
+
+.post-preview__title {
+  margin-bottom: 0.375rem;
+}
+
+.post-preview__title a {
+  text-decoration: none;
+}
+
+.post-preview__title a:hover,
+.post-preview__title a:focus-visible {
+  text-decoration: underline;
+}
+
+.post-preview__meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--color-text-secondary);
+  font-size: 0.875rem;
+  margin-bottom: 0.625rem;
+}
+
+.post-preview__excerpt {
+  color: var(--color-text-secondary);
+  margin-bottom: 0.75rem;
+}
