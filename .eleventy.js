@@ -18,6 +18,7 @@ import {
 import { dir, excludedTags } from './lib/constants.js';
 import registerCollections from './lib/collections.js';
 import faviconShortcode from './lib/shortcodes/favicon.js';
+import { buildToc } from './lib/toc.js';
 
 // Template language for the site: https://www.11ty.dev/docs/languages/liquid/
 const TEMPLATE_ENGINE = 'liquid';
@@ -49,7 +50,7 @@ export default (eleventyConfig) => {
   // Markdown: add clickable anchor links to headings for easy deep-linking.
   const markdownLib = markdownIt({ html: true, breaks: false, linkify: true }).use(markdownItAnchor, {
     permalink: markdownItAnchor.permalink.headerLink({ safariReaderFix: true }),
-    level: [2, 3, 4],
+    level: [1, 2, 3, 4],
   });
   eleventyConfig.setLibrary('md', markdownLib);
 
@@ -58,6 +59,20 @@ export default (eleventyConfig) => {
 
   // Custom shortcodes
   eleventyConfig.addShortcode('favicon', faviconShortcode);
+  // A pull-quote/callout box, used as {% aside %}...{% endaside %} around a block of Markdown.
+  eleventyConfig.addPairedShortcode('aside', (content) => {
+    return `<aside role="note" class="post-aside">${markdownLib.render(content.trim())}</aside>`;
+  });
+
+  // Builds a table of contents out of the heading anchors left behind by markdown-it-anchor.
+  // Runs as a transform (rather than inside the `toc` include) because headings don't exist
+  // yet at the point the include tag is substituted, before Markdown has rendered.
+  eleventyConfig.addTransform('toc', (content, outputPath) => {
+    if (!outputPath || !outputPath.endsWith('.html')) {
+      return content;
+    }
+    return buildToc(content);
+  });
 
   // Custom filters
   eleventyConfig.addFilter('toAbsoluteUrl', toAbsoluteUrl);
@@ -79,6 +94,7 @@ export default (eleventyConfig) => {
   // Passthrough copy
   eleventyConfig.addPassthroughCopy('src/assets/images');
   eleventyConfig.addPassthroughCopy('src/assets/scripts');
+  eleventyConfig.addPassthroughCopy('src/assets/fonts');
   eleventyConfig.addPassthroughCopy('CNAME');
 
   return {

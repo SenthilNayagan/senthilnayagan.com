@@ -1,0 +1,100 @@
+// Callout/pull-quote box: {% aside %}...{% endaside %} in post content.
+.post-aside {
+  border-left: 3px solid var(--color-accent);
+  border-radius: var(--radius);
+  padding: 1rem 1.25rem;
+  background-color: var(--color-bg-raised);
+}
+
+.post-aside > * + * {
+  margin-top: 1em;
+}
+
+// Table of contents sidebar: {% include "toc.md" %} in post content requests one, and lib/toc.js
+// (a build transform) moves it here — see src/_layouts/post.liquid and src/assets/styles/components/_page.scss
+// for the surrounding layout/positioning.
+.post__toc:empty {
+  display: none;
+}
+
+.post__toc {
+  padding: 1.25rem 1.5rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background-color: var(--color-bg-raised);
+  font-size: 0.9375rem;
+}
+
+.post__toc summary {
+  font-weight: 700;
+  cursor: pointer;
+  list-style: none;
+}
+
+.post__toc summary::-webkit-details-marker {
+  display: none;
+}
+
+.post__toc nav {
+  margin-top: 0.875rem;
+}
+
+.post__toc ol {
+  list-style: none;
+  padding-left: 1.25em;
+}
+
+.post__toc > details > nav > ol {
+  padding-left: 0;
+}
+
+.post__toc li + li {
+  margin-top: 0.5em;
+}
+
+.post__toc a {
+  display: block;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  border-left: 2px solid transparent;
+  padding-left: 0.625em;
+  margin-left: -0.625em;
+}
+
+.post__toc a:hover,
+.post__toc a:focus-visible {
+  color: var(--color-text);
+}
+
+.post__toc a.is-current {
+  color: var(--color-text);
+  border-left-color: var(--color-text);
+  font-weight: 600;
+}
+
+// Numbered "Notes and references" section at the end of a post.
+.references {
+  font-size: 0.9375rem;
+}
+
+.references ol {
+  list-style: none;
+  padding-left: 0;
+}
+
+.references li {
+  margin-top: 0.75em;
+}
+
+.references li:first-child {
+  margin-top: 0;
+}
+
+.back-to-note {
+  text-decoration: none;
+  margin-left: 0.25em;
+}
+
+sup a {
+  text-decoration: none;
+}

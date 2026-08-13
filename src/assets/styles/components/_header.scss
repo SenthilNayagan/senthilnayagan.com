@@ -13,10 +13,29 @@
 }
 
 .site-header__logo {
-  font-weight: 700;
-  font-size: 1.125rem;
-  color: var(--color-text);
+  display: inline-flex;
+  align-items: center;
   text-decoration: none;
+}
+
+// Logotype image, swapped for a light/dark-appropriate version depending on the active theme (same
+// show/hide approach as the sun/moon theme-toggle icon).
+.site-header__logo-image {
+  display: block;
+  height: 2.5rem;
+  width: auto;
+}
+
+.site-header__logo-image--dark {
+  display: none;
+}
+
+:root[data-theme="dark"] .site-header__logo-image--light {
+  display: none;
+}
+
+:root[data-theme="dark"] .site-header__logo-image--dark {
+  display: block;
 }
 
 .site-nav {

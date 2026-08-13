@@ -1,0 +1,15 @@
+{%- comment -%}
+  A captioned figure for post content, e.g.:
+  {% include "postImage.html" src: "./images/foo.jpg", alt: "...", description: "...", credits: "..." %}
+  The <img> src is resolved relative to the post's own file by Eleventy's image transform plugin, which
+  optimizes any local image reference it finds in the rendered HTML output.
+{%- endcomment -%}
+<figure class="{{ className }}">
+  <img src="{{ src }}" alt="{{ alt }}" loading="lazy">
+  {%- if description or credits -%}
+  <figcaption>
+    {%- if description -%}<p class="image-description">{{ description }}</p>{%- endif -%}
+    {%- if credits -%}<p class="image-credits"><strong>Image credits: </strong>{{ credits }}</p>{%- endif -%}
+  </figcaption>
+  {%- endif -%}
+</figure>

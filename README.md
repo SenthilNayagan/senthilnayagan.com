@@ -77,9 +77,27 @@ git branch -M main
 git push -u origin main
 ```
 
+## Newsletter
+
+`/newsletter/` and the homepage's "subscribe to my newsletter" link both point at `site.newsletterUrl`
+(in `src/_data/site.js`) — currently set to the [Buttondown](https://buttondown.com/senthilnayagan)
+subscribe page. No signup form or backend lives in this repo; it's just a link out to the subscription
+page. If `newsletterUrl` is ever emptied out, `/newsletter/` falls back to pointing readers at the RSS
+feed instead of showing a dead link.
+
+To switch providers later, just replace the value of `newsletterUrl` with the new service's hosted
+subscribe page URL — nothing else needs to change. One open-source, self-hosted option worth
+considering if you outgrow Buttondown's free tier: [Listmonk](https://listmonk.app) (MIT-licensed).
+Rough setup:
+
+1. Deploy Listmonk (its docs cover [Docker Compose](https://listmonk.app/docs/installation/) — you'll
+   need a small VPS or similar, Postgres, and an SMTP sender for outgoing mail, e.g. a transactional
+   email provider's free tier).
+2. Create a list for this blog.
+3. Copy its **public subscription page** URL (Lists → your list → public page) into `newsletterUrl`.
+
 ## Before you publish
 
-- [ ] Fill in `src/_data/site.js`: social links (LinkedIn, X/Twitter if you use them), and double-check the bio/tagline.
+- [ ] Fill in `src/_data/site.js`: social links (LinkedIn, X/Twitter if you use them), and double-check the bio.
 - [ ] Replace the bio in `src/_pages/about.md`.
 - [ ] Replace `src/assets/images/favicon/favicon.png` with a real logo/monogram (the current one is a generated placeholder).
-- [ ] Write your first real post and delete or repurpose `src/_posts/2026-08-13-hello-world/`.

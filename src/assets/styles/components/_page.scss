@@ -1,3 +1,17 @@
+@use "../mixins" as *;
+
+// Actual reading content (page text, post header + article body) is narrower than the site's overall
+// frame for comfortable line length, even though the frame itself (nav, footer, post/tag grids) is
+// wider. Only applies to text pages (About, 404, Newsletter — anything using the "page" layout, marked
+// with .page--article), not listing pages like Blog/Tags, whose title should stay flush with the wide
+// grid underneath it instead of looking indented relative to it.
+.page--article .page__title,
+.post__header,
+.post__footer {
+  max-width: var(--prose-width);
+  margin-inline: auto;
+}
+
 .page__title {
   margin-bottom: 2rem;
 }
@@ -15,6 +29,10 @@
 .intro__tagline {
   color: var(--color-text-secondary);
   font-size: 1.125rem;
+}
+
+.recent-posts + .recent-posts {
+  margin-top: 3.5rem;
 }
 
 .recent-posts__header {
@@ -36,11 +54,68 @@
   text-decoration: underline;
 }
 
+// Below desktop-lg, the TOC (if present) is just a collapsible block above the article, in normal
+// document flow. At desktop-lg+, it becomes a sticky sidebar to the left of the article, wide enough
+// to fit alongside without cramping the reading column.
+.post__grid {
+  display: flex;
+  flex-direction: column;
+}
+
+.post__toc {
+  order: 2;
+  margin-bottom: 2rem;
+}
+
+.post__main {
+  order: 1;
+  min-width: 0;
+}
+
+@include desktop-lg {
+  .post.wrapper {
+    max-width: 88rem;
+
+    // Wider reading column specifically for posts at this breakpoint — inherited by .prose,
+    // .post__header, .post__footer, etc. underneath, without affecting other pages' --prose-width.
+    --prose-width: 54rem;
+  }
+
+  .post__grid {
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 4.5rem;
+  }
+
+  // No internal max-height/scroll — a long TOC just renders at full height. It's still sticky, so it
+  // stays pinned near the top of the viewport for as long as the article has room below it; very long
+  // TOCs (60+ headings) may extend past the bottom of the viewport at any given scroll position rather
+  // than being independently scrollable.
+  .post__toc {
+    order: 1;
+    flex: 0 0 23rem;
+    margin-bottom: 0;
+    position: sticky;
+    top: 1.5rem;
+  }
+
+  .post__main {
+    order: 2;
+    flex: 0 1 auto;
+  }
+}
+
 .post__header {
   margin-bottom: 2rem;
 }
 
 .post__title {
+  // Overrides the global h1 `text-wrap: balance`, which deliberately shortens every line to make
+  // wrapped lines visually even — for a long post title that reads as "wrapping early" and leaving
+  // unused horizontal space. `pretty` still avoids a lone orphan word on the last line without
+  // shrinking every other line to match it.
+  text-wrap: pretty;
   margin-bottom: 0.75rem;
 }
 
@@ -51,7 +126,66 @@
   gap: 0.5rem;
   color: var(--color-text-secondary);
   font-size: 0.9375rem;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.post__header .tag-list {
+  margin-bottom: 1.25rem;
+}
+
+// A light-weight, larger-than-body preview of the post's `description` — signals "this is a summary,"
+// not part of the article's own prose.
+.post__subtitle {
+  font-size: 1.375rem;
+  font-weight: 300;
+  line-height: 1.4;
+  color: var(--color-text-secondary);
+  margin-bottom: 1.5rem;
+}
+
+// Share row: email/WhatsApp/X/LinkedIn + copy-link, between the subtitle and the cover image.
+.post__share {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  margin-bottom: 1.5rem;
+}
+
+// No badge/background shape at all — just the icon glyph, color-only hover state.
+.post__share-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  color: var(--color-text-secondary);
+}
+
+.post__share-icon:hover,
+.post__share-icon:focus-visible {
+  color: var(--color-text);
+}
+
+.post__share-icon svg {
+  width: 1.125rem;
+  height: 1.125rem;
+  fill: currentcolor;
+}
+
+.post__share-copied {
+  position: absolute;
+  left: 0;
+  bottom: -1.375rem;
+  font-size: 0.8125rem;
+  color: var(--color-text-secondary);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+
+.post__share-copied.is-visible {
+  opacity: 1;
 }
 
 .post__footer {

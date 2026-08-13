@@ -29,6 +29,8 @@ scripts: []
       } catch (e) {}
     })();
   </script>
+  {%- comment -%}Preload the body font to avoid a flash of unstyled/fallback text{%- endcomment -%}
+  <link rel="preload" href="/assets/fonts/source-sans-3-variable-latin-normal.woff2" as="font" type="font/woff2" crossorigin>
   {%- comment -%}Metadata for search engines{%- endcomment -%}
   <title>{{ pageTitle }}</title>
   <meta name="description" content="{{ description }}">
@@ -80,6 +82,13 @@ scripts: []
     {{ content }}
   </main>
   {% include "components/footer.liquid" %}
+  <button type="button" id="back-to-top" class="back-to-top" aria-label="Back to top">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <line x1="12" y1="19" x2="12" y2="5"></line>
+      <polyline points="5 12 12 5 19 12"></polyline>
+    </svg>
+  </button>
   <script type="module" src="/assets/scripts/theme-toggle.js"></script>
+  <script type="module" src="/assets/scripts/back-to-top.js"></script>
 </body>
 </html>

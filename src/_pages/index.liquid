@@ -4,16 +4,35 @@ layout: default
 ---
 <div class="wrapper">
   <section class="intro">
-    <h1 class="intro__title">Hi, I'm {{ site.author }}.</h1>
-    <p class="intro__tagline">{{ site.tagline }}</p>
+    <h1 class="intro__title">Hi, I'm {{ site.author }}</h1>
+    <p class="intro__tagline">
+      Thanks for dropping by! I am a Data Engineer by profession and a Rustacean by interest. My love
+      for open source software stems from my belief in the power of openness and collaborative growth.
+      You can learn more <a href="/about/">about me</a>. This blog is my little corner of the internet
+      where I delve into personal thoughts, share my design and coding principles, and explore a
+      variety of topics. If you like my posts and want to stay updated, don&rsquo;t forget to subscribe
+      to my <a href="/newsletter/" target="_blank" rel="noopener">newsletter</a>.
+    </p>
   </section>
+  {%- if collections.featuredPosts.size > 0 -%}
+  <section class="recent-posts">
+    <div class="recent-posts__header">
+      <h2>Featured posts</h2>
+    </div>
+    <div class="post-list">
+      {%- for post in collections.featuredPosts -%}
+        {% include "components/post-preview.liquid" %}
+      {%- endfor -%}
+    </div>
+  </section>
+  {%- endif -%}
   <section class="recent-posts">
     <div class="recent-posts__header">
       <h2>Recent posts</h2>
       <a href="/blog/">View all &rarr;</a>
     </div>
     <div class="post-list">
-      {%- assign recentPosts = collections.posts | limit: 5 -%}
+      {%- assign recentPosts = collections.recentPosts | limit: 9 -%}
       {%- for post in recentPosts -%}
         {% include "components/post-preview.liquid" %}
       {%- endfor -%}

@@ -1,0 +1,25 @@
+// Self-hosted variable fonts, matching the family used on senthilnayagan.net.
+// Source Sans 3 and Source Code Pro are both SIL Open Font License.
+@font-face {
+  font-family: "Source Sans 3";
+  font-style: normal;
+  font-weight: 200 900;
+  font-display: swap;
+  src: url("/assets/fonts/source-sans-3-variable-latin-normal.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Source Sans 3";
+  font-style: italic;
+  font-weight: 200 900;
+  font-display: swap;
+  src: url("/assets/fonts/source-sans-3-variable-latin-italic.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Source Code Pro";
+  font-style: normal;
+  font-weight: 200 900;
+  font-display: swap;
+  src: url("/assets/fonts/source-code-pro-variable-latin-normal.woff2") format("woff2");
+}

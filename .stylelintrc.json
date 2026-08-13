@@ -5,6 +5,7 @@
     "custom-property-pattern": null,
     "selector-class-pattern": null,
     "no-descending-specificity": null,
+    "property-no-vendor-prefix": null,
     "scss/at-rule-no-unknown": true
   }
 }

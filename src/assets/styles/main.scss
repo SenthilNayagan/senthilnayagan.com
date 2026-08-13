@@ -1,4 +1,5 @@
 @use "tokens";
+@use "global/fonts";
 @use "global/reset";
 @use "global/base";
 @use "components/header";
@@ -8,4 +9,6 @@
 @use "components/tag";
 @use "components/pagination";
 @use "components/prose";
+@use "components/content-extras";
+@use "components/button";
 @use "components/page";

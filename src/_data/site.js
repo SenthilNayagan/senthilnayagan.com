@@ -4,9 +4,9 @@ export default {
   author: 'Senthil Nayagan',
   email: 'senthil.nayagan@gmail.com',
   description: 'Senthil Nayagan writes about software engineering, web development, and technology.',
-  tagline: 'Software engineer writing about web dev & tech.',
   keywords: ['Senthil Nayagan', 'software engineering', 'web development', 'programming', 'tech blog'],
   language: 'en-US',
+  newsletterUrl: 'https://buttondown.com/senthilnayagan',
   favicon: {
     widths: [32, 57, 76, 96, 128, 192, 228],
     format: 'png',

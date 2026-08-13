@@ -2,32 +2,52 @@
 layout: default
 openGraph:
   type: article
+scripts:
+  - /assets/scripts/toc-scrollspy.js
+  - /assets/scripts/copy-link.js
 ---
 <article class="wrapper post">
-  <header class="post__header">
-    <h1 class="post__title">{{ title }}</h1>
-    <div class="post__meta">
-      <time datetime="{{ page.date | machineDate }}">{{ page.date | readableDate }}</time>
-      <span aria-hidden="true">&middot;</span>
-      <span>{{ content | readingTime }} min read</span>
-      {%- if lastUpdated -%}
-      <span aria-hidden="true">&middot;</span>
-      <span>Updated {{ lastUpdated | readableDate }}</span>
-      {%- endif -%}
+  <div class="post__grid">
+    {%- comment -%}
+      Filled in by the `toc` build transform (lib/toc.js), which moves the table of contents here
+      from wherever {% include "toc.md" %} appears in the article body. Left empty (and hidden via
+      CSS :empty) for posts that don't request a TOC.
+    {%- endcomment -%}
+    <aside class="post__toc" id="post-toc"><!--eleventy-toc-slot--></aside>
+    <div class="post__main">
+      <header class="post__header">
+        <div class="post__meta">
+          <time datetime="{{ page.date | machineDate }}">{{ page.date | readableDate }}</time>
+          <span aria-hidden="true">&middot;</span>
+          <span>{{ content | readingTime }} min read</span>
+          {%- if lastUpdated -%}
+          <span aria-hidden="true">&middot;</span>
+          <span>Updated {{ lastUpdated | readableDate }}</span>
+          {%- endif -%}
+        </div>
+        <h1 class="post__title" style="view-transition-name: view-{{ page.fileSlug }};">{{ title }}</h1>
+        {%- assign postTags = tags | publicTags -%}
+        {%- if postTags.size > 0 -%}
+        <ul class="tag-list">
+          {%- for tag in postTags -%}
+          <li><a class="tag" href="/tags/{{ tag | slugify }}/">{{ tag }}</a></li>
+          {%- endfor -%}
+        </ul>
+        {%- endif -%}
+        {%- if description -%}
+        <p class="post__subtitle">{{ description }}</p>
+        {%- endif -%}
+        {% include "components/share.liquid" %}
+        {%- if coverImage -%}
+        {% include "postImage.html" src: coverImage, alt: title, description: imageDescription, credits: imageCredits, className: "cover-image" %}
+        {%- endif -%}
+      </header>
+      <div class="prose">
+        {{ content }}
+      </div>
+      <footer class="post__footer">
+        <a href="/blog/">&larr; Back to all posts</a>
+      </footer>
     </div>
-    {%- assign postTags = tags | publicTags -%}
-    {%- if postTags.size > 0 -%}
-    <ul class="tag-list">
-      {%- for tag in postTags -%}
-      <li><a class="tag" href="/tags/{{ tag | slugify }}/">{{ tag }}</a></li>
-      {%- endfor -%}
-    </ul>
-    {%- endif -%}
-  </header>
-  <div class="prose">
-    {{ content }}
   </div>
-  <footer class="post__footer">
-    <a href="/blog/">&larr; Back to all posts</a>
-  </footer>
 </article>

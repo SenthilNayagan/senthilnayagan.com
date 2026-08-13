@@ -1,7 +1,20 @@
 @use "../mixins" as *;
 
+// Native cross-document view transitions (e.g. Chrome 111+): animates shared elements — like a post
+// title carrying over from its preview card to the article page — between full page navigations.
+// Browsers without support just navigate normally, no fallback needed.
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
+  }
+}
+
 html {
   color-scheme: light dark;
+
+  // Applies to the back-to-top button's window.scrollTo() call. Overridden back to `auto` under
+  // prefers-reduced-motion by the global rule in global/_reset.scss.
+  scroll-behavior: smooth;
 }
 
 :root[data-theme="light"] {
@@ -16,7 +29,7 @@ body {
   background-color: var(--color-bg);
   color: var(--color-text);
   font-family: var(--font-sans);
-  font-size: 1rem;
+  font-size: var(--font-size-base);
   transition: background-color 0.15s ease, color 0.15s ease;
 }
 
@@ -57,6 +70,29 @@ a:visited {
 a:hover,
 a:focus-visible {
   text-decoration-thickness: 0.15em;
+}
+
+// Any link that opens in a new tab automatically gets a small "opens in a new window" icon after it —
+// add target="_blank" (and rel="noopener") to a link anywhere on the site and this applies on its own.
+// Add class="no-icon" to opt a specific link out.
+a[target="_blank"]:not(.no-icon)::after {
+  content: "";
+  display: inline-block;
+  width: 0.7em;
+  height: 0.7em;
+  margin-left: 0.25em;
+  background-color: currentcolor;
+  mask-image: url("/assets/images/icons/external-link.svg");
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  vertical-align: middle;
+
+  // No autoprefixer in this build; Safari still needs the prefixed mask properties.
+  -webkit-mask-image: url("/assets/images/icons/external-link.svg");
+  -webkit-mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
 }
 
 :focus-visible {

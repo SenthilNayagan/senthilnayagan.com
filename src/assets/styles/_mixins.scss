@@ -37,6 +37,12 @@
   }
 }
 
+@mixin desktop-lg {
+  @include breakpoint("desktop-lg") {
+    @content;
+  }
+}
+
 @mixin visually-hidden {
   position: absolute;
   width: 1px;

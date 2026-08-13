@@ -11,24 +11,33 @@ $tokens: (
 
 :root {
   // Layout
-  --content-width: 42rem;
-  --wide-width: 60rem;
+  --content-width: 58rem;
+
+  // Narrower column for actual reading content (article body, page text), nested inside the wider
+  // --content-width frame so long lines stay comfortable to read even though the site itself is wide.
+  --prose-width: 47.5rem;
   --header-height: 4rem;
   --radius: 0.5rem;
 
   // Typography
-  --font-sans: -apple-system, blinkmacsystemfont, "Segoe UI", roboto, helvetica, arial, sans-serif;
-  --font-mono: ui-monospace, sfmono-regular, "SF Mono", menlo, consolas, "Liberation Mono", monospace;
+  --font-sans: "Source Sans 3", -apple-system, blinkmacsystemfont, "Segoe UI", roboto, helvetica, arial, sans-serif;
+  --font-mono: "Source Code Pro", ui-monospace, sfmono-regular, "SF Mono", menlo, consolas, "Liberation Mono",
+    monospace;
 
-  // Light theme (default)
+  // Base reading text size, fluid between 18px (375px viewport) and 20px (960px+ viewport) —
+  // matches the body text scale used on senthilnayagan.net.
+  --font-size-base: clamp(1.125rem, 1.045rem + 0.34vw, 1.25rem);
+
+  // Light theme (default). Strictly monochrome: no accent hue anywhere in the UI — "accent" and
+  // "visited" both resolve to the same black used for body text, just a different weight/underline
+  // to distinguish state instead of color.
   --color-bg: #fff;
   --color-bg-raised: #f4f5f7;
   --color-text: #1a1d23;
   --color-text-secondary: #565d6b;
   --color-border: #e3e5e9;
-  --color-accent: #3452e0;
-  --color-accent-text: #fff;
-  --color-link-visited: #6d3cbf;
+  --color-accent: var(--color-text);
+  --color-link-visited: var(--color-text);
   --color-code-bg: #f4f5f7;
   --color-code-text: #1a1d23;
   --color-shadow: rgb(20 22 26 / 8%);
@@ -41,9 +50,8 @@ $tokens: (
     --color-text: #e7e9ec;
     --color-text-secondary: #a3aab6;
     --color-border: #2b2f38;
-    --color-accent: #7d95ff;
-    --color-accent-text: #0d1117;
-    --color-link-visited: #b79bf0;
+    --color-accent: var(--color-text);
+    --color-link-visited: var(--color-text);
     --color-code-bg: #1b1e25;
     --color-code-text: #e7e9ec;
     --color-shadow: rgb(0 0 0 / 40%);
@@ -56,9 +64,8 @@ $tokens: (
   --color-text: #e7e9ec;
   --color-text-secondary: #a3aab6;
   --color-border: #2b2f38;
-  --color-accent: #7d95ff;
-  --color-accent-text: #0d1117;
-  --color-link-visited: #b79bf0;
+  --color-accent: var(--color-text);
+  --color-link-visited: var(--color-text);
   --color-code-bg: #1b1e25;
   --color-code-text: #e7e9ec;
   --color-shadow: rgb(0 0 0 / 40%);

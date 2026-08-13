@@ -3,15 +3,15 @@
     <p>&copy; {{ "now" | date: "%Y" }} {{ site.author }}. All rights reserved.</p>
     <ul class="site-footer__links">
       {%- if site.social.github != "" -%}
-      <li><a href="{{ site.social.github }}" rel="me">GitHub</a></li>
+      <li><a href="{{ site.social.github }}" target="_blank" rel="me noopener">GitHub</a></li>
       {%- endif -%}
       {%- if site.social.linkedin != "" -%}
-      <li><a href="{{ site.social.linkedin }}" rel="me">LinkedIn</a></li>
+      <li><a href="{{ site.social.linkedin }}" target="_blank" rel="me noopener">LinkedIn</a></li>
       {%- endif -%}
       {%- if site.social.twitter != "" -%}
-      <li><a href="{{ site.social.twitter }}" rel="me">X / Twitter</a></li>
+      <li><a href="{{ site.social.twitter }}" target="_blank" rel="me noopener">X / Twitter</a></li>
       {%- endif -%}
-      <li><a href="/feed.xml">RSS</a></li>
+      <li><a href="/feed.xml" target="_blank" rel="noopener">RSS</a></li>
       <li><a href="mailto:{{ site.email }}">Email</a></li>
     </ul>
   </div>
