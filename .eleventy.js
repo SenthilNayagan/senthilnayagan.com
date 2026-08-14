@@ -1,3 +1,4 @@
+import * as pagefind from 'pagefind';
 import markdownIt from 'markdown-it';
 import markdownItAnchor from 'markdown-it-anchor';
 import { eleventyImageTransformPlugin } from '@11ty/eleventy-img';
@@ -45,6 +46,17 @@ export default (eleventyConfig) => {
   });
   eleventyConfig.addPlugin(syntaxHighlight, {
     preAttributes: { tabindex: 0 },
+  });
+
+  // Client-side search (Pagefind): indexes the built site after every build — both `eleventy` and
+  // `eleventy --serve` fire this event, so the index stays current in dev too. Only pages that mark a
+  // `data-pagefind-body` element (posts, About, Newsletter — see default.liquid) get indexed; once any
+  // page uses that attribute, Pagefind indexes only marked pages sitewide, which is how listing/tag/
+  // pagination pages end up excluded without needing a separate ignore rule.
+  eleventyConfig.on('eleventy.after', async () => {
+    const { index } = await pagefind.createIndex({});
+    await index.addDirectory({ path: dir.output });
+    await index.writeFiles({ outputPath: `${dir.output}/pagefind` });
   });
 
   // Markdown: add clickable anchor links to headings for easy deep-linking. Uses the same slugify as

@@ -13,6 +13,15 @@ scripts: []
 {%- assign keywords = keywords | default: site.keywords -%}
 {%- comment -%}Canonical URL. Make sure each page has one.{%- endcomment -%}
 {%- assign canonicalUrl = page.url | toAbsoluteUrl -%}
+{%- comment -%}
+  Content worth surfacing in search (posts, About, Newsletter) vs. pages that just list/aggregate that
+  content (home, /blog/, /tags/, pagination) — see the eleventy.after hook in .eleventy.js for how this
+  attribute controls what Pagefind indexes.
+{%- endcomment -%}
+{%- assign isSearchable = false -%}
+{%- if tags contains "posts" or page.url == "/about/" or page.url == "/newsletter/" -%}
+  {%- assign isSearchable = true -%}
+{%- endif -%}
 
 <!DOCTYPE html>
 <html lang="{{ site.language }}">
@@ -78,10 +87,11 @@ scripts: []
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
   {% include "components/header.liquid" %}
-  <main id="main">
+  <main id="main"{% if isSearchable %} data-pagefind-body{% endif %}>
     {{ content }}
   </main>
   {% include "components/footer.liquid" %}
+  {% include "components/search.liquid" %}
   <button type="button" id="back-to-top" class="back-to-top" aria-label="Back to top">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
       <line x1="12" y1="19" x2="12" y2="5"></line>
@@ -90,5 +100,6 @@ scripts: []
   </button>
   <script type="module" src="/assets/scripts/theme-toggle.js"></script>
   <script type="module" src="/assets/scripts/back-to-top.js"></script>
+  <script type="module" src="/assets/scripts/search.js"></script>
 </body>
 </html>

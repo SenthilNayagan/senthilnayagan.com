@@ -45,14 +45,20 @@
 .site-nav {
   display: flex;
   align-items: center;
-  gap: 1.25rem;
 }
 
+// The search and theme-toggle buttons are 2.25rem circular hit targets around a 1.125rem icon, so
+// each one carries 0.5625rem of invisible padding per side that plain text links don't have. A
+// uniform flex `gap` would leave a visibly bigger gap wherever an icon button sits next to something,
+// and a bigger gap still between the two icon buttons (padding on both facing sides adds up). These
+// margins subtract that built-in padding out so every visible edge — link text or icon glyph — ends
+// up 1.25rem apart, matching the Home/Blog/Tags/About rhythm.
 .site-nav__list {
   display: flex;
   align-items: center;
   gap: 1.25rem;
   flex-wrap: wrap;
+  margin-right: 0.6875rem;
 }
 
 .site-nav__list a {
@@ -69,4 +75,26 @@
 
 .site-nav__list a[aria-current="page"] {
   color: var(--color-accent);
+}
+
+.search-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 999px;
+  color: var(--color-text-secondary);
+  margin-right: 0.125rem;
+}
+
+.search-trigger:hover,
+.search-trigger:focus-visible {
+  background-color: var(--color-bg-raised);
+  color: var(--color-text);
+}
+
+.search-trigger svg {
+  width: 1.125rem;
+  height: 1.125rem;
 }

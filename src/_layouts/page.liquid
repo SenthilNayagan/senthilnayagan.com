@@ -3,7 +3,7 @@ layout: default
 ---
 <div class="wrapper page page--article">
   {%- if title -%}
-  <h1 class="page__title">{{ title }}</h1>
+  <h1 class="page__title" data-pagefind-meta="title">{{ title }}</h1>
   {%- endif -%}
   <div class="prose">
     {{ content }}

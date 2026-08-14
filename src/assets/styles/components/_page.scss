@@ -183,18 +183,21 @@
   margin-bottom: 1.5rem;
 }
 
-// No badge/background shape at all — just the icon glyph, color-only hover state.
+// Same circular hover treatment as the header's search/theme-toggle buttons, for one consistent
+// icon language across the site.
 .post__share-icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2rem;
-  height: 2rem;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 999px;
   color: var(--color-text-secondary);
 }
 
 .post__share-icon:hover,
 .post__share-icon:focus-visible {
+  background-color: var(--color-bg-raised);
   color: var(--color-text);
 }
 
