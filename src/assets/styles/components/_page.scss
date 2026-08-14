@@ -32,6 +32,10 @@
   line-height: 1.5;
 }
 
+.intro__tagline p + p {
+  margin-top: 1em;
+}
+
 .recent-posts + .recent-posts {
   margin-top: 3.5rem;
 }
@@ -89,16 +93,42 @@
     gap: 4.5rem;
   }
 
-  // No internal max-height/scroll — a long TOC just renders at full height. It's still sticky, so it
-  // stays pinned near the top of the viewport for as long as the article has room below it; very long
-  // TOCs (60+ headings) may extend past the bottom of the viewport at any given scroll position rather
-  // than being independently scrollable.
   .post__toc {
     order: 1;
     flex: 0 0 23rem;
     margin-bottom: 0;
     position: sticky;
-    top: 1.5rem;
+
+    // Sits below the sticky header now, not at the very top of the viewport.
+    top: calc(var(--header-height) + 1.5rem);
+
+    // Scrolls internally once it's taller than the space below the sticky header — otherwise, since
+    // the sidebar itself is sticky, a long TOC (60+ headings on some posts) would have its lower half
+    // permanently out of reach: sticky elements can't reveal their own overflow by page-scrolling.
+    max-height: calc(100vh - var(--header-height) - 3rem);
+    overflow-y: auto;
+
+    // Thin, muted scrollbar rather than the browser's default chunky one — only actually shows up on
+    // the handful of posts whose TOC exceeds the available height.
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-border) transparent;
+
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: var(--color-border);
+      border-radius: 999px;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+      background-color: var(--color-text-secondary);
+    }
   }
 
   .post__main {

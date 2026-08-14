@@ -5,14 +5,23 @@ layout: default
 <div class="wrapper">
   <section class="intro">
     <h1 class="intro__title">Hi, I'm {{ site.author }}</h1>
-    <p class="intro__tagline">
-      Thanks for dropping by! I am a Data Engineer by profession and a Rustacean by interest. My love
-      for open source software stems from my belief in the power of openness and collaborative growth.
-      You can learn more <a href="/about/">about me</a>. This blog is my little corner of the internet
-      where I delve into personal thoughts, share my design and coding principles, and explore a
-      variety of topics. If you like my posts and want to stay updated, don&rsquo;t forget to subscribe
-      to my <a href="/newsletter/" target="_blank" rel="noopener">newsletter</a>.
-    </p>
+    <div class="intro__tagline">
+      <p>
+        Thanks for dropping by! I&rsquo;m a Data Engineer by profession, a Rustacean by interest, and a
+        developer by curiosity. I&rsquo;m a big fan of open source because I believe good ideas get
+        better when people are free to build on them, improve them, break them, fix them, and
+        occasionally argue about them on the internet.
+      </p>
+      <p>
+        This little corner of the internet is where I write about technology, coding, architecture,
+        design principles, things I&rsquo;ve learned the hard way, and whatever else manages to keep me
+        curious. Think of it as my digital notebook&mdash;except the pages are public. Want to know more
+        about the person behind the keyboard? You can read <a href="/about/">about me</a>. If you find
+        something useful here, interesting, or at least mildly entertaining, feel free to subscribe to
+        my <a href="/newsletter/" target="_blank" rel="noopener">newsletter</a> or follow along through
+        my <a href="/feed.xml" target="_blank" rel="noopener">RSS feed</a>.
+      </p>
+    </div>
   </section>
   {%- if collections.featuredPosts.size > 0 -%}
   <section class="recent-posts">

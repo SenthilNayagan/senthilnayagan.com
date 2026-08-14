@@ -17,6 +17,13 @@ html {
   scroll-behavior: smooth;
 }
 
+// Now that the header is sticky (position: sticky; top: 0), jumping straight to an anchor — a TOC
+// link, a footnote reference, the skip-link — would otherwise land the target right underneath it.
+// This nudges every anchor-jump target down by the header's height plus a little breathing room.
+[id] {
+  scroll-margin-top: calc(var(--header-height) + 1rem);
+}
+
 :root[data-theme="light"] {
   color-scheme: light;
 }

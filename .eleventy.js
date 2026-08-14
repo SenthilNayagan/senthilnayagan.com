@@ -47,10 +47,15 @@ export default (eleventyConfig) => {
     preAttributes: { tabindex: 0 },
   });
 
-  // Markdown: add clickable anchor links to headings for easy deep-linking.
+  // Markdown: add clickable anchor links to headings for easy deep-linking. Uses the same slugify as
+  // tags/URLs elsewhere on the site — markdown-it-anchor's own default slugify runs encodeURIComponent
+  // on the slug, which bakes literal "%3F"-style escapes into the id attribute for any heading with
+  // punctuation (e.g. a "?"). That breaks anything doing `getElementById` from a decoded href, like the
+  // TOC scrollspy.
   const markdownLib = markdownIt({ html: true, breaks: false, linkify: true }).use(markdownItAnchor, {
     permalink: markdownItAnchor.permalink.headerLink({ safariReaderFix: true }),
     level: [1, 2, 3, 4],
+    slugify: slugifyString,
   });
   eleventyConfig.setLibrary('md', markdownLib);
 
