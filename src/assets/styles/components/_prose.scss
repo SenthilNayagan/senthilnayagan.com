@@ -72,18 +72,6 @@
   border-radius: var(--radius);
 }
 
-// Shown at its natural aspect ratio, not cropped into a circle/square/anything else — just capped to
-// a sensible display width, centered above the text (not floated alongside it).
-.prose img.profile-photo {
-  display: block;
-  width: 30rem;
-  max-width: 100%;
-  height: auto;
-  margin-inline: auto;
-  margin-bottom: 1.5rem;
-  border-radius: 1rem;
-}
-
 .prose figcaption,
 .post__header .cover-image figcaption {
   margin-top: 0.5em;

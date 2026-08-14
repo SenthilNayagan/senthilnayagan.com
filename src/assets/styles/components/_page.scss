@@ -16,6 +16,108 @@
   margin-bottom: 2rem;
 }
 
+// Banner styled after Apple's leadership bio pages: name/title on one side, photo on the other.
+// <main> has no max-width of its own, so this — as its direct child — is already full viewport
+// width without needing a breakout hack; .about-hero__inner (itself a .wrapper) puts the actual
+// content back inside the site's normal content column. Stacked and centered by default
+// (mobile-first); side by side, photo bottom-anchored against the divider, from tablet-sm up.
+// Background is a half-strength version of the raised-surface tint — a full-strength tint reads
+// as much more prominent now that the photo itself has no background of its own (transparent
+// cutout), letting the tint show right up to the subject's edges.
+.about-hero {
+  background-color: color-mix(in srgb, var(--color-bg-raised) 50%, var(--color-bg));
+  border-bottom: 1px solid var(--color-border);
+  margin-top: -2.5rem; // cancels out <main>'s top padding so the tint starts right at the header's divider
+  margin-bottom: 3rem;
+}
+
+.about-hero__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  padding-block: 2.5rem;
+  text-align: center;
+}
+
+.about-hero__name {
+  margin: 0 0 0.5rem;
+  font-size: clamp(2rem, 1.5rem + 2.5vw, 3.5rem);
+}
+
+.about-hero__tagline {
+  color: var(--color-text-secondary);
+  font-size: clamp(1.125rem, 1rem + 0.5vw, 1.5rem);
+  line-height: 1.4;
+}
+
+.about-hero__photo-wrap {
+  width: 100%;
+  max-width: 20rem;
+}
+
+.about-hero__photo {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+@include tablet-sm {
+  .about-hero__inner {
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 2.5rem;
+    padding-top: 1.5rem;
+    padding-bottom: 0;
+    text-align: left;
+  }
+
+  .about-hero__headlines {
+    padding-bottom: 2.5rem;
+  }
+
+  // Fixed flex-basis, not a percentage — a percentage here is ambiguous inside a flex row and
+  // was previously resolving to an unpredictable size.
+  .about-hero__photo-wrap {
+    flex: 0 0 22rem;
+    width: 22rem;
+    max-width: none;
+  }
+}
+
+// At wider viewports, give the hero band's content extra room (like post pages already do for
+// their own frame) so the photo can grow substantially without squeezing the name into wrapping.
+@include desktop {
+  .about-hero__inner {
+    max-width: 70rem;
+    padding-top: 2.5rem;
+  }
+
+  .about-hero__photo-wrap {
+    flex-basis: 28rem;
+    width: 28rem;
+  }
+}
+
+// Untitled, magazine-style two-column body text (About page only) — an explicit left/right split
+// (.about-col × 2, authored directly in the markdown) rather than CSS's auto-balancing `columns`,
+// since auto-balancing can't guarantee which specific paragraph ends up in which column. .prose's
+// child-spacing rule only reaches its direct children, so it's repeated here one level deeper for
+// spacing between paragraphs inside each column. Stacked (one column after the other) below
+// tablet-sm, where two side-by-side columns would feel cramped.
+.about-col > * + * {
+  margin-top: 1.25em;
+}
+
+@include tablet-sm {
+  .about-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+  }
+}
+
 .intro {
   padding-block: 1.5rem 3rem;
   border-bottom: 1px solid var(--color-border);

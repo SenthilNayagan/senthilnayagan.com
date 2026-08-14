@@ -1,0 +1,34 @@
+---
+layout: default
+---
+{%- comment -%}
+  Banner (name/title left, photo right) styled after Apple's leadership bio pages — lives outside
+  .wrapper/.prose so its tinted background can span the viewport, unlike the rest of the page's
+  constrained reading column. The photo is a transparent cutout, bottom-anchored so the subject
+  reads as standing at the bottom edge of the band, same as the Steve Lemay-style reference.
+  eleventy:ignore skips the image optimization pipeline — its JPEG fallback would fill in the
+  transparency with a solid background, the same reason the site logo images skip it too.
+{%- endcomment -%}
+<header class="about-hero">
+  <div class="about-hero__inner wrapper">
+    <div class="about-hero__headlines">
+      <h1 class="about-hero__name" data-pagefind-meta="title">Senthil Nayagan</h1>
+      <p class="about-hero__tagline">Data Engineer<br>Rustacean<br>Lifelong Learner</p>
+    </div>
+    <div class="about-hero__photo-wrap">
+      <img
+        src="/assets/images/about/profile.png"
+        alt="Senthil Nayagan"
+        class="about-hero__photo"
+        width="1152"
+        height="923"
+        eleventy:ignore
+      >
+    </div>
+  </div>
+</header>
+<div class="wrapper page page--article">
+  <div class="prose">
+    {{ content }}
+  </div>
+</div>
