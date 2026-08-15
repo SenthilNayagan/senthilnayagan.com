@@ -39,9 +39,9 @@ You’ll also notice that I tend to use “we,” “us,” and “our” more t
 
 **Life Outside the Terminal**
 
-As a kid, I collected stamps, coins, and old paper money, as kids often do—until life got busy and other interests took over. Apparently, I never really stopped.
+As a kid, I was the collecting type — stamps, coins, you name it — as kids often do, until life got busy and other interests took over. Apparently, I never really stopped.
 
-My other hobbies include:
+My hobbies include — this is the highlight reel, not the full list:
 
  - Collecting old Indian banknotes — especially paper money from the British period through the years that followed. There’s something special about holding a small piece of paper that has travelled through decades and somehow ended up in my hands.
 
@@ -49,7 +49,9 @@ My other hobbies include:
 
 - Composing short jingles — tiny musical ideas that may never escape my hard drive, but I enjoy making them anyway.
 
-- Collecting brass and bronze idols — for the craftsmanship, the stories behind them, and the simple pleasure of owning something made long before most of us were around. Apparently, I have a thing for things that age well—which may explain both the old banknotes and my choice of programming language.
+- Collecting brass and bronze idols — for the craftsmanship, the stories behind them, and the simple pleasure of owning them.
+
+- Collecting original music album CDs — constantly hunting down originals and converting them into lossless audio for the best possible listening experience. 
 
 </div>
 </div>

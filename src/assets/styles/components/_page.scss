@@ -300,11 +300,13 @@
 }
 
 // Share row: email/WhatsApp/X/LinkedIn + copy-link, between the subtitle and the cover image.
+// Gap and icon box tightened to sit closer together, in line with Apple Newsroom's social row
+// (https://www.apple.com/in/newsroom/2026/08/apple-arcade-levels-up-with-block-blast-plus-and-art-of-fauna-cozy-puzzles-plus/).
 .post__share {
   position: relative;
   display: flex;
   align-items: center;
-  gap: 0.625rem;
+  gap: 0.25rem;
   margin-bottom: 1.5rem;
 }
 
@@ -314,8 +316,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2.25rem;
-  height: 2.25rem;
+  width: 2rem;
+  height: 2rem;
   border-radius: 999px;
   color: var(--color-text-secondary);
 }

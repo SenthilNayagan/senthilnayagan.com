@@ -1,0 +1,12 @@
+// Giscus-backed comment thread, between the article body and the "back to all posts" footer link.
+.post__comments {
+  max-width: var(--prose-width);
+  margin: 3rem auto 0;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.post__comments-title {
+  font-size: clamp(1.375rem, 1.25rem + 0.5vw, 1.75rem);
+  margin-bottom: 1.25rem;
+}

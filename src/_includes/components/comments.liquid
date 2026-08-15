@@ -1,0 +1,34 @@
+{%- comment -%}
+  Reader comments via giscus (github.com/giscus/giscus), backed by GitHub Discussions on
+  {{ site.giscus.repo }}. One-time setup before this renders real comments:
+    1. Make sure the repo is public.
+    2. Repo Settings -> General -> Features -> enable "Discussions".
+    3. Install the giscus app (https://github.com/apps/giscus) and grant it access to the repo.
+    4. Go to https://giscus.app, fill in the repo, pick the "{{ site.giscus.category }}" category
+       (GitHub's default Announcement-type category — locked so only maintainers/giscus can start
+       new discussions directly on GitHub) and "pathname" mapping, then copy the generated
+       data-repo-id / data-category-id from the snippet at the bottom of the page.
+    5. Paste those into site.giscus.repoId / site.giscus.categoryId in src/_data/site.js.
+  Theme starts as "light"; giscus-theme-sync.js corrects it to match the site's active theme (and
+  keeps it in sync with the theme-toggle button) once the widget's iframe has loaded.
+{%- endcomment -%}
+<section class="post__comments" id="comments">
+  <h2 class="post__comments-title">Comments</h2>
+  <script
+    src="https://giscus.app/client.js"
+    data-repo="{{ site.giscus.repo }}"
+    data-repo-id="{{ site.giscus.repoId }}"
+    data-category="{{ site.giscus.category }}"
+    data-category-id="{{ site.giscus.categoryId }}"
+    data-mapping="pathname"
+    data-strict="0"
+    data-reactions-enabled="1"
+    data-emit-metadata="0"
+    data-input-position="top"
+    data-theme="light"
+    data-lang="en"
+    data-loading="lazy"
+    crossorigin="anonymous"
+    async
+  ></script>
+</section>

@@ -2,7 +2,7 @@ export default {
   title: 'Senthil Nayagan',
   shortTitle: 'Senthil Nayagan',
   author: 'Senthil Nayagan',
-  email: 'senthil.nayagan@gmail.com',
+  email: 'hello@senthilnayagan.com',
   description: 'Senthil Nayagan writes about software engineering, web development, and technology.',
   keywords: ['Senthil Nayagan', 'software engineering', 'web development', 'programming', 'tech blog'],
   language: 'en-US',
@@ -19,6 +19,15 @@ export default {
     github: 'https://github.com/senthilnayagan',
     linkedin: '',
     twitter: '',
+  },
+  // Reader comments on blog posts, via giscus (github.com/giscus/giscus) backed by GitHub Discussions.
+  // repoId/categoryId come from https://giscus.app once Discussions is enabled and the giscus app is
+  // installed on the repo — see src/_includes/components/comments.liquid for setup steps.
+  giscus: {
+    repo: 'SenthilNayagan/senthilnayagan.com',
+    repoId: 'R_kgDOLfinTQ',
+    category: 'Announcements',
+    categoryId: 'DIC_kwDOLfinTc4DDcmr',
   },
   nav: [
     { text: 'Home', url: '/' },
