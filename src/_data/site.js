@@ -7,6 +7,10 @@ export default {
   keywords: ['Senthil Nayagan', 'software engineering', 'web development', 'programming', 'tech blog'],
   language: 'en-US',
   newsletterUrl: 'https://buttondown.com/senthilnayagan',
+  // Empty in development so local/author visits never get tracked or count toward real traffic.
+  googleAnalyticsId: process.env.ELEVENTY_ENV === 'development' ? '' : 'G-H2FX392X8T',
+  cookieConsentMessage:
+    'This site uses cookies to understand how visitors read and navigate it, via Google Analytics. See the Privacy Policy for details.',
   favicon: {
     widths: [32, 57, 76, 96, 128, 192, 228],
     format: 'png',

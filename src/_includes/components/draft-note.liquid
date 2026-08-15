@@ -1,0 +1,21 @@
+{%- comment -%}
+  Shown on posts with `draft: true` — reuses .post-aside (the {% aside %} shortcode's callout
+  styling, see .eleventy.js) rather than a parallel box style. `draft` is purely a visual notice
+  here: it doesn't exclude the post from the blog listing, RSS feed, or sitemap.
+{%- endcomment -%}
+<aside role="note" class="post-aside draft-note">
+  <p class="draft-note__heading">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
+    </svg>
+    Work in Progress
+  </p>
+  <p class="draft-note__body">
+    The content you are about to read is still a work in progress. Because of the topic's nuances
+    and my quest for perfection, I'm still fine-tuning the details. But I couldn't wait to share
+    what I have so far with you! Got some brilliant ideas to add or spot something that needs
+    fixing? I'd love to hear from you! Your insights are incredibly valuable and can help make this
+    post even better. Drop me a line at <a href="mailto:{{ site.email }}">{{ site.email }}</a> with
+    your thoughts, suggestions, or any corrections. Thanks!
+  </p>
+</aside>

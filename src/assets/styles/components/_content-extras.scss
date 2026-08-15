@@ -10,6 +10,30 @@
   margin-top: 1em;
 }
 
+// No accent stripe on this one, unlike the general pull-quote .post-aside — plain box, smaller
+// heading than the inherited body size, matching the reference this was modeled on.
+.draft-note {
+  border-left: none;
+}
+
+.draft-note__heading {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.draft-note__heading svg {
+  flex-shrink: 0;
+  width: 1.125rem;
+  height: 1.125rem;
+}
+
+.draft-note__body {
+  font-size: 0.9375rem;
+}
+
 // Table of contents sidebar: {% include "toc.md" %} in post content requests one, and lib/toc.js
 // (a build transform) moves it here — see src/_layouts/post.liquid and src/assets/styles/components/_page.scss
 // for the surrounding layout/positioning.

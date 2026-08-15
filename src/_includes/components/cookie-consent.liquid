@@ -1,0 +1,15 @@
+{%- comment -%}
+  Google Analytics only loads once the visitor accepts here — see cookie-consent.js. Hidden by
+  default (opacity/pointer-events, same technique as #back-to-top); the script adds .is-visible
+  only when there's no stored choice yet.
+{%- endcomment -%}
+<div id="cookie-banner" class="cookie-banner" data-ga-id="{{ site.googleAnalyticsId }}">
+  <p class="cookie-banner__message">
+    {{ site.cookieConsentMessage }}
+    <a href="/privacy/">Privacy Policy</a>
+  </p>
+  <div class="cookie-banner__actions">
+    <button type="button" id="cookie-decline" class="cookie-banner__button">Decline</button>
+    <button type="button" id="cookie-accept" class="cookie-banner__button cookie-banner__button--primary">Accept</button>
+  </div>
+</div>

@@ -39,6 +39,9 @@ scripts:
         <p class="post__subtitle">{{ description }}</p>
         {%- endif -%}
         {% include "components/share.liquid" %}
+        {%- if draft -%}
+        {% include "components/draft-note.liquid" %}
+        {%- endif -%}
       </header>
       {%- if coverImage -%}
       {%- comment -%}

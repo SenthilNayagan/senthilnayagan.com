@@ -16,6 +16,7 @@ tags:
 coverImage: ./images/cover-image.jpg
 imageCredits: AI-generated image from freepik.
 featured: true
+draft: true
 ---
 
 Let’s face it, most "developers are creatures of habit." When it comes to I/O-bound intensive tasks, many stick to their trusty old blocking-based programming. It’s like ordering the same coffee every day, even though you know there’s a whole menu of exciting options out there. The focus is usually on getting the expected outcome – who cares if the program takes a scenic route through CPU wasteland to get there?

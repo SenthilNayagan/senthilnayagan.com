@@ -1,0 +1,70 @@
+// Fixed bottom bar, hidden until cookie-consent.js determines there's no stored choice yet (first
+// visit, or after the consent cookie's ~year-long expiry). Full-width rather than a corner card so
+// it doesn't collide with #back-to-top, which sits underneath it (higher z-index) while shown —
+// an acceptable trade-off since the banner only appears briefly, before any choice is made.
+.cookie-banner {
+  position: fixed;
+  inset-inline: 0;
+  bottom: 0;
+  z-index: 60;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.25rem;
+  background-color: var(--color-bg);
+  border-top: 1px solid var(--color-border);
+  box-shadow: 0 -2px 10px var(--color-shadow);
+  opacity: 0;
+  transform: translateY(0.5rem);
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.cookie-banner.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.cookie-banner__message {
+  flex: 1 1 20rem;
+  font-size: 0.9375rem;
+  color: var(--color-text-secondary);
+}
+
+.cookie-banner__message a {
+  color: var(--color-text);
+}
+
+.cookie-banner__actions {
+  display: flex;
+  flex-shrink: 0;
+  gap: 0.75rem;
+}
+
+.cookie-banner__button {
+  padding: 0.5rem 1.125rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  font-weight: 500;
+  font-size: 0.9375rem;
+}
+
+.cookie-banner__button:hover,
+.cookie-banner__button:focus-visible {
+  border-color: var(--color-text-secondary);
+}
+
+.cookie-banner__button--primary {
+  background-color: var(--color-text);
+  color: var(--color-bg);
+  border-color: var(--color-text);
+}
+
+.cookie-banner__button--primary:hover,
+.cookie-banner__button--primary:focus-visible {
+  border-color: var(--color-text);
+  opacity: 0.85;
+}
