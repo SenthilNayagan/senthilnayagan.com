@@ -247,9 +247,18 @@
     }
   }
 
+  // flex-grow: 1 (not the previous 0) so this column actually claims the space left over after the
+  // TOC + gap — 58rem, on a post that has a TOC (88rem wrapper − 2.5rem padding − 23rem TOC −
+  // 4.5rem gap) — rather than shrinking to match its own capped-width content. .post__header/.prose
+  // still center themselves at --prose-width inside it via margin-inline: auto, so body text stays
+  // exactly as narrow as before — only the (now unconstrained) .cover-image benefits from the extra
+  // width. The explicit max-width matches that same 58rem so a post WITHOUT a TOC — where .post__main
+  // would otherwise be the row's only flex item and grow to the full 85.5rem wrapper width — still
+  // gets a cover image sized the same as everyone else's, not something wildly wider.
   .post__main {
     order: 2;
-    flex: 0 1 auto;
+    flex: 1 1 0;
+    max-width: 58rem;
   }
 }
 

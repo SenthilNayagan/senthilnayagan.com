@@ -39,10 +39,15 @@ scripts:
         <p class="post__subtitle">{{ description }}</p>
         {%- endif -%}
         {% include "components/share.liquid" %}
-        {%- if coverImage -%}
-        {% include "postImage.html" src: coverImage, alt: title, description: imageDescription, credits: imageCredits, className: "cover-image" %}
-        {%- endif -%}
       </header>
+      {%- if coverImage -%}
+      {%- comment -%}
+        Deliberately outside .post__header (which is capped at --prose-width like the rest of the
+        reading column) so the cover image can fill .post__main's full width instead of matching
+        in-article image sizing — see the .cover-image rules in _prose.scss for why.
+      {%- endcomment -%}
+      {% include "postImage.html" src: coverImage, alt: title, description: imageDescription, credits: imageCredits, className: "cover-image" %}
+      {%- endif -%}
       <div class="prose">
         {{ content }}
       </div>

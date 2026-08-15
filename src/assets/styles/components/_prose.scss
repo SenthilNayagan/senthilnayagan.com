@@ -73,27 +73,30 @@
 }
 
 .prose figcaption,
-.post__header .cover-image figcaption {
+.cover-image figcaption {
   margin-top: 0.5em;
   font-size: 0.8125rem;
   color: var(--color-text-secondary);
 }
 
 .prose figcaption > * + *,
-.post__header .cover-image figcaption > * + * {
+.cover-image figcaption > * + * {
   margin-top: 0.25em;
 }
 
-.prose .cover-image figcaption,
-.post__header .cover-image figcaption {
+.cover-image figcaption {
   text-align: center;
 }
 
-// Cover image at the top of a post. Contained within the same reading-width column as the rest of
-// the page (not a full-bleed breakout), so it stays aligned with the site's frame.
-.prose .cover-image img,
-.post__header .cover-image img {
-  max-height: 26rem;
+// Cover image at the top of a post — deliberately sits outside .post__header/.prose (both capped
+// at --prose-width) so it can fill .post__main's full width and stand out as the post's hero art,
+// rather than matching the size of in-article images.
+.cover-image {
+  margin-bottom: 2rem;
+}
+
+.cover-image img {
+  max-height: 32rem;
   width: 100%;
   object-fit: cover;
   border-radius: var(--radius);
