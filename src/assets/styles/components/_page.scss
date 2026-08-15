@@ -114,7 +114,21 @@
   .about-columns {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 3rem;
+    gap: 3.5rem;
+  }
+}
+
+// The default --prose-width (sized for a single reading column) splits into two cramped, narrow
+// columns once .about-columns kicks in. Widening it here — same technique posts already use for
+// their own wider frame — gives each column a comfortable width again and roughly matches the
+// hero band's width above it, so the page doesn't visually narrow partway down.
+@include desktop {
+  .about-page {
+    --prose-width: 64rem;
+  }
+
+  .about-columns {
+    gap: 6.5rem;
   }
 }
 
