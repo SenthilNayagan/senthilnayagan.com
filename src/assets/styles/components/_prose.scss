@@ -95,10 +95,12 @@
   margin-bottom: 2rem;
 }
 
+// No max-height/object-fit crop here — cover images often have meaningful content (titles, text)
+// baked in close to the edges, and cropping to a fixed box silently cuts that off. Shown at full
+// natural aspect ratio instead, same as in-article .prose images.
 .cover-image img {
-  max-height: 32rem;
   width: 100%;
-  object-fit: cover;
+  height: auto;
   border-radius: var(--radius);
 }
 
