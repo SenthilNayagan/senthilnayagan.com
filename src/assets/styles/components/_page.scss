@@ -12,6 +12,17 @@
   margin-inline: auto;
 }
 
+// The site's three "primary title" contexts — post title, standalone page title (About,
+// Newsletter, 404), and the homepage intro heading — all inherited the bare global h1 size, which
+// reads noticeably smaller than the equivalent title treatment on the previous site. Sized here to
+// match that (roughly 36px → 56px), distinctly bigger than the in-article .prose heading scale
+// below so a post's title and its own first-level heading never look like-for-like.
+.page__title,
+.intro__title,
+.post__title {
+  font-size: clamp(2.25rem, 1.9rem + 1.75vw, 3.5rem);
+}
+
 .page__title {
   margin-bottom: 2rem;
 }

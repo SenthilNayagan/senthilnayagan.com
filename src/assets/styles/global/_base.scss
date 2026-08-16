@@ -49,6 +49,15 @@ h4 {
   text-wrap: balance;
 }
 
+// An explicit weight, not the browser default `strong { font-weight: bolder }` — that relative
+// keyword doesn't reliably resolve against this variable font's weight axis in every ambient
+// context (e.g. bold text inside an italicized blockquote rendered with no visible weight
+// difference at all).
+strong,
+b {
+  font-weight: 700;
+}
+
 h1 {
   font-size: clamp(1.75rem, 1.5rem + 1vw, 2.5rem);
 }
