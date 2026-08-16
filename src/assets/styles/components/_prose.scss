@@ -9,14 +9,6 @@
   margin-top: 1.25em;
 }
 
-.prose h1,
-.prose h2,
-.prose h3,
-.prose h4 {
-  margin-top: 2em;
-  margin-bottom: 0.5em;
-}
-
 // Content headings start at h1 (the post title itself is rendered outside .prose, now sized up
 // to clamp(2.25rem, ..., 3.5rem) — see .post__title/.page__title/.intro__title in _page.scss), so
 // this whole scale sits a step below that while keeping h1 > h2 > h3 > h4 clearly distinct from
@@ -26,20 +18,33 @@
 // heading font-size at all inside article content — they just inherit that native cascade). The
 // previous scale here compressed h1 and h2 to within 4px of each other at the max breakpoint,
 // which read as barely-there hierarchy; widening the steps is the fix, not a smaller h1.
+//
+// Margins are fixed rem values here, not `em` — `em` resolves against each heading's OWN
+// font-size, so a bigger heading's margin-top compounds right along with it (h1 at 2.75rem would
+// get a 5.5rem gap above it, nearly double h4's). Rem keeps the gap-before/gap-after moderate and
+// consistent across levels instead of ballooning with size.
 .prose h1 {
   font-size: clamp(2.25rem, 1.95rem + 1.25vw, 2.75rem);
+  margin-top: 2.5rem;
+  margin-bottom: 0.75rem;
 }
 
 .prose h2 {
   font-size: clamp(1.75rem, 1.55rem + 0.85vw, 2.125rem);
+  margin-top: 2.25rem;
+  margin-bottom: 0.75rem;
 }
 
 .prose h3 {
   font-size: clamp(1.4375rem, 1.3rem + 0.5vw, 1.625rem);
+  margin-top: 2rem;
+  margin-bottom: 0.5rem;
 }
 
 .prose h4 {
   font-size: clamp(1.1875rem, 1.1rem + 0.3vw, 1.3125rem);
+  margin-top: 1.75rem;
+  margin-bottom: 0.5rem;
 }
 
 .prose h1 .header-anchor,
