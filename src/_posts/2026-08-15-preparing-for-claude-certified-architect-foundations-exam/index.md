@@ -259,7 +259,7 @@ Now that we have a better understanding of what CCAR-F tests, let's answer the p
 |---|---|
 | **Exam Name** | Claude Certified Architect – Foundations |
 | **Exam Code** | CCAR-F (also seen as CCA-F in some materials) |
-| **Question Format** | Scenario-based multiple-choice and multiple-response questions |
+| **Question Format** | Scenario-based questions; Anthropic's current certification page lists multiple-choice and multiple-response, while the current Exam Guide describes one correct answer with three distractors |
 | **Number of Questions** | 60 |
 | **Scenario Coverage** | 4 scenarios selected from a pool of 6 |
 | **Exam Duration** | 120 minutes |
@@ -296,9 +296,95 @@ And that brings us to the next part of our preparation journey:
 
 ---
 
-# The Five Domains: Our Roadmap for CCAR-F Preparation
+# How I'm Going to Prepare
 
-TODO
+Now we know what CCAR-F is, what it tests, and what the actual exam looks like.
+
+So the obvious question is:
+
+> **How are we actually going to prepare for all this?**
+
+I'm going to keep the approach simple.
+
+I don't want to treat **five domains + seven courses + six scenarios** as twelve different things to study. That would make the certification look like a small PhD with a registration fee.
+
+Instead, I'm thinking about the preparation as four connected pieces:
+
+## The Five Domains — What We Need to Know
+
+The **five exam domains** are going to be our main study roadmap.
+
+I'll take each domain separately and break it down into simple language:
+
+- What does this domain actually mean?
+- What should we understand?
+- Why does it matter in a real system?
+- What kind of architectural decisions might we need to make?
+- Can we build a small example to make the idea stick?
+
+I'll use Anthropic's official learning material and documentation as the foundation, then add my own explanations, examples, illustrations and hands-on experiments.
+
+And when something sounds like it was written specifically to confuse perfectly innocent engineers, we'll translate that too. 😄
+
+I'll document each domain as a separate article, so we can go as deep as needed without turning this post into a 30,000-word study guide.
+
+## The Seven Free Courses — Where We Learn It
+
+Anthropic also provides **seven free courses** as recommended preparation resources.
+
+I'm going to work through them as part of my preparation, but I don't want to treat them as a second syllabus.
+
+Think of it this way:
+
+> **The domains tell us what we need to know.** <br/> **The courses give us places to learn it.**
+
+I'll have a separate article covering all seven courses, including what each course covers, which domains it helps with, and my experience as I work through them.
+
+## The Six Scenarios — Where We Put It Together
+
+Knowing individual concepts isn't enough.
+
+The exam puts those concepts into realistic scenarios, so I'll use the six scenarios to bring multiple domains together.
+
+For example, instead of learning agent orchestration in isolation, we'll ask:
+
+> **How would we use it in a multi-agent research system?**
+
+Or instead of learning MCP as a standalone technology:
+
+> **How would we use tools and MCP in a customer-support agent?**
+
+This is where the individual pieces start becoming architecture.
+
+## Hands-On Practice — Where We Find Out If We Actually Understand It
+
+And finally, I'll build small examples along the way.
+
+Not giant production systems. Just enough to turn:
+
+> "I think I understand this..."
+
+into:
+
+> "Okay, now I understand why this works."
+
+I'll also use scenario-based practice questions to test the most important part of the exam: **our ability to make the right architectural decision when several answers look reasonable.**
+
+## So What's the Plan?
+
+In simple terms:
+
+> **Learn → Understand → Build → Apply → Practise → Revisit the weak spots**
+
+I'll document the journey as I go rather than pretending I already have the perfect study plan.
+
+The next part of this journey is where the real preparation begins.
+
+We'll take the **five exam domains one at a time**, starting with the biggest one:
+
+> **Agentic Architecture & Orchestration — 27%**
+
+**Continue the preparation → CCAR-F Domain 1: Agentic Architecture & Orchestration**
 
 ---
 

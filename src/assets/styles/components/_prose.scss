@@ -20,23 +20,26 @@
 // Content headings start at h1 (the post title itself is rendered outside .prose, now sized up
 // to clamp(2.25rem, ..., 3.5rem) — see .post__title/.page__title/.intro__title in _page.scss), so
 // this whole scale sits a step below that while keeping h1 > h2 > h3 > h4 clearly distinct from
-// each other. Sizes are carried over from the previous site's own heading scale, offset one level
-// down (its h2/h3/h4/h5 become this site's in-content h1/h2/h3/h4) since here the true post title
-// already occupies the "h1" slot.
+// each other. Each step is roughly a ~1.25x jump from the next — close to the browser's own
+// unstyled h1/h2/h3/h4 UA ratio (2em/1.5em/1.17em/1em off the body font-size), which is what
+// senthilnayagan.net and aleksandrhovhannisyan.com both actually render with (neither overrides
+// heading font-size at all inside article content — they just inherit that native cascade). The
+// previous scale here compressed h1 and h2 to within 4px of each other at the max breakpoint,
+// which read as barely-there hierarchy; widening the steps is the fix, not a smaller h1.
 .prose h1 {
-  font-size: clamp(1.75rem, 1.55rem + 1vw, 2.25rem);
+  font-size: clamp(2.25rem, 1.95rem + 1.25vw, 2.75rem);
 }
 
 .prose h2 {
-  font-size: clamp(1.5rem, 1.35rem + 0.75vw, 2rem);
+  font-size: clamp(1.75rem, 1.55rem + 0.85vw, 2.125rem);
 }
 
 .prose h3 {
-  font-size: clamp(1.375rem, 1.3rem + 0.375vw, 1.625rem);
+  font-size: clamp(1.4375rem, 1.3rem + 0.5vw, 1.625rem);
 }
 
 .prose h4 {
-  font-size: clamp(1.25rem, 1.2rem + 0.25vw, 1.375rem);
+  font-size: clamp(1.1875rem, 1.1rem + 0.3vw, 1.3125rem);
 }
 
 .prose h1 .header-anchor,
