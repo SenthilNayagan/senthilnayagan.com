@@ -48,11 +48,11 @@ If we've been researching this certification, we've probably noticed two short n
 
 No, they're not two different exams.
 
-They're two codes we'll encounter for the same **Claude Certified Architect – Foundations** certification. Older material commonly uses **CCA-F**, while newer registration references use **CCAR-F**.
+We'll encounter both codes in Anthropic-related material for the same **Claude Certified Architect – Foundations** certification.
 
 So if we find a great CCA-F resource while preparing for CCAR-F, **let's not throw it away**. We've found the "right" rabbit hole. 🐇
 
-For this blog, I'll use **CCAR-F**.
+For this blog, I'll use **CCAR-F** consistently.
 
 ---
 
@@ -68,7 +68,7 @@ The Associate track is for people who need to understand Claude and how it can b
 
 Think:
 
-> “We need to understand what Claude can do and how to work with it effectively.”
+> "We need to understand what Claude can do and how to work with it effectively."
 
 ## Developer — Building with Claude
 
@@ -76,7 +76,7 @@ The Developer track is for people who actually build applications and features u
 
 Think:
 
-> “Give us the requirements and we'll build the thing.”
+> "Give us the requirements and we'll build the thing."
 
 This is where knowledge of APIs, SDKs, integrations and implementation becomes important.
 
@@ -86,15 +86,15 @@ The Architect track is about the bigger picture: designing production solutions,
 
 Think:
 
-> “Before we build this, let's figure out how we should build it.”
+> "Before we build this, let's figure out how we should build it."
 
 And this is where my certification lives.
 
 I'm preparing specifically for:
 
-> Claude Certified Architect – Foundations (CCAR-F)
+> **Claude Certified Architect – Foundations (CCAR-F)**
 
-Anthropic describes the certification as being aimed at solution architects with hands-on experience building production applications with Claude and the Anthropic API.
+Anthropic describes this certification as being aimed at solution architects with hands-on experience building production applications with Claude and the Anthropic API.
 
 So, very roughly:
 
@@ -102,7 +102,7 @@ So, very roughly:
 - **Developer → Build it**
 - **Architect → Design it**
 
-And I'm currently volunteering for the “Design it” part.
+And I'm currently volunteering for the **"Design it"** part.
 
 ---
 
@@ -131,12 +131,13 @@ And no, unfortunately, we don't get to pick our favourite four!
 
 This is probably the simplest way to make sense of the exam:
 
-> Domains = WHAT we need to know. </br>Scenarios = WHERE we need to apply it.
+> **Domains = WHAT we need to know.**  
+> **Scenarios = WHERE we need to apply it.**
 
 The five exam domains are:
 
 | # | Domain | Weight |
-|---|---|---|
+|---|---|---:|
 | 1 | Agentic Architecture & Orchestration | 27% |
 | 2 | Tool Design & MCP Integration | 18% |
 | 3 | Claude Code Configuration & Workflows | 20% |
@@ -155,17 +156,17 @@ For example, building a **Customer Support Resolution Agent** is not just about 
 
 - How the agent decides what actions to take (**Agentic Architecture**)
 - How it interacts with external systems (**Tool Design & MCP**)
-- How it remembers and manages information (**Context Management & Reliability**)
+- How it manages information and behaves reliably (**Context Management & Reliability**)
 
 So we shouldn't think:
 
-> Scenario 1 = Domain 1
+> **Scenario 1 = Domain 1**
 
 That would make preparation unnecessarily complicated.
 
 Instead, think of it this way:
 
-> Domains are our toolbox. Scenarios are the projects where we use the toolbox.
+> **Domains are our toolbox. Scenarios are the projects where we use the toolbox.**
 
 And this is where things get interesting.
 
@@ -177,9 +178,9 @@ They usually look more like:
 
 > "We need an AI assistant that can help developers, call tools, remember context, produce reliable output, and work inside our delivery pipeline."
 
-Suddenly, we are dealing with multiple domains at the same time.
+Suddenly, we're dealing with multiple domains at the same time.
 
-Here is how the six scenarios connect with the five domains:
+Here's how I think about the relationship between the six scenarios and the five domains:
 
 | Scenario | Related Domains |
 |---|---|
@@ -192,9 +193,9 @@ Here is how the six scenarios connect with the five domains:
 
 One interesting thing stands out from this mapping:
 
-**Context Management & Reliability appears across many scenarios despite having the lowest exam weight (15%).**
+**Context Management & Reliability appears in four of the six scenarios despite having the lowest exam weight (15%).**
 
-That is a good reminder not to underestimate it.
+That's a good reminder not to underestimate it.
 
 A powerful agent with great tools and well-written prompts can still fail if it cannot manage context properly or behave reliably.
 
@@ -204,7 +205,7 @@ And that distinction is important because it changes how we should prepare.
 
 ## It's Testing Our Judgement, Not Our Memory
 
-One thing becomes clear while going through the exam guide:
+One thing becomes clear while going through the Exam Guide:
 
 **CCAR-F is not a vocabulary quiz.**
 
@@ -220,7 +221,9 @@ For example:
 - Our multi-agent workflow is losing important information between steps. What should we change?
 - Our Claude Code workflow needs to run reliably inside a CI/CD pipeline. What approach makes sense?
 
-These are not questions where we can simply recall a definition from documentation. They require us to think like an architect.
+These are not questions where we can simply recall a definition from documentation.
+
+They require us to think like an architect.
 
 We need to understand the **trade-offs, limitations, reliability considerations, and practical implications** behind each decision.
 
@@ -245,6 +248,8 @@ I'm trying to understand:
 
 Because in real-world architecture, there is rarely one perfect answer.
 
+---
+
 # Okay, But What Does the Actual Exam Look Like?
 
 Now that we have a better understanding of what CCAR-F tests, let's answer the practical questions that usually come next:
@@ -252,14 +257,13 @@ Now that we have a better understanding of what CCAR-F tests, let's answer the p
 - "How many questions are there?"
 - "How much time do we get?"
 - "What score do we need to pass?"
-- "And yes... how much does this adventure cost?" 
-
+- "And yes... how much does this adventure cost?"
 
 | Detail | Value |
 |---|---|
 | **Exam Name** | Claude Certified Architect – Foundations |
 | **Exam Code** | CCAR-F (also seen as CCA-F in some materials) |
-| **Question Format** | Scenario-based questions; Anthropic's current certification page lists multiple-choice and multiple-response, while the current Exam Guide describes one correct answer with three distractors |
+| **Question Format** | Scenario-based questions; the current Exam Guide describes one correct answer with three distractors |
 | **Number of Questions** | 60 |
 | **Scenario Coverage** | 4 scenarios selected from a pool of 6 |
 | **Exam Duration** | 120 minutes |
@@ -269,7 +273,9 @@ Now that we have a better understanding of what CCAR-F tests, let's answer the p
 | **Certification Validity** | 1 year |
 | **Retakes** | Waiting period of 14 / 30 / 90 days after the 1st / 2nd / 3rd failed attempt; maximum 4 attempts within a rolling 12-month period |
 
-At first glance, 60 questions in 120 minutes sounds quite comfortable.
+> **A note on question format:** Anthropic's certification materials have not always described the question format consistently. For this table, I'm following the current **Exam Guide** as the primary source.
+
+At first glance, **60 questions in 120 minutes** sounds quite comfortable.
 
 Two minutes per question.
 
@@ -281,18 +287,20 @@ These are not the kind of questions where we simply recall a definition:
 
 > "What does MCP stand for?"
 
-Instead, we are placed inside a realistic scenario and asked to think through the problem:
+Instead, we're placed inside a realistic scenario and asked to think through the problem:
 
 - What is the actual challenge?
 - Which approach makes the most sense?
 - What trade-offs should we consider?
 - Which option would create the most reliable architecture?
 
-The exam is not testing how many Claude-related terms we can memorize. It's testing whether **we can think like an architect when faced with real-world decisions**.
+The exam is not testing how many Claude-related terms we can memorise.
 
-And that brings us to the next part of our preparation journey:
+It's testing whether **we can think like an architect when faced with real-world decisions**.
 
-**Understanding the five exam domains and what each one expects us to know.**
+And that brings us to the next question:
+
+> **How are we actually going to prepare for this?**
 
 ---
 
@@ -306,7 +314,9 @@ So the obvious question is:
 
 I'm going to keep the approach simple.
 
-I don't want to treat **five domains + seven courses + six scenarios** as twelve different things to study. That would make the certification look like a small PhD with a registration fee.
+I don't want to treat **five domains + seven courses + six scenarios** as twelve different things to study.
+
+That would make the certification look like a small PhD with a registration fee. 😄
 
 Instead, I'm thinking about the preparation as four connected pieces:
 
@@ -314,7 +324,7 @@ Instead, I'm thinking about the preparation as four connected pieces:
 
 The **five exam domains** are going to be our main study roadmap.
 
-I'll take each domain separately and break it down into simple language:
+I'll take each domain separately in its own article and break it down into simple language:
 
 - What does this domain actually mean?
 - What should we understand?
@@ -336,7 +346,8 @@ I'm going to work through them as part of my preparation, but I don't want to tr
 
 Think of it this way:
 
-> **The domains tell us what we need to know.** <br/> **The courses give us places to learn it.**
+> **The domains tell us what we need to know.**  
+> **The courses give us places to learn it.**
 
 I'll have a separate article covering all seven courses, including what each course covers, which domains it helps with, and my experience as I work through them.
 
@@ -384,9 +395,7 @@ We'll take the **five exam domains one at a time**, starting with the biggest on
 
 > **Agentic Architecture & Orchestration — 27%**
 
-**Continue the preparation → CCAR-F Domain 1: Agentic Architecture & Orchestration**
-
----
+**Continue the preparation → [CCAR-F Domain 1: Agentic Architecture & Orchestration](#)**
 
 <!-- # Free Resources I'm Using
 
