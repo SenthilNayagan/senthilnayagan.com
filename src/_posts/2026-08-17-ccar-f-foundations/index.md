@@ -34,23 +34,30 @@ draft: true
 
 This is **Path 1** from [How I'm Preparing for the Claude Certified Architect – Foundations Exam (CCAR-F)](/blog/preparing-for-claude-certified-architect-foundations-exam/#path-1-we-need-the-basics-first).
 
-If terms like **LLM, context window, tool use, agent, MCP, structured output** or **Claude Code** already feel familiar, there's no reason to be here — [Domain 1: Agentic Architecture & Orchestration](/blog/ccar-f-domain-1-agentic-architecture-orchestration/) is where the actual CCAR-F preparation starts.
+If terms like **LLM, context window, tool use, agent, MCP** or **Claude Projects** already feel familiar, there's no reason to be here — [Domain 1: Agentic Architecture & Orchestration](/blog/ccar-f-domain-1-agentic-architecture-orchestration/) is where the actual CCAR-F preparation starts.
 
 But if a few of those words made us pause, even briefly, this post is for us.
 
-The goal here isn't a three-month history of artificial intelligence. It's just enough of a mental model — in plain English, with examples — that the CCAR-F domains stop reading like a wall of unfamiliar terminology and start reading like things we can reason about.
+The goal here isn't a three-month history of artificial intelligence. It's just enough of a mental model — in plain English, with diagrams where a picture beats a paragraph — that the CCAR-F domains stop reading like a wall of unfamiliar terminology and start reading like things we can reason about.
+
+We've grouped the terms into four sets:
+
+1. **The basics** — how Claude actually works under the hood.
+2. **How Claude gets things done** — tools, agents, and the protocol connecting them.
+3. **Claude's workspace features** — Code, Cowork, Projects, Artifacts, Skills, and more.
+4. **Working with Claude well** — the habits and framing that make it actually useful.
 
 ---
 
-# Claude, in One Paragraph
+# The Basics: How Claude Actually Works
 
-Claude is the family of AI models built by Anthropic. We talk to it, it talks back, and somewhere underneath that conversation is a **large language model** doing the actual work. That's really the whole picture we need for now — everything else in this post is about unpacking what that sentence actually means.
+## Claude, in One Paragraph
 
----
+Claude is the family of AI models built by Anthropic. We talk to it, it talks back, and somewhere underneath that conversation is a **large language model** doing the actual work. That's really the whole picture we need for now — everything else in this section is about unpacking what that sentence means.
 
-# LLMs — Large Language Models
+## LLMs — Large Language Models
 
-An LLM is, at its core, a very large statistical model trained to predict **the next word** (technically, the next *token* — more on that in a moment) given everything that came before it.
+An LLM is, at its core, a very large statistical model trained to predict **the next word** (technically, the next *token* — more on that below) given everything that came before it.
 
 That's it. That's the trick.
 
@@ -58,70 +65,293 @@ Trained on enormous amounts of text, the model learns patterns — grammar, fact
 
 A **token** is just a chunk of text — sometimes a whole word, sometimes a piece of one. When we hear about "context window size in tokens," this is what's being counted.
 
+## Context Window
+
+The **context window** is the model's **working memory** — the maximum amount of text it can hold and actively "see" at once while generating a response.
+
+Everything inside it gets read together, every time:
+
+1. **System instructions** — how the model should behave.
+2. **Our prompt** — the actual question or task.
+3. **Any files or data** we've handed it.
+4. **The chat history so far** — every earlier message in this conversation.
+
+{% include "postImage.html" src: "./images/figure-1-context-window.png", alt: "The context window as the model's working memory", description: "<b>Figure 1: </b>The context window — what it holds, and what falls off once it's full." %}
+
+If everything we've given the model fits inside the window, it remembers all of it perfectly. If it doesn't fit, the **oldest** parts get cut to make room for new text — and once something falls out, it's gone. We can't ask about message 5 if messages 6 through 80 have since pushed it out of the window.
+
+**The trade-off:** a bigger window is better for long tasks — reading whole documents, hours-long conversations — but it's also slower and more expensive to process, since the model re-reads the entire window for every single response.
+
+A rough sense of scale, in tokens:
+
+| Model | Approx. window | Roughly equivalent to |
+|---|---|---:|
+| An older, small model | ~4,000 tokens | A short story |
+| A mid-sized model | ~32,000 tokens | A 50-page novella |
+| Claude (larger models) | ~200,000 tokens | The entire *Lord of the Rings* trilogy |
+
+**The rule worth remembering:** if we paste a 500-page document into a model whose window only holds 300 pages' worth of tokens, it will have already forgotten the first 200 pages by the time it answers a question about the ending.
+
+## Constitutional AI
+
+**Constitutional AI** is Anthropic's technique for training Claude to be helpful and harmless — instead of a human reviewing every single response for safety, Claude is given a written set of principles (its "constitution") and taught to check its own answers against them.
+
+{% include "postImage.html" src: "./images/figure-2-constitutional-ai.png", alt: "Constitutional AI's self-critique loop", description: "<b>Figure 2: </b>Claude checks its own draft against a written set of principles before we ever see it." %}
+
+This flips the usual approach. Instead of humans manually labeling thousands of "bad" responses (slow, exhausting, and inconsistent between reviewers), Claude does most of that filtering itself, using its own rulebook. Humans mainly step in at the end, choosing between outputs that are already reasonably safe — rather than having to catch every problem from scratch.
+
+## Extended Thinking
+
+**Extended Thinking** lets Claude take extra time and computation to reason through a problem step by step before answering, instead of responding immediately.
+
+With it on, Claude effectively pauses to break the problem into parts, try different approaches, and check its own logic — then uses that groundwork to write a better final answer.
+
+**Worth turning on for:** advanced math, debugging tricky code, multi-step technical problems where one early mistake ruins the whole result, or planning something with a lot of moving parts.
+
+**Not worth it for:** quick factual questions, casual conversation, or anything where a fast, simple answer is genuinely all we need — extended thinking costs more time and tokens, so it should be reached for on purpose, not by default.
+
 ---
 
-# Context Windows
+# How Claude Gets Things Done
 
-The **context window** is how much text the model can "see" at once — our messages, its previous replies, any documents or tool results we've handed it. Think of it as the model's short-term memory for this conversation, not a permanent one.
+## Tool Use
 
-Once we go past that limit, older content has to drop off (or get summarized) to make room for new content. This matters a lot for CCAR-F: agents that call tools repeatedly, read files, or juggle long conversations can burn through a context window surprisingly fast — which is exactly why **Context Management & Reliability** is its own exam domain.
+By default, a model can only generate text. **Tool use** (sometimes called *function calling*) is what lets it go further — Claude can say "I'd like to call this function, with these arguments," a system executes that function, and the result gets fed back in.
 
----
+{% include "postImage.html" src: "./images/figure-3-tool-use.png", alt: "The tool use flow", description: "<b>Figure 3: </b>Without tools, Claude can only guess. With a real tool to call, it gets a real answer." %}
 
-# Tool Use
-
-By default, a model can only generate text. **Tool use** (sometimes called *function calling*) is what lets it go further — the model can say "I'd like to call this function, with these arguments," a system executes that function, and the result gets fed back in.
-
-A simple example: we ask "what's the weather in Chennai right now?" The model doesn't know — it has no live data. But if it has access to a `get_weather(city)` tool, it can call that tool, receive the actual result, and answer accurately instead of guessing.
+A simple example: we ask "what's the weather in Chennai right now?" The model has no live data — it can't know this on its own. But with access to a `get_weather(city)` tool, it can call that tool, receive the real result, and answer accurately instead of guessing.
 
 Tool use is what turns a model from "a very good text generator" into something that can actually *do* things.
 
----
-
-# Agents
+## Agents
 
 An **agent**, in this context, isn't a person or a mysterious black box — it's a loop:
 
+<div class="diagram">
+  <svg viewBox="0 0 560 200" role="img" aria-labelledby="al-title al-desc">
+    <title id="al-title">The agentic loop</title>
+    <desc id="al-desc">Three boxes in a row: Observe, Decide, Act, connected left to right by arrows. A curved arrow labeled "repeat" loops from Act back to Observe. A separate arrow labeled "when done" leaves Decide downward to a box labeled Final Answer.</desc>
+    <defs>
+      <marker id="al-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M0 0 L10 5 L0 10 Z" fill="var(--color-text-secondary)"></path>
+      </marker>
+    </defs>
+    <rect x="20" y="20" width="130" height="55" rx="8" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"></rect>
+    <text x="85" y="53" text-anchor="middle" fill="var(--color-text)" font-size="13" font-weight="700">1. Observe</text>
+    <line x1="150" y1="47" x2="205" y2="47" stroke="var(--color-text-secondary)" stroke-width="2" marker-end="url(#al-arrow)"></line>
+    <rect x="207" y="20" width="130" height="55" rx="8" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"></rect>
+    <text x="272" y="53" text-anchor="middle" fill="var(--color-text)" font-size="13" font-weight="700">2. Decide</text>
+    <line x1="337" y1="47" x2="392" y2="47" stroke="var(--color-text-secondary)" stroke-width="2" marker-end="url(#al-arrow)"></line>
+    <rect x="394" y="20" width="130" height="55" rx="8" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"></rect>
+    <text x="459" y="53" text-anchor="middle" fill="var(--color-text)" font-size="13" font-weight="700">3. Act</text>
+    <path d="M459 75 C 459 150, 85 150, 85 75" fill="none" stroke="var(--color-text-secondary)" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#al-arrow)"></path>
+    <text x="272" y="163" text-anchor="middle" fill="var(--color-text-secondary)" font-size="12">4. Repeat, until the task is done</text>
+    <line x1="272" y1="75" x2="272" y2="105" stroke="var(--color-text-secondary)" stroke-width="1.5" marker-end="url(#al-arrow)"></line>
+    <rect x="197" y="107" width="150" height="40" rx="8" fill="var(--color-bg-raised)" stroke="var(--color-border)"></rect>
+    <text x="272" y="124" text-anchor="middle" fill="var(--color-text)" font-size="11" font-weight="700">or: Final Answer</text>
+    <text x="272" y="139" text-anchor="middle" fill="var(--color-text-secondary)" font-size="9">(when the task is done)</text>
+  </svg>
+  <figcaption>Decide isn't always followed by Act — the model can also decide it's finished and skip straight to a final answer.</figcaption>
+</div>
+
 1. The model looks at the current situation (our request, any tool results so far).
 2. It decides what to do next — answer, or call a tool.
-3. If it calls a tool, the result comes back into the conversation.
+3. If it calls a tool, the result comes back in.
 4. Repeat, until the model decides the task is done.
 
-That loop — decide, act, observe, repeat — is the **agentic loop**, and it's the foundation of **Domain 1: Agentic Architecture & Orchestration**, the single biggest chunk of the CCAR-F exam. We'll go much deeper into it in the [Domain 1 post](/blog/ccar-f-domain-1-agentic-architecture-orchestration/).
+That loop — observe, decide, act, repeat — is the **agentic loop**, and it's the foundation of **Domain 1: Agentic Architecture & Orchestration**, the single biggest chunk of the CCAR-F exam. We'll go much deeper into it in the [Domain 1 post](/blog/ccar-f-domain-1-agentic-architecture-orchestration/).
+
+## MCP — Model Context Protocol
+
+**MCP (Model Context Protocol)** is an open standard for connecting models to external tools and data — a common plug shape, so any MCP-compatible tool can talk to any MCP-compatible model without custom, one-off integration code for each pair.
+
+<div class="diagram">
+  <svg viewBox="0 0 600 130" role="img" aria-labelledby="mcp-title mcp-desc">
+    <title id="mcp-title">MCP client-server architecture</title>
+    <desc id="mcp-desc">Three boxes connected by double-headed arrows: Claude, labeled MCP Client, in the middle connects to an MCP Server on one side, which in turn connects to a Tool or Data Source such as a ticketing system, database, or file storage, on the other side.</desc>
+    <defs>
+      <marker id="mcp-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M0 0 L10 5 L0 10 Z" fill="var(--color-text-secondary)"></path>
+      </marker>
+      <marker id="mcp-arrow-start" viewBox="0 0 10 10" refX="1" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M10 0 L0 5 L10 10 Z" fill="var(--color-text-secondary)"></path>
+      </marker>
+    </defs>
+    <rect x="20" y="35" width="140" height="60" rx="8" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"></rect>
+    <text x="90" y="60" text-anchor="middle" fill="var(--color-text)" font-size="13" font-weight="700">Claude</text>
+    <text x="90" y="78" text-anchor="middle" fill="var(--color-text-secondary)" font-size="10">(MCP Client)</text>
+    <line x1="160" y1="65" x2="220" y2="65" stroke="var(--color-text-secondary)" stroke-width="2" marker-start="url(#mcp-arrow-start)" marker-end="url(#mcp-arrow)"></line>
+    <rect x="222" y="35" width="140" height="60" rx="8" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"></rect>
+    <text x="292" y="60" text-anchor="middle" fill="var(--color-text)" font-size="13" font-weight="700">MCP Server</text>
+    <text x="292" y="78" text-anchor="middle" fill="var(--color-text-secondary)" font-size="10">(standard protocol)</text>
+    <line x1="362" y1="65" x2="422" y2="65" stroke="var(--color-text-secondary)" stroke-width="2" marker-start="url(#mcp-arrow-start)" marker-end="url(#mcp-arrow)"></line>
+    <rect x="424" y="35" width="156" height="60" rx="8" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"></rect>
+    <text x="502" y="55" text-anchor="middle" fill="var(--color-text)" font-size="12" font-weight="700">Tool / Data Source</text>
+    <text x="502" y="72" text-anchor="middle" fill="var(--color-text-secondary)" font-size="9">e.g. ticketing system,</text>
+    <text x="502" y="86" text-anchor="middle" fill="var(--color-text-secondary)" font-size="9">database, file storage</text>
+  </svg>
+  <figcaption>Same MCP server, any MCP-compatible model — the integration code doesn't need to be rewritten per model.</figcaption>
+</div>
+
+Before MCP, connecting a model to, say, a company's internal ticketing system meant writing bespoke integration code for that specific model and that specific system. MCP standardizes the connection: an MCP **server** exposes tools and data, and an MCP **client** (built into the model-facing application) discovers and uses them.
+
+This is what **Domain 2: Tool Design & MCP Integration** is about — designing good tools and wiring them up cleanly.
+
+## Structured Output
+
+Left to its own devices, a model replies in free-flowing prose. Great for a chat, painful for a system that needs to parse the response programmatically.
+
+**Structured output** constrains the model's response to a specific shape — usually JSON matching a schema we define — so downstream code can rely on it. Instead of parsing "the weather is sunny with a high of 31°C" out of a sentence, we get back `{"condition": "sunny", "high_celsius": 31}` directly.
+
+This matters the moment an agent's output feeds into another system rather than a human reader — which, in most production architectures, is most of the time.
 
 ---
 
-# MCP — Model Context Protocol
+# Claude's Workspace Features
 
-**MCP (Model Context Protocol)** is an open standard for connecting models to external tools and data sources — think of it as a common plug shape, so any MCP-compatible tool can talk to any MCP-compatible model without custom, one-off integration code for each pair.
-
-Before MCP, connecting a model to, say, a company's internal ticketing system meant writing bespoke integration code for that specific model and that specific system. MCP standardizes that connection: an MCP *server* exposes tools/data, and an MCP *client* (built into the model-facing application) can discover and use them.
-
-This is what **Domain 2: Tool Design & MCP Integration** is all about — designing good tools and wiring them up cleanly.
-
----
-
-# Structured Output
-
-Left to its own devices, a model replies in free-flowing prose. That's great for a chat, but painful for a system that needs to parse the response programmatically.
-
-**Structured output** means constraining the model's response to a specific shape — usually JSON matching a schema we define — so downstream code can rely on it. Instead of parsing "the weather is sunny with a high of 31°C" out of a sentence, we get back `{"condition": "sunny", "high_celsius": 31}` directly.
-
-This becomes important the moment an agent's output feeds into another system rather than a human reader — which, in most production architectures, is most of the time.
-
----
-
-# Claude Code
+## Claude Code
 
 **Claude Code** is Anthropic's agentic coding tool — it can read a codebase, make edits, run commands, and iterate, all through the same agentic loop described above, applied specifically to software engineering tasks.
 
 We don't need to be Claude Code experts for CCAR-F, but we do need to understand how it's configured and used in real workflows — that's **Domain 3: Claude Code Configuration & Workflows**.
 
+## Claude Cowork
+
+**Claude Cowork** turns Claude from a conversational chatbot into an active agent that can work directly with the files and folders on our computer — no more copy-pasting text back and forth.
+
+We authorize Claude to access a specific folder, describe the outcome we want, and step away while it reads, edits, and creates files there. A few things it's genuinely useful for:
+
+- **Sorting a messy Downloads folder** by date or file type.
+- **Turning a folder of receipt screenshots** into a spreadsheet with formulas.
+- **Drafting a report** from a folder of scattered notes.
+
+Currently a research preview on the Claude desktop app (macOS and Windows) for Pro, Max, Team, and Enterprise plans.
+
+## Projects in Claude
+
+**Projects** are self-contained workspaces that give Claude specialized context for a specific piece of work, so we're not re-explaining the same background in every new chat. A project carries:
+
+- **A knowledge base** — documents, code, or files Claude treats as background for every chat inside that project.
+- **Project instructions** — standing rules, like "use a formal tone" or "answer as a product manager would."
+
+There are two distinct kinds worth telling apart:
+
+| | Chat Projects | Cowork Projects |
+|---|---|---|
+| Where | claude.ai/projects (cloud) | Claude Desktop (local) |
+| Works with | Documents, chat history | Local folders on our computer |
+| Extra features | — | Scheduled tasks, persistent memory |
+
+We can even import an existing Chat Project into a Cowork Project.
+
+## Artifacts
+
+**Artifacts** give substantial content — code, a document, a webpage, an interactive tool — its own dedicated window, separate from the back-and-forth of the chat itself. Instead of scrolling back through a long conversation to find a code snippet, it's sitting right there in its own panel to view, edit, or download.
+
+Claude creates one automatically for anything substantial (roughly 15+ lines). If it doesn't and we wanted one, asking directly — "show me this as an artifact" — works fine.
+
+## Skills
+
+**Skills** are folders of instructions, scripts, and resources Claude loads on demand for a specific kind of task — expertise packages that teach it how to do something in a repeatable way.
+
+- **Anthropic Skills** — built-in, covering things like Excel, Word, PowerPoint, and PDF creation. Claude invokes these automatically; we don't need to do anything.
+- **Custom Skills** — ones we (or our org) build for a specific workflow, like applying brand guidelines to a deck or running a particular data analysis process the same way every time.
+
+Available on Pro, Max, Team, and Enterprise plans, under **Settings → Capabilities**, once code execution is enabled.
+
+## Enterprise Search
+
+**Enterprise Search** is a pre-configured project that searches across a company's connected tools in one place — Microsoft 365, Slack, Google Workspace, wikis, CRM — instead of us hunting through each app individually.
+
+We ask a question, Claude searches every connected source in parallel, and synthesizes one answer with citations back to where it found each piece.
+
+## Research
+
+Claude's **Research** mode is built for the questions that need more than one search — it plans out a research approach, searches the web (and any connected sources) across multiple steps, and comes back with a structured, cited report rather than a single quick reply.
+
+Worth reaching for on genuinely open-ended questions — market analysis, competitive landscapes, "what do we currently know about X" — not on questions with one clear factual answer.
+
+## Claude Design
+
+**Claude Design** is a collaborative design and prototyping tool — it lets us create interactive designs, prototypes, and presentations just by describing them in conversation, combining a frontier model with the functionality of a traditional design tool.
+
+---
+
+# Working With Claude Well
+
+## Writing Effective Prompts
+
+Every interaction starts with a prompt, so it's worth spending a moment on what makes one good. The best mental model: talk to Claude the way we'd talk to a capable coworker — naturally, concisely, conversationally.
+
+Three things worth including:
+
+1. **Setting the stage** — our role, and any context Claude should know about the work.
+2. **Defining the task** — the specific action we want (write, analyze, build, something else).
+3. **Specifying rules** — tone, format, or examples of what "good" looks like.
+
+**Example**, using all three:
+
+> "I'm the marketing lead at an indie streaming startup, and we're preparing an investor pitch deck for Series A investors. Can you research the current state of the independent film streaming market and identify key trends, competitor positioning, and growth opportunities? Use current web research with citations and structure it as a professional report of up to 5 pages, with an executive summary, market analysis, competitive landscape, and growth opportunities."
+
+Stage: the pitch deck and the startup context. Task: research the market, with specific angles (trends, competitors, opportunities). Rules: cited web research, a 5-page professional report with named sections.
+
+## Learning Mode
+
+**Learning Mode** changes how Claude responds — instead of handing us the answer directly, it acts more like a tutor, using questions and prompts to guide us toward finding the answer ourselves.
+
+It started as part of Claude for Education, then rolled out to all users in August 2025. Under the hood, it's not a different model — it's the same Claude, working from a system prompt that nudges it toward a guided, teaching style instead of a direct one.
+
+## You Bring the Expertise
+
+Claude knows *how* to do things. It doesn't automatically know *what* matters to us, specifically.
+
+Without our own judgment in the loop, Claude is a brilliant intern with no context — it can produce flawless-looking text with no way to know whether it's actually accurate, useful, or right for our situation. That judgment call is still ours to make.
+
+## Continued and Frequent Communication
+
+The first response to a genuinely complex ask is usually generic. That's not a prompt-wording problem to solve with one longer message — it's fixed by **iterating**: giving feedback, asking follow-ups, correcting course as we go.
+
+Because Claude's context window holds the whole conversation, each correction compounds — by the tenth exchange in a session, it's working from a much sharper picture of what we actually want than it had after the first message. A single one-shot prompt, however carefully worded, can't reach that same depth.
+
+## The AI Fluency Framework
+
+**AI Fluency** is the skill of using AI effectively, efficiently, and ethically — not just knowing how to type a question into a chat box, but knowing *when* to use AI, *how* to guide it, and *how* to judge what it hands back.
+
+<div class="diagram">
+  <svg viewBox="0 0 560 220" role="img" aria-labelledby="fluency-title fluency-desc">
+    <title id="fluency-title">The four legs of AI fluency</title>
+    <desc id="fluency-desc">A tabletop resting on four labeled legs: Delegation, Description, Discernment, and Diligence — if any one leg is missing, the table is unstable.</desc>
+    <rect x="60" y="30" width="440" height="26" rx="4" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"></rect>
+    <text x="280" y="48" text-anchor="middle" fill="var(--color-text)" font-size="13" font-weight="700">Working effectively with AI</text>
+    <line x1="100" y1="56" x2="100" y2="150" stroke="var(--color-text)" stroke-width="4"></line>
+    <line x1="230" y1="56" x2="230" y2="150" stroke="var(--color-text)" stroke-width="4"></line>
+    <line x1="330" y1="56" x2="330" y2="150" stroke="var(--color-text)" stroke-width="4"></line>
+    <line x1="460" y1="56" x2="460" y2="150" stroke="var(--color-text)" stroke-width="4"></line>
+    <text x="100" y="172" text-anchor="middle" fill="var(--color-text)" font-size="12" font-weight="700">Delegation</text>
+    <text x="100" y="188" text-anchor="middle" fill="var(--color-text-secondary)" font-size="9">who does what</text>
+    <text x="230" y="172" text-anchor="middle" fill="var(--color-text)" font-size="12" font-weight="700">Description</text>
+    <text x="230" y="188" text-anchor="middle" fill="var(--color-text-secondary)" font-size="9">clear instructions</text>
+    <text x="330" y="172" text-anchor="middle" fill="var(--color-text)" font-size="12" font-weight="700">Discernment</text>
+    <text x="330" y="188" text-anchor="middle" fill="var(--color-text-secondary)" font-size="9">checking the work</text>
+    <text x="460" y="172" text-anchor="middle" fill="var(--color-text)" font-size="12" font-weight="700">Diligence</text>
+    <text x="460" y="188" text-anchor="middle" fill="var(--color-text-secondary)" font-size="9">using it responsibly</text>
+  </svg>
+  <figcaption>Four legs of the same table — weak in any one of them, and the whole thing wobbles.</figcaption>
+</div>
+
+| Competency | In plain terms | The question it answers |
+|---|---|---|
+| **Delegation** | Deciding who does the task — us, a plain tool, or AI. | *"Should I do this myself, or hand it to Claude?"* |
+| **Description** | Writing clear, specific instructions. | *"How do I ask for exactly what I need?"* |
+| **Discernment** | Checking the output for mistakes, bias, or hallucinations before trusting it. | *"Is this answer actually correct and usable?"* |
+| **Diligence** | Using AI responsibly — credit, privacy, wider impact. | *"Am I using this fairly and safely?"* |
+
 ---
 
 # Where We Go From Here
 
-That's the vocabulary we needed: **LLM, context window, tool use, agent, MCP, structured output, Claude Code.**
+That's the full vocabulary set: from the basics (LLM, context window, Constitutional AI, extended thinking) through how Claude gets things done (tool use, agents, MCP, structured output), Claude's workspace features (Code, Cowork, Projects, Artifacts, Skills, Enterprise Search, Research, Design), and the habits that make working with it actually effective.
 
 None of these ideas are complicated in isolation — they just tend to get thrown around together, which makes them feel more intimidating than they are.
 

@@ -103,6 +103,28 @@
   color: var(--color-text-secondary);
 }
 
+// Hand-drawn inline SVG diagrams embedded directly in article content (raw HTML, not run through
+// eleventy-img — these aren't files, they're markup). Boxed like a callout so a diagram reads as a
+// distinct "look at this" moment against the surrounding prose, same idea as .post-aside.
+.prose .diagram {
+  margin: 1.75em auto;
+  padding: 1.5rem 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background-color: var(--color-bg-raised);
+  text-align: center;
+}
+
+.prose .diagram svg {
+  width: 100%;
+  height: auto;
+  max-width: 34rem;
+}
+
+.prose .diagram figcaption {
+  margin-top: 0.75em;
+}
+
 .prose figcaption > * + *,
 .cover-image figcaption > * + * {
   margin-top: 0.25em;
