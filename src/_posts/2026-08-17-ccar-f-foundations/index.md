@@ -76,7 +76,7 @@ Everything inside it gets read together, every time:
 3. **Any files or data** we've handed it.
 4. **The chat history so far** — every earlier message in this conversation.
 
-{% include "postImage.html" src: "./images/figure-1-context-window.png", alt: "The context window as the model's working memory", description: "<b>Figure 1: </b>The context window — what it holds, and what falls off once it's full." %}
+{% include "postImage.html" src: "./images/context-window.png", alt: "The context window as the model's working memory", description: "<b>Figure 1: </b>The context window — what it holds, and what falls off once it's full." %}
 
 If everything we've given the model fits inside the window, it remembers all of it perfectly. If it doesn't fit, the **oldest** parts get cut to make room for new text — and once something falls out, it's gone. We can't ask about message 5 if messages 6 through 80 have since pushed it out of the window.
 
@@ -96,7 +96,7 @@ A rough sense of scale, in tokens:
 
 **Constitutional AI** is Anthropic's technique for training Claude to be helpful and harmless — instead of a human reviewing every single response for safety, Claude is given a written set of principles (its "constitution") and taught to check its own answers against them.
 
-{% include "postImage.html" src: "./images/figure-2-constitutional-ai.png", alt: "Constitutional AI's self-critique loop", description: "<b>Figure 2: </b>Claude checks its own draft against a written set of principles before we ever see it." %}
+{% include "postImage.html" src: "./images/constitutional-ai.png", alt: "Constitutional AI's self-critique loop", description: "<b>Figure 2: </b>Claude checks its own draft against a written set of principles before we ever see it." %}
 
 This flips the usual approach. Instead of humans manually labeling thousands of "bad" responses (slow, exhausting, and inconsistent between reviewers), Claude does most of that filtering itself, using its own rulebook. Humans mainly step in at the end, choosing between outputs that are already reasonably safe — rather than having to catch every problem from scratch.
 
@@ -118,7 +118,7 @@ With it on, Claude effectively pauses to break the problem into parts, try diffe
 
 By default, a model can only generate text. **Tool use** (sometimes called *function calling*) is what lets it go further — Claude can say "I'd like to call this function, with these arguments," a system executes that function, and the result gets fed back in.
 
-{% include "postImage.html" src: "./images/figure-3-tool-use.png", alt: "The tool use flow", description: "<b>Figure 3: </b>Without tools, Claude can only guess. With a real tool to call, it gets a real answer." %}
+{% include "postImage.html" src: "./images/tool-use.png", alt: "The tool use flow", description: "<b>Figure 3: </b>Without tools, Claude can only guess. With a real tool to call, it gets a real answer." %}
 
 A simple example: we ask "what's the weather in Chennai right now?" The model has no live data — it can't know this on its own. But with access to a `get_weather(city)` tool, it can call that tool, receive the real result, and answer accurately instead of guessing.
 
@@ -128,32 +128,7 @@ Tool use is what turns a model from "a very good text generator" into something 
 
 An **agent**, in this context, isn't a person or a mysterious black box — it's a loop:
 
-<div class="diagram">
-  <svg viewBox="0 0 560 200" role="img" aria-labelledby="al-title al-desc">
-    <title id="al-title">The agentic loop</title>
-    <desc id="al-desc">Three boxes in a row: Observe, Decide, Act, connected left to right by arrows. A curved arrow labeled "repeat" loops from Act back to Observe. A separate arrow labeled "when done" leaves Decide downward to a box labeled Final Answer.</desc>
-    <defs>
-      <marker id="al-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-        <path d="M0 0 L10 5 L0 10 Z" fill="var(--color-text-secondary)"></path>
-      </marker>
-    </defs>
-    <rect x="20" y="20" width="130" height="55" rx="8" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"></rect>
-    <text x="85" y="53" text-anchor="middle" fill="var(--color-text)" font-size="13" font-weight="700">1. Observe</text>
-    <line x1="150" y1="47" x2="205" y2="47" stroke="var(--color-text-secondary)" stroke-width="2" marker-end="url(#al-arrow)"></line>
-    <rect x="207" y="20" width="130" height="55" rx="8" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"></rect>
-    <text x="272" y="53" text-anchor="middle" fill="var(--color-text)" font-size="13" font-weight="700">2. Decide</text>
-    <line x1="337" y1="47" x2="392" y2="47" stroke="var(--color-text-secondary)" stroke-width="2" marker-end="url(#al-arrow)"></line>
-    <rect x="394" y="20" width="130" height="55" rx="8" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"></rect>
-    <text x="459" y="53" text-anchor="middle" fill="var(--color-text)" font-size="13" font-weight="700">3. Act</text>
-    <path d="M459 75 C 459 150, 85 150, 85 75" fill="none" stroke="var(--color-text-secondary)" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#al-arrow)"></path>
-    <text x="272" y="163" text-anchor="middle" fill="var(--color-text-secondary)" font-size="12">4. Repeat, until the task is done</text>
-    <line x1="272" y1="75" x2="272" y2="105" stroke="var(--color-text-secondary)" stroke-width="1.5" marker-end="url(#al-arrow)"></line>
-    <rect x="197" y="107" width="150" height="40" rx="8" fill="var(--color-bg-raised)" stroke="var(--color-border)"></rect>
-    <text x="272" y="124" text-anchor="middle" fill="var(--color-text)" font-size="11" font-weight="700">or: Final Answer</text>
-    <text x="272" y="139" text-anchor="middle" fill="var(--color-text-secondary)" font-size="9">(when the task is done)</text>
-  </svg>
-  <figcaption>Decide isn't always followed by Act — the model can also decide it's finished and skip straight to a final answer.</figcaption>
-</div>
+{% include "postImage.html" src: "./images/agents-the-agentic-loop.png", alt: "The agentic loop: observe, decide, act, repeat", description: "<b>Figure 4: </b>Decide isn't always followed by Act — the model can also decide it's finished and skip straight to a final answer." %}
 
 1. The model looks at the current situation (our request, any tool results so far).
 2. It decides what to do next — answer, or call a tool.
@@ -166,35 +141,17 @@ That loop — observe, decide, act, repeat — is the **agentic loop**, and it's
 
 **MCP (Model Context Protocol)** is an open standard for connecting models to external tools and data — a common plug shape, so any MCP-compatible tool can talk to any MCP-compatible model without custom, one-off integration code for each pair.
 
-<div class="diagram">
-  <svg viewBox="0 0 600 130" role="img" aria-labelledby="mcp-title mcp-desc">
-    <title id="mcp-title">MCP client-server architecture</title>
-    <desc id="mcp-desc">Three boxes connected by double-headed arrows: Claude, labeled MCP Client, in the middle connects to an MCP Server on one side, which in turn connects to a Tool or Data Source such as a ticketing system, database, or file storage, on the other side.</desc>
-    <defs>
-      <marker id="mcp-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-        <path d="M0 0 L10 5 L0 10 Z" fill="var(--color-text-secondary)"></path>
-      </marker>
-      <marker id="mcp-arrow-start" viewBox="0 0 10 10" refX="1" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-        <path d="M10 0 L0 5 L10 10 Z" fill="var(--color-text-secondary)"></path>
-      </marker>
-    </defs>
-    <rect x="20" y="35" width="140" height="60" rx="8" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"></rect>
-    <text x="90" y="60" text-anchor="middle" fill="var(--color-text)" font-size="13" font-weight="700">Claude</text>
-    <text x="90" y="78" text-anchor="middle" fill="var(--color-text-secondary)" font-size="10">(MCP Client)</text>
-    <line x1="160" y1="65" x2="220" y2="65" stroke="var(--color-text-secondary)" stroke-width="2" marker-start="url(#mcp-arrow-start)" marker-end="url(#mcp-arrow)"></line>
-    <rect x="222" y="35" width="140" height="60" rx="8" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"></rect>
-    <text x="292" y="60" text-anchor="middle" fill="var(--color-text)" font-size="13" font-weight="700">MCP Server</text>
-    <text x="292" y="78" text-anchor="middle" fill="var(--color-text-secondary)" font-size="10">(standard protocol)</text>
-    <line x1="362" y1="65" x2="422" y2="65" stroke="var(--color-text-secondary)" stroke-width="2" marker-start="url(#mcp-arrow-start)" marker-end="url(#mcp-arrow)"></line>
-    <rect x="424" y="35" width="156" height="60" rx="8" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"></rect>
-    <text x="502" y="55" text-anchor="middle" fill="var(--color-text)" font-size="12" font-weight="700">Tool / Data Source</text>
-    <text x="502" y="72" text-anchor="middle" fill="var(--color-text-secondary)" font-size="9">e.g. ticketing system,</text>
-    <text x="502" y="86" text-anchor="middle" fill="var(--color-text-secondary)" font-size="9">database, file storage</text>
-  </svg>
-  <figcaption>Same MCP server, any MCP-compatible model — the integration code doesn't need to be rewritten per model.</figcaption>
-</div>
+{% include "postImage.html" src: "./images/mcp.png", alt: "MCP client-server architecture", description: "<b>Figure 5: </b>Same MCP server, any MCP-compatible model — no integration code to rewrite per model." %}
 
 Before MCP, connecting a model to, say, a company's internal ticketing system meant writing bespoke integration code for that specific model and that specific system. MCP standardizes the connection: an MCP **server** exposes tools and data, and an MCP **client** (built into the model-facing application) discovers and uses them.
+
+**So how is this different from just using an API?** Say 3 AI apps — a chatbot, a coding assistant, an email agent — all need to check the weather and manage a calendar. Without a shared protocol, each app needs its own integration for each service: its own auth, its own response parsing, its own hardcoded "call this when the user asks about weather" logic. That's 3 apps × 2 services = 6 integrations to maintain — and it scales badly: 10 apps and 20 tools is 200 integrations. With MCP, someone builds one server per service; any MCP-compatible app plugs in with no custom code. Same scenario becomes 3 + 2 = 5. *N × M* becomes *N + M*, and fixing the weather server once fixes it for every app using it.
+
+The other shift: with a plain API, a developer decides in advance exactly which endpoint gets called and hardcodes that logic. With MCP, the model reads a tool's description at runtime and decides whether and how to use it — **discovery** instead of a pre-wired call.
+
+**Should MCP replace APIs, then? No.** An MCP server is usually a thin wrapper *around* an existing API — someone still has to build and run the actual service underneath. Most API traffic isn't AI-driven at all (a mobile app calling a backend, one microservice talking to another), so wrapping it in a discovery layer adds pure overhead for no benefit there. MCP also has real costs a direct API call doesn't: extra latency from the discovery round-trip, less control over each call, and a live security concern — **prompt injection**, where malicious instructions hidden in a tool's description or output trick the model, something a hardcoded API call simply isn't exposed to.
+
+The mental model: the **API is the underlying capability**; **MCP is the model-facing interface**, added specifically where a model needs to discover and call that capability dynamically. For a direct, known integration between two pieces of software we control, a plain API call is usually still simpler and more predictable.
 
 This is what **Domain 2: Tool Design & MCP Integration** is about — designing good tools and wiring them up cleanly.
 
@@ -219,6 +176,8 @@ We don't need to be Claude Code experts for CCAR-F, but we do need to understand
 ## Claude Cowork
 
 **Claude Cowork** turns Claude from a conversational chatbot into an active agent that can work directly with the files and folders on our computer — no more copy-pasting text back and forth.
+
+{% include "postImage.html" src: "./images/claude-cowork.png", alt: "Claude Cowork working directly with local files and folders", description: "<b>Figure 6: </b>Claude Cowork reads, edits, and creates files in a folder we've authorized, while we step away." %}
 
 We authorize Claude to access a specific folder, describe the outcome we want, and step away while it reads, edits, and creates files there. A few things it's genuinely useful for:
 
@@ -318,27 +277,7 @@ Because Claude's context window holds the whole conversation, each correction co
 
 **AI Fluency** is the skill of using AI effectively, efficiently, and ethically — not just knowing how to type a question into a chat box, but knowing *when* to use AI, *how* to guide it, and *how* to judge what it hands back.
 
-<div class="diagram">
-  <svg viewBox="0 0 560 220" role="img" aria-labelledby="fluency-title fluency-desc">
-    <title id="fluency-title">The four legs of AI fluency</title>
-    <desc id="fluency-desc">A tabletop resting on four labeled legs: Delegation, Description, Discernment, and Diligence — if any one leg is missing, the table is unstable.</desc>
-    <rect x="60" y="30" width="440" height="26" rx="4" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"></rect>
-    <text x="280" y="48" text-anchor="middle" fill="var(--color-text)" font-size="13" font-weight="700">Working effectively with AI</text>
-    <line x1="100" y1="56" x2="100" y2="150" stroke="var(--color-text)" stroke-width="4"></line>
-    <line x1="230" y1="56" x2="230" y2="150" stroke="var(--color-text)" stroke-width="4"></line>
-    <line x1="330" y1="56" x2="330" y2="150" stroke="var(--color-text)" stroke-width="4"></line>
-    <line x1="460" y1="56" x2="460" y2="150" stroke="var(--color-text)" stroke-width="4"></line>
-    <text x="100" y="172" text-anchor="middle" fill="var(--color-text)" font-size="12" font-weight="700">Delegation</text>
-    <text x="100" y="188" text-anchor="middle" fill="var(--color-text-secondary)" font-size="9">who does what</text>
-    <text x="230" y="172" text-anchor="middle" fill="var(--color-text)" font-size="12" font-weight="700">Description</text>
-    <text x="230" y="188" text-anchor="middle" fill="var(--color-text-secondary)" font-size="9">clear instructions</text>
-    <text x="330" y="172" text-anchor="middle" fill="var(--color-text)" font-size="12" font-weight="700">Discernment</text>
-    <text x="330" y="188" text-anchor="middle" fill="var(--color-text-secondary)" font-size="9">checking the work</text>
-    <text x="460" y="172" text-anchor="middle" fill="var(--color-text)" font-size="12" font-weight="700">Diligence</text>
-    <text x="460" y="188" text-anchor="middle" fill="var(--color-text-secondary)" font-size="9">using it responsibly</text>
-  </svg>
-  <figcaption>Four legs of the same table — weak in any one of them, and the whole thing wobbles.</figcaption>
-</div>
+{% include "postImage.html" src: "./images/the-ai-fluency-framework.png", alt: "The four legs of AI fluency: Delegation, Description, Discernment, Diligence", description: "<b>Figure 7: </b>Four legs of the same table — weak in any one of them, and the whole thing wobbles." %}
 
 | Competency | In plain terms | The question it answers |
 |---|---|---|
