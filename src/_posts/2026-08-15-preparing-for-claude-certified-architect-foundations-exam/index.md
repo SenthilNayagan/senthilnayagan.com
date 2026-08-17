@@ -318,7 +318,7 @@ I don't want to treat **five domains + seven courses + six scenarios** as twelve
 
 That would make the certification look like a small PhD with a registration fee. 😄
 
-Instead, I'm thinking about the preparation as four connected pieces:
+Instead, I'm thinking about the preparation as a few connected pieces:
 
 ## The Five Domains — What We Need to Know
 
@@ -381,78 +381,78 @@ into:
 
 I'll also use scenario-based practice questions to test the most important part of the exam: **our ability to make the right architectural decision when several answers look reasonable.**
 
+---
+
 ## So What's the Plan?
 
 In simple terms:
 
 > **Learn → Understand → Build → Apply → Practise → Revisit the weak spots**
 
-I'll document the journey as I go rather than pretending I already have the perfect study plan.
+But there's one thing I don't want to assume.
 
-The next part of this journey is where the real preparation begins.
+Not everyone starting CCAR-F will have the same level of experience with Claude, agents, MCP, APIs or Claude Code.
 
-We'll take the **five exam domains one at a time**, starting with the biggest one:
+Some of us may already be comfortable with these concepts.
+
+Others may be looking at terms like *agentic loop*, *context window*, *tool use* or *MCP* and thinking:
+
+> "Right... I suppose I should understand what those words mean first." 😄
+
+That's completely fine.
+
+So I'm keeping **two entry points** into the preparation.
+
+---
+
+## Path 1: We Need the Basics First
+
+If concepts such as **LLMs, context windows, tool use, agents, MCP, structured output or Claude Code** are still new to us, it's worth building those foundations first.
+
+I've created a separate **CCAR-F Foundations / 101** path for exactly that.
+
+The goal isn't to turn this into a three-month course on the history of artificial intelligence.
+
+We'll cover only the foundations that help us understand the CCAR-F material comfortably.
+
+We'll start with the basics, build the mental models, and then come back to the certification domains.
+
+> **Start here → [CCAR-F Foundations: The Basics We Need to Know](/blog/ccar-f-foundations/)**
+
+This path is **optional**.
+
+It's there to remove the terminology barrier, not to add another syllabus to our preparation.
+
+---
+
+## Path 2: We Already Know the Basics
+
+If we're already comfortable with Claude, LLMs, agents, tool use, MCP and the surrounding concepts, there's no reason to take the scenic route.
+
+We can skip the foundations and go straight into the certification preparation.
+
+We'll start with the biggest exam domain:
 
 > **Agentic Architecture & Orchestration — 27%**
 
-**Continue the preparation → [CCAR-F Domain 1: Agentic Architecture & Orchestration](#)**
+This is where we'll take the official material apart, translate it into plain English, build examples, explore architectural trade-offs and document what we learn along the way.
 
-<!-- # Free Resources I'm Using
-
-Before spending money on any paid course, there's a genuinely solid free stack available:
-
-**Official (Anthropic)**
-- **Anthropic Partner Academy** (Skilljar) — free, self-paced courses that map directly to the exam blueprint, including Agent Skills, Building with the Claude API, Introduction to MCP, and Claude Code in Action. This is the closest thing to an official syllabus.
-- **Anthropic developer docs** (docs.claude.com) — primary source for Messages API mechanics, tool use, `tool_choice`, the Message Batches API, and prompt caching.
-- **"Building Effective Agents"** — Anthropic's engineering blog post on workflow vs. agent patterns; several exam task statements (coordinator/subagent design, prompt chaining) map almost directly onto its framing.
-- **The MCP specification** (modelcontextprotocol.io) — for tools, resources, prompts, and the trust model.
-- **Anthropic's public cookbook repo** on GitHub — worked examples of agentic loops, useful for our hands-on exercises below.
-- **The official Exam Guide PDF itself** — download it from the certification page before doing anything else. It includes 12 full sample questions with explanations and a full task-statement breakdown per domain. I'm treating it as the single source of truth over any third-party blog, since I found real inconsistencies out there (some sites quote different fees or validity periods than what's actually in the guide).
-
-**Community (free, unofficial — use as supplements, not primary source)**
-- A couple of community GitHub repos host free study guides organized by domain, with topic checklists that mirror the blueprint's task statements — useful as a study index to make sure we haven't skipped a task statement.
-- A couple of independent sites host free practice-question banks (several hundred questions) with explanations, styled after the exam's scenario format. Good for self-testing in week 3–4, not for learning concepts cold.
-
-A caution on the community stuff: quality varies a lot, and a few sites have blurred "Anthropic Academy" (official, always free) with paid third-party "exam prep masterclasses." If a resource is charging money to teach us what's in the free official guide, skip it — everything we need to pass is either in the guide itself or in Anthropic's free docs/courses.
+> **Continue the CCAR-F preparation → [Domain 1: Agentic Architecture & Orchestration](/blog/ccar-f-domain-1-agentic-architecture-orchestration/)**
 
 ---
 
-# My Week-by-Week Prep Plan (4 Weeks)
+## Where Do Both Paths Lead?
 
-This assumes roughly **1–1.5 hours per weekday** plus a longer session on weekends, and that we already have *some* hands-on Claude experience (if we're starting from zero, add 2 weeks up front just for building small projects).
+Whichever path we choose, the destination is the same.
 
-## Week 1 — Domain 1 + Domain 3 foundations (biggest combined weight: 47%)
-- Read the Exam Guide in full once, cover to cover, so we know what "in scope" and "out of scope" actually mean before studying anything.
-- Anthropic Academy: Agent Skills course + Claude Code in Action course.
-- Docs deep-dive: agentic loop lifecycle, `stop_reason`, hooks (`PostToolUse`), `Task` tool, `CLAUDE.md` hierarchy, `.claude/rules/`.
-- **Hands-on:** Exam Guide Exercise 1 (multi-tool agent with escalation logic) and Exercise 2 (Claude Code team workflow config).
-- Weekend: re-read Domain 1 and Domain 3 task statements from the guide and self-check against what was built.
+We'll work through the **five exam domains**, use Anthropic's recommended courses and documentation to fill the gaps, build small hands-on examples, and then bring everything together through the **six exam scenarios**.
 
-## Week 2 — Domain 2 + Domain 4 (combined weight: 38%)
-- Anthropic Academy: Building with the Claude API course + Introduction to MCP course.
-- Docs deep-dive: `tool_choice` options, JSON schema design (nullable fields, enum + "other" pattern), Message Batches API tradeoffs, MCP `isError` and structured error responses.
-- **Hands-on:** Exercise 3 (structured data extraction pipeline with validation-retry loop and batch processing).
-- Start Exercise 4 (multi-agent research pipeline) if time allows — it straddles into Week 3 anyway.
+The goal isn't simply to finish courses or tick boxes.
 
-## Week 3 — Domain 5 + full scenario integration
-- Finish Exercise 4 (error propagation, provenance/claim-source mapping, parallel subagent execution).
-- Docs/blog deep-dive: "lost in the middle" effects, scratchpad files, context trimming, confidence calibration and stratified sampling for human review routing.
-- Re-map everything built against all **six exam scenarios** — for each one, write a one-paragraph summary of what could go wrong and how we'd fix it. This forces domain knowledge into scenario-shaped answers, which is literally the exam's format.
-- Start working through free community practice questions, but review the *reasoning* for wrong answers, not just the correct letter.
+It's to reach the point where, when we're given a scenario and several possible architectural approaches, we can look at the problem and say:
 
-## Week 4 — Practice, gaps, and exam logistics
-- Two full 60-question practice run-throughs under a 120-minute timer, using the community question banks.
-- Track score by domain (most banks report this) and spend 2–3 focused sessions shoring up whichever domain is weakest — for me this is likely Domain 2, since MCP tool design is the area I've touched least in production.
-- Re-read the 12 official sample questions in the Exam Guide one more time — they're the best calibration for actual difficulty and "trap answer" style (the guide's explanations show *why* the tempting-but-wrong options fail, which is the real skill being tested).
-- Confirm exam logistics: ID matching registration name exactly, workspace/webcam rules if testing online, and schedule with a buffer day before in case of needing to push it out.
-- Light review only in the final 48 hours — no new material.
+> **"Here's what I'd choose — and here's why."**
 
----
+That's the skill we're ultimately preparing for.
 
-# A Few Things I'd Tell Past-Me
-
-- **Study scenario-first, not just domain-first.** The exam frames every question inside one of six production contexts, so practicing "given this scenario, what's the root cause" is closer to the real test than memorizing domain trivia in isolation.
-- **Build, don't just read.** Nearly every sample question in the official guide is really testing *judgment calls we'd only internalize by having built the thing* — e.g., knowing that a programmatic hook beats a prompt instruction for guaranteed compliance isn't something one can memorize convincingly; we have to have hit that failure mode once.
-- **Trust the official Exam Guide over blog posts** (including, ironically, parts of this one — always cross-check pricing/policy details against Anthropic's current guide before registering or scheduling, since terms can change between guide versions).
-
-I'll post an update after the exam with what actually showed up versus what I over/under-prepared for. -->
+And that's where the real journey begins.
