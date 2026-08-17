@@ -299,11 +299,6 @@
 }
 
 .post__title {
-  // Overrides the global h1 `text-wrap: balance`, which deliberately shortens every line to make
-  // wrapped lines visually even — for a long post title that reads as "wrapping early" and leaving
-  // unused horizontal space. `pretty` still avoids a lone orphan word on the last line without
-  // shrinking every other line to match it.
-  text-wrap: pretty;
   margin-bottom: 0.75rem;
 }
 

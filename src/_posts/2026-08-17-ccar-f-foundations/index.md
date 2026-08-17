@@ -189,7 +189,11 @@ Currently a research preview on the Claude desktop app (macOS and Windows) for P
 
 ## Projects in Claude
 
-**Projects** are self-contained workspaces that give Claude specialized context for a specific piece of work, so we're not re-explaining the same background in every new chat. A project carries:
+**Projects** are self-contained workspaces that give Claude specialized context for a specific piece of work, so we're not re-explaining the same background in every new chat.
+
+{% include "postImage.html" src: "./images/projects-in-claude.png", alt: "Projects in Claude — a self-contained workspace with its own knowledge base and instructions", description: "<b>Figure 7: </b>A project carries its own knowledge base and standing instructions, shared across every chat inside it." %}
+
+A project carries:
 
 - **A knowledge base** — documents, code, or files Claude treats as background for every chat inside that project.
 - **Project instructions** — standing rules, like "use a formal tone" or "answer as a product manager would."
@@ -208,11 +212,15 @@ We can even import an existing Chat Project into a Cowork Project.
 
 **Artifacts** give substantial content — code, a document, a webpage, an interactive tool — its own dedicated window, separate from the back-and-forth of the chat itself. Instead of scrolling back through a long conversation to find a code snippet, it's sitting right there in its own panel to view, edit, or download.
 
+{% include "postImage.html" src: "./images/artifacts.png", alt: "An artifact shown in its own panel, separate from the chat", description: "<b>Figure 8: </b>Substantial content gets its own panel instead of getting buried in the chat history." %}
+
 Claude creates one automatically for anything substantial (roughly 15+ lines). If it doesn't and we wanted one, asking directly — "show me this as an artifact" — works fine.
 
 ## Skills
 
 **Skills** are folders of instructions, scripts, and resources Claude loads on demand for a specific kind of task — expertise packages that teach it how to do something in a repeatable way.
+
+{% include "postImage.html" src: "./images/skills.png", alt: "Skills as folders of instructions Claude loads on demand", description: "<b>Figure 9: </b>A skill is expertise packaged as a folder — loaded on demand for the task at hand." %}
 
 - **Anthropic Skills** — built-in, covering things like Excel, Word, PowerPoint, and PDF creation. Claude invokes these automatically; we don't need to do anything.
 - **Custom Skills** — ones we (or our org) build for a specific workflow, like applying brand guidelines to a deck or running a particular data analysis process the same way every time.
@@ -277,7 +285,7 @@ Because Claude's context window holds the whole conversation, each correction co
 
 **AI Fluency** is the skill of using AI effectively, efficiently, and ethically — not just knowing how to type a question into a chat box, but knowing *when* to use AI, *how* to guide it, and *how* to judge what it hands back.
 
-{% include "postImage.html" src: "./images/the-ai-fluency-framework.png", alt: "The four legs of AI fluency: Delegation, Description, Discernment, Diligence", description: "<b>Figure 7: </b>Four legs of the same table — weak in any one of them, and the whole thing wobbles." %}
+{% include "postImage.html" src: "./images/the-ai-fluency-framework.png", alt: "The four legs of AI fluency: Delegation, Description, Discernment, Diligence", description: "<b>Figure 10: </b>Four legs of the same table — weak in any one of them, and the whole thing wobbles." %}
 
 | Competency | In plain terms | The question it answers |
 |---|---|---|

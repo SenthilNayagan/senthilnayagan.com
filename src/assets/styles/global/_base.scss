@@ -46,7 +46,18 @@ h3,
 h4 {
   line-height: 1.25;
   font-weight: 700;
-  text-wrap: balance;
+
+  // `balance` shrinks every line to match the others, which for a heading shorter than its
+  // container (true almost everywhere on this site — page titles, preview cards, in-article
+  // headings) leaves visible unused width instead of just filling the line and wrapping the
+  // rest. `pretty` avoids that, but it's a holistic algorithm — it can still re-optimize break
+  // points across the WHOLE heading whenever the content changes, which was visibly reshuffling
+  // where earlier lines broke just from the " #" that .header-anchor:hover::after appends after
+  // the last word. Plain `wrap` (CSS's actual initial value, set explicitly here to document the
+  // choice rather than rely on it being the default) is a simple greedy fill: pack each line as
+  // full as possible, wrap only the overflow, never reconsider earlier lines — less protection
+  // against a lone orphan word on a rare 3-line heading, but stable and predictable everywhere else.
+  text-wrap: wrap;
 }
 
 // An explicit weight, not the browser default `strong { font-weight: bolder }` — that relative

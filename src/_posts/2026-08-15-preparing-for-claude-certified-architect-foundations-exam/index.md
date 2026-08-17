@@ -248,6 +248,8 @@ I'm trying to understand:
 
 Because in real-world architecture, there is rarely one perfect answer.
 
+{% include "postImage.html" src: "./images/ccar-f-at-a-glance.png", alt: "CCAR-F certification at a glance — role tracks, domains, scenarios, and how they connect", description: "<b>Figure 1: </b>Everything covered so far, in one glance — the three role tracks, the 5 weighted domains, the 6 scenarios, and how a scenario maps to multiple domains." %}
+
 ---
 
 # Okay, But What Does the Actual Exam Look Like?
