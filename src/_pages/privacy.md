@@ -15,7 +15,7 @@ Your privacy matters. This site takes it seriously, and this page explains what 
 
 ## Cookies
 
-This site uses cookies to understand how visitors read and navigate it, via Google Analytics. Cookies are small data files placed on your device when you visit. Specifically, Google Analytics uses cookies to track things like which posts get read and how long visitors spend on the site. That data is transmitted to and stored by Google on servers in the United States — you can read more in [Google's Privacy Policy](https://policies.google.com/privacy).
+This site uses cookies to understand how visitors read and navigate it, via Google Analytics. Cookies are small data files placed on your device when you visit. Specifically, Google Analytics uses cookies to track things like which posts get read and how long visitors spend on the site. That data is transmitted to and stored by Google on servers in the United States — you can read more in <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google's Privacy Policy</a>.
 
 These cookies are only set after you accept them via the banner shown on your first visit. If you decline, no analytics cookies are set. You can change your mind at any time by clearing this site's cookies in your browser, which will bring the banner back on your next visit.
 

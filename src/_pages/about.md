@@ -63,6 +63,3 @@ I read everything that lands in my inbox, even if I'm slow to reply. You can fin
 <!-- TODO: add LinkedIn/X links here (as list items, same format) once site.social.linkedin / .twitter are filled in. -->
 - [Email](mailto:{{ site.email }})
 - [GitHub]({{ site.social.github }})
-
-Best wishes,<br>
-Senthil Nayagan

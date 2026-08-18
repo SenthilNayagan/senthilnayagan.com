@@ -3,8 +3,10 @@ title: Blog
 description: All posts, newest first.
 layout: default
 pagination:
+  # A multiple of 3, matching .post-list's 3-column grid at desktop width (_post-preview.scss) —
+  # anything not divisible by 3 leaves a partial last row with empty column slots on every page.
   data: collections.posts
-  size: 10
+  size: 12
   alias: posts
 permalink: "{% if pagination.pageNumber == 0 %}/blog/{% else %}/blog/{{ pagination.pageNumber | plus: 1 }}/{% endif %}"
 ---
