@@ -227,6 +227,14 @@ Claude creates one automatically for anything substantial (roughly 15+ lines). I
 
 Available on Pro, Max, Team, and Enterprise plans, under **Settings → Capabilities**, once code execution is enabled.
 
+<details>
+  <summary>More on how Skills actually work</summary>
+  <p>A Skill is just a folder with a <code>SKILL.md</code> file at its root — YAML frontmatter (name, description) followed by markdown instructions, plus whatever supporting files it needs (scripts, templates, reference docs).</p>
+  <p>Claude doesn't load the whole thing upfront. It's <strong>progressive disclosure</strong>: only the short frontmatter description sits in context by default, and the full instructions only get read in once Claude decides the skill is actually relevant to what we're doing — the same reason a hundred installed Skills don't quietly eat our context window before we've used any of them.</p>
+  <p>A Skill's frontmatter can also set <code>allowed-tools</code>, restricting which tools Claude is permitted to use while that Skill is active — a guardrail worth having for Skills we didn't write ourselves. And Skills can bundle actual scripts: deterministic code that runs and returns a result, without the script's own internal logic burning through the model's context the way describing the same steps in prose would.</p>
+  <p>Beyond the built-in Anthropic Skills, custom ones are shareable — via a git repo, a plugin, or centrally through enterprise-managed settings, so an org can standardize which Skills are available across every team's Claude Code setup.</p>
+</details>
+
 ## Enterprise Search
 
 **Enterprise Search** is a pre-configured project that searches across a company's connected tools in one place — Microsoft 365, Slack, Google Workspace, wikis, CRM — instead of us hunting through each app individually.

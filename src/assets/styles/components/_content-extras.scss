@@ -10,6 +10,58 @@
   margin-top: 1em;
 }
 
+// Inline "expand for more depth" section within article content — deliberately NOT a boxed
+// callout like .post-aside above. This is for a sub-topic that deserves a little more detail than
+// the concise version but not a whole separate post, so it should read as more of the same
+// paragraph once expanded, not as a separate module competing for attention. The trigger is
+// styled as a plain link (matching the global `a` styling exactly — underline only, no color, no
+// weight change), and the revealed content just continues the normal prose flow underneath.
+.prose details > summary {
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+  cursor: pointer;
+  list-style: none;
+}
+
+.prose details > summary::-webkit-details-marker {
+  display: none;
+}
+
+// Small chevron after the link text — right-pointing when collapsed (there's more this way),
+// rotates to down-pointing when open (expanded below). Distinguishes "this expands in place"
+// from a normal link that navigates away, without going back to a boxed/iconed callout.
+.prose details > summary::after {
+  content: "";
+  display: inline-block;
+  width: 0.4em;
+  height: 0.4em;
+  margin-left: 0.4em;
+  margin-bottom: 0.05em;
+  border-right: 2px solid currentcolor;
+  border-bottom: 2px solid currentcolor;
+  transform: rotate(-45deg);
+  transition: transform 0.15s ease;
+  vertical-align: middle;
+}
+
+.prose details[open] > summary::after {
+  transform: rotate(45deg);
+}
+
+.prose details > summary:hover,
+.prose details > summary:focus-visible {
+  text-decoration: none;
+}
+
+.prose details > summary + * {
+  margin-top: 1.25em;
+}
+
+.prose details > * + * {
+  margin-top: 1.25em;
+}
+
 // No accent stripe on this one, unlike the general pull-quote .post-aside — plain box, smaller
 // heading than the inherited body size, matching the reference this was modeled on.
 .draft-note {
