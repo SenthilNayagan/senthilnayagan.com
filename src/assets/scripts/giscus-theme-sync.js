@@ -3,7 +3,11 @@ const root = document.documentElement;
 function syncGiscusTheme() {
   const iframe = document.querySelector('iframe.giscus-frame');
   if (!iframe) return;
-  const theme = root.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+  const isDark = root.getAttribute('data-theme') === 'dark';
+  // window.location.origin (rather than a hardcoded domain) so this resolves correctly in both
+  // local dev and production — the iframe's own browser context fetches this URL directly, so it
+  // just needs to be reachable from wherever the page itself is being viewed.
+  const theme = `${window.location.origin}/assets/giscus-themes/${isDark ? 'dark' : 'light'}.css`;
   iframe.contentWindow.postMessage({ giscus: { setConfig: { theme } } }, 'https://giscus.app');
 }
 

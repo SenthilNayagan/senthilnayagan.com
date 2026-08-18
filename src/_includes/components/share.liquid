@@ -1,7 +1,7 @@
 {%- comment -%}
-  Icons: Font Awesome Free (fa-regular comments/envelope, fa-brands whatsapp/x-twitter/linkedin,
-  fa-solid link) — same icon set used on senthilnayagan.net's shareAndComment.html, inlined as SVGs
-  rather than loading the whole Font Awesome kit for six icons.
+  Icons: Font Awesome Free (fa-regular comments/envelope, fa-brands whatsapp/x-twitter/linkedin/
+  markdown, fa-solid link) — same icon set used on senthilnayagan.net's shareAndComment.html,
+  inlined as SVGs rather than loading the whole Font Awesome kit for seven icons.
 {%- endcomment -%}
 {%- assign shareUrl = page.url | toAbsoluteUrl -%}
 <div class="post__share">
@@ -48,7 +48,7 @@
   </a>
   <a
     class="post__share-icon no-icon"
-    href="https://www.linkedin.com/shareArticle?mini=true&url={{ shareUrl | url_encode }}&title={{ title | url_encode }}"
+    href="https://www.linkedin.com/sharing/share-offsite/?url={{ shareUrl | url_encode }}"
     target="_blank"
     rel="noopener"
     title="Share on LinkedIn"
@@ -63,5 +63,16 @@
       <path d="M579.8 267.7c56.5-56.5 56.5-148 0-204.5c-50-50-128.8-56.5-186.3-15.4l-1.6 1.1c-14.4 10.3-17.7 30.3-7.4 44.6s30.3 17.7 44.6 7.4l1.6-1.1c32.1-22.9 76-19.3 103.8 8.6c31.5 31.5 31.5 82.5 0 114L422.3 334.8c-31.5 31.5-82.5 31.5-114 0c-27.9-27.9-31.5-71.8-8.6-103.8l1.1-1.6c10.3-14.4 6.9-34.4-7.4-44.6s-34.4-6.9-44.6 7.4l-1.1 1.6C206.5 251.2 213 330 263 380c56.5 56.5 148 56.5 204.5 0L579.8 267.7zM60.2 244.3c-56.5 56.5-56.5 148 0 204.5c50 50 128.8 56.5 186.3 15.4l1.6-1.1c14.4-10.3 17.7-30.3 7.4-44.6s-30.3-17.7-44.6-7.4l-1.6 1.1c-32.1 22.9-76 19.3-103.8-8.6C74 372 74 321 105.5 289.5L217.7 177.2c31.5-31.5 82.5-31.5 114 0c27.9 27.9 31.5 71.8 8.6 103.9l-1.1 1.6c-10.3 14.4-6.9 34.4 7.4 44.6s34.4 6.9 44.6-7.4l1.1-1.6C433.5 260.8 427 182 377 132c-56.5-56.5-148-56.5-204.5 0L60.2 244.3z"></path>
     </svg>
   </button>
+  <a
+    class="post__share-icon no-icon"
+    href="/blog/{{ page.fileSlug }}.md"
+    download="{{ page.fileSlug }}.md"
+    title="Export as Markdown"
+    aria-label="Export as Markdown"
+  >
+    <svg viewBox="0 0 640 512" aria-hidden="true">
+      <path d="M593.8 59.1H46.2C20.7 59.1 0 79.8 0 105.2v301.5c0 25.5 20.7 46.2 46.2 46.2h547.7c25.5 0 46.2-20.7 46.1-46.1V105.2c0-25.4-20.7-46.1-46.2-46.1zM338.5 360.6H277v-120l-61.5 76.9-61.5-76.9v120H92.3V151.4h61.5l61.5 76.9 61.5-76.9h61.5v209.2zm135.3 3.1L381.5 256H443V151.4h61.5V256H566z"></path>
+    </svg>
+  </a>
   <span id="copy-message" class="post__share-copied" role="status">Copied to clipboard</span>
 </div>

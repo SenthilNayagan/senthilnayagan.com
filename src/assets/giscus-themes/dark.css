@@ -1,0 +1,97 @@
+/*!
+ * Custom giscus theme matching this site's monochrome dark palette (see src/assets/styles/_tokens.scss).
+ * Mirrors light.css in the same directory — see that file for the variable-by-variable rationale.
+ */
+main {
+  --color-canvas-default: #13151a;
+  --color-canvas-overlay: #13151a;
+  --color-canvas-inset: #1b1e25;
+  --color-canvas-subtle: #1b1e25;
+  --color-border-default: #2b2f38;
+  --color-border-muted: #2b2f38;
+  --color-neutral-muted: #2b2f3866;
+
+  --color-fg-default: #e7e9ec;
+  --color-fg-muted: #a3aab6;
+  --color-fg-subtle: #a3aab6;
+
+  --color-accent-fg: #e7e9ec;
+  --color-accent-emphasis: #e7e9ec;
+  --color-accent-muted: #a3aab666;
+  --color-accent-subtle: #1b1e25;
+
+  --color-btn-text: #e7e9ec;
+  --color-btn-bg: #1b1e25;
+  --color-btn-border: #2b2f38;
+  --color-btn-shadow: 0 0 #0000;
+  --color-btn-inset-shadow: 0 0 #0000;
+  --color-btn-hover-bg: #2b2f38;
+  --color-btn-hover-border: #a3aab6;
+  --color-btn-active-bg: #2b2f38;
+  --color-btn-active-border: #a3aab6;
+  --color-btn-selected-bg: #1b1e25;
+
+  /* Inverted from light.css, same recipe as this site's own .button component in dark mode: a
+     light button with dark text, still no hue. */
+  --color-btn-primary-text: #13151a;
+  --color-btn-primary-bg: #e7e9ec;
+  --color-btn-primary-border: #e7e9ec;
+  --color-btn-primary-shadow: 0 0 #0000;
+  --color-btn-primary-inset-shadow: 0 0 #0000;
+  --color-btn-primary-hover-bg: #a3aab6;
+  --color-btn-primary-hover-border: #a3aab6;
+  --color-btn-primary-selected-bg: #e7e9ec;
+  --color-btn-primary-selected-shadow: 0 0 #0000;
+  --color-btn-primary-disabled-text: #a3aab680;
+  --color-btn-primary-disabled-bg: #a3aab699;
+  --color-btn-primary-disabled-border: #2b2f38;
+
+  --color-action-list-item-default-hover-bg: #1b1e25;
+  --color-segmented-control-bg: #a3aab61a;
+  --color-segmented-control-button-bg: #13151a;
+  --color-segmented-control-button-selected-border: #a3aab6;
+
+  --color-success-fg: #e7e9ec;
+  --color-attention-fg: #e7e9ec;
+  --color-attention-muted: #2b2f38;
+  --color-attention-subtle: #1b1e25;
+  --color-danger-fg: #e7e9ec;
+  --color-danger-muted: #2b2f38;
+  --color-danger-subtle: #1b1e25;
+
+  --color-scale-gray-7: #2b2f38;
+  --color-scale-blue-8: #1b1e25;
+  --color-social-reaction-bg-hover: #1b1e25;
+  --color-social-reaction-bg-reacted-hover: #1b1e25;
+
+  --color-prettylights-syntax-comment: #a3aab6;
+  --color-prettylights-syntax-constant: #e7e9ec;
+  --color-prettylights-syntax-entity: #e7e9ec;
+  --color-prettylights-syntax-storage-modifier-import: #e7e9ec;
+  --color-prettylights-syntax-entity-tag: #e7e9ec;
+  --color-prettylights-syntax-keyword: #e7e9ec;
+  --color-prettylights-syntax-string: #a3aab6;
+  --color-prettylights-syntax-variable: #e7e9ec;
+  --color-prettylights-syntax-brackethighlighter-unmatched: #e7e9ec;
+  --color-prettylights-syntax-invalid-illegal-text: #13151a;
+  --color-prettylights-syntax-invalid-illegal-bg: #e7e9ec;
+  --color-prettylights-syntax-carriage-return-text: #13151a;
+  --color-prettylights-syntax-carriage-return-bg: #e7e9ec;
+  --color-prettylights-syntax-string-regexp: #a3aab6;
+  --color-prettylights-syntax-markup-list: #e7e9ec;
+  --color-prettylights-syntax-markup-heading: #e7e9ec;
+  --color-prettylights-syntax-markup-italic: #e7e9ec;
+  --color-prettylights-syntax-markup-bold: #e7e9ec;
+  --color-prettylights-syntax-markup-deleted-text: #e7e9ec;
+  --color-prettylights-syntax-markup-deleted-bg: #1b1e25;
+  --color-prettylights-syntax-markup-inserted-text: #e7e9ec;
+  --color-prettylights-syntax-markup-inserted-bg: #1b1e25;
+  --color-prettylights-syntax-markup-changed-text: #e7e9ec;
+  --color-prettylights-syntax-markup-changed-bg: #1b1e25;
+  --color-prettylights-syntax-markup-ignored-text: #a3aab6;
+  --color-prettylights-syntax-markup-ignored-bg: #1b1e25;
+  --color-prettylights-syntax-meta-diff-range: #e7e9ec;
+  --color-prettylights-syntax-brackethighlighter-angle: #a3aab6;
+  --color-prettylights-syntax-sublimelinter-gutter-mark: #a3aab6;
+  --color-prettylights-syntax-constant-other-reference-link: #e7e9ec;
+}

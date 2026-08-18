@@ -5,12 +5,15 @@
     2. Repo Settings -> General -> Features -> enable "Discussions".
     3. Install the giscus app (https://github.com/apps/giscus) and grant it access to the repo.
     4. Go to https://giscus.app, fill in the repo, pick the "{{ site.giscus.category }}" category
-       (GitHub's default Announcement-type category — locked so only maintainers/giscus can start
-       new discussions directly on GitHub) and "pathname" mapping, then copy the generated
-       data-repo-id / data-category-id from the snippet at the bottom of the page.
+       and "pathname" mapping, then copy the generated data-repo-id / data-category-id from the
+       snippet at the bottom of the page. Use "General", not "Announcements" — giscus currently
+       can't create new discussions in an Announcement-type category (see site.giscus's comment
+       in src/_data/site.js for details).
     5. Paste those into site.giscus.repoId / site.giscus.categoryId in src/_data/site.js.
-  Theme starts as "light"; giscus-theme-sync.js corrects it to match the site's active theme (and
-  keeps it in sync with the theme-toggle button) once the widget's iframe has loaded.
+  Theme starts as our own custom light theme (src/assets/giscus-themes/light.css — matches this
+  site's monochrome palette instead of giscus's default GitHub colors, e.g. the green "Comment"
+  button); giscus-theme-sync.js swaps to dark.css to match the site's active theme (and keeps it
+  in sync with the theme-toggle button) once the widget's iframe has loaded.
 {%- endcomment -%}
 <section class="post__comments" id="comments">
   <h2 class="post__comments-title">Comments</h2>
@@ -25,7 +28,7 @@
     data-reactions-enabled="1"
     data-emit-metadata="0"
     data-input-position="top"
-    data-theme="light"
+    data-theme="{{ site.url }}/assets/giscus-themes/light.css"
     data-lang="en"
     data-loading="lazy"
     crossorigin="anonymous"
