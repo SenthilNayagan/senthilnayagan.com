@@ -18,7 +18,6 @@
 // heading font-size at all inside article content — they just inherit that native cascade). The
 // previous scale here compressed h1 and h2 to within 4px of each other at the max breakpoint,
 // which read as barely-there hierarchy; widening the steps is the fix, not a smaller h1.
-//
 // Margins are fixed rem values here, not `em` — `em` resolves against each heading's OWN
 // font-size, so a bigger heading's margin-top compounds right along with it (h1 at 2.75rem would
 // get a 5.5rem gap above it, nearly double h4's). Rem keeps the gap-before/gap-after moderate and

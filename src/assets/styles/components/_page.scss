@@ -165,6 +165,7 @@
 // same as Blog/Tags/Newsletter/Privacy's plain .page__title. An extra top padding here used to
 // push "Hi, I'm ..." down 1.5rem further than every other page's title.
 .intro {
+  position: relative;
   padding-bottom: 3rem;
   border-bottom: 1px solid var(--color-border);
   margin-bottom: 3rem;
@@ -172,6 +173,23 @@
 
 .intro__title {
   margin-bottom: 0.5rem;
+}
+
+// Straddles the divider at its right end — background-color "erases" the border line directly
+// behind it so the medallion reads as sitting on top of, not crossed by, the rule. Big enough for
+// the petal/dot detail to actually read as a rangoli pattern rather than a smudge, while staying a
+// quiet accent since it's just thin, muted-color strokes rather than a bold graphic. Right-aligned
+// won out over left in a side-by-side comparison.
+.intro__ornament {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  transform: translateY(50%);
+  width: 3.5rem;
+  height: auto;
+  padding-left: 0.5rem;
+  background-color: var(--color-bg);
+  color: var(--color-text-secondary);
 }
 
 .intro__tagline {
