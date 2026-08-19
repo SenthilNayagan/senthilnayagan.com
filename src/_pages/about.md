@@ -1,7 +1,7 @@
 ---
-title: About
+title: About Me
 description: Data Engineer by day, Rustacean by night, and occasionally a man who collects bronze idols for reasons even he can't fully explain.
-permalink: /about/
+permalink: /about-me/
 layout: about
 ---
 

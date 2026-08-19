@@ -38,7 +38,7 @@ export default {
     { text: 'Home', url: '/' },
     { text: 'Blog', url: '/blog/' },
     { text: 'Tags', url: '/tags/' },
-    { text: 'About', url: '/about/' },
+    { text: 'About Me', url: '/about-me/' },
   ],
   // SITE_URL overrides both branches below — an escape hatch for tunneling the dev server (e.g.
   // through cloudflared) to a real public URL. Needed whenever testing something Chrome's Private

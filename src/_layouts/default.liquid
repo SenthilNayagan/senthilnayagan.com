@@ -19,7 +19,7 @@ scripts: []
   attribute controls what Pagefind indexes.
 {%- endcomment -%}
 {%- assign isSearchable = false -%}
-{%- if tags contains "posts" or page.url == "/about/" or page.url == "/newsletter/" -%}
+{%- if tags contains "posts" or page.url == "/about-me/" or page.url == "/newsletter/" -%}
   {%- assign isSearchable = true -%}
 {%- endif -%}
 

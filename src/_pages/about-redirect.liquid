@@ -1,0 +1,25 @@
+---
+permalink: /about/
+layout: null
+eleventyExcludeFromCollections: true
+excludeFromSitemap: true
+---
+<!DOCTYPE html>
+<html lang="{{ site.language }}">
+<head>
+  <meta charset="utf-8">
+  <title>Redirecting… | {{ site.shortTitle }}</title>
+  {%- comment -%}
+    /about/ moved to /about-me/. This stub keeps any existing bookmarks/external links/search
+    results pointing at the old URL from breaking — meta refresh handles browsers, the canonical
+    tag and noindex tell search engines to update their index to the new URL instead of indexing
+    this stub as its own page.
+  {%- endcomment -%}
+  <meta http-equiv="refresh" content="0; url=/about-me/">
+  <link rel="canonical" href="{{ '/about-me/' | toAbsoluteUrl }}">
+  <meta name="robots" content="noindex">
+</head>
+<body>
+  <p>This page has moved to <a href="/about-me/">/about-me/</a>.</p>
+</body>
+</html>
