@@ -60,6 +60,8 @@ if (button && 'speechSynthesis' in window) {
     }
 
     const utterance = new SpeechSynthesisUtterance(readableText());
+    // The API's default (1.0) reads noticeably faster than a comfortable narration pace.
+    utterance.rate = 0.9;
     const voice = pickVoice();
     if (voice) {
       utterance.voice = voice;
