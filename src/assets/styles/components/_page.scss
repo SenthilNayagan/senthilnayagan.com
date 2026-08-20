@@ -379,6 +379,20 @@
   fill: currentcolor;
 }
 
+// Play/pause icon swap on #listen-button (listen.js toggles .is-speaking) — same show/hide-via-
+// class technique as .code-copy's copy/check icons.
+.listen-icon--pause {
+  display: none;
+}
+
+#listen-button.is-speaking .listen-icon--play {
+  display: none;
+}
+
+#listen-button.is-speaking .listen-icon--pause {
+  display: block;
+}
+
 .post__share-copied {
   position: absolute;
   left: 0;
