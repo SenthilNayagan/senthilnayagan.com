@@ -102,6 +102,46 @@
   color: var(--color-text-secondary);
 }
 
+// Wraps <picture>, injected by image-download.js, so the download button below can overlay the
+// image itself at its bottom-right corner rather than sitting in its own row underneath.
+.image-frame {
+  position: relative;
+}
+
+.image-frame picture {
+  display: block;
+}
+
+// A fixed dark/white treatment rather than the site's usual theme-driven currentColor icons —
+// this button sits on top of arbitrary photo/diagram content, so it needs reliable contrast
+// regardless of what's underneath it or which site theme is active, the same reason video players
+// overlay controls this way instead of using their surrounding page's colors.
+.image-download {
+  position: absolute;
+  right: 0.75rem;
+  bottom: 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 999px;
+  background-color: rgb(0 0 0 / 55%);
+  color: #fff;
+  transition: background-color 0.15s ease;
+}
+
+.image-download:hover,
+.image-download:focus-visible {
+  background-color: rgb(0 0 0 / 75%);
+}
+
+.image-download svg {
+  width: 1.125rem;
+  height: 1.125rem;
+  fill: currentcolor;
+}
+
 // Hand-drawn inline SVG diagrams embedded directly in article content (raw HTML, not run through
 // eleventy-img — these aren't files, they're markup). Boxed like a callout so a diagram reads as a
 // distinct "look at this" moment against the surrounding prose, same idea as .post-aside.
