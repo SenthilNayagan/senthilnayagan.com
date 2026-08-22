@@ -4,3 +4,7 @@ node_modules/
 .eslintcache
 .env
 .DS_Store
+# Piper TTS venv + voice model (~110MB, over GitHub's 100MB file limit) — build-time tooling only,
+# not needed by readers. The narration it generates (src/assets/audio/) IS committed. See
+# lib/audio.js and scripts/setup-piper.sh.
+.piper/

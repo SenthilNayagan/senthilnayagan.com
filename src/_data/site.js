@@ -7,11 +7,12 @@ export default {
   keywords: ['Senthil Nayagan', 'software engineering', 'web development', 'programming', 'tech blog'],
   language: 'en-US',
   newsletterUrl: 'https://buttondown.com/senthilnayagan',
-  // Off for now — the browser's Web Speech API voice is too robotic/inconsistent across visitors'
-  // devices to ship as-is. Flip back on once it's been swapped for pre-generated, human-sounding
-  // audio (see src/assets/scripts/listen.js). Toggling this hides the button only; listen.js stays
-  // loaded but no-ops safely since it already checks for the button before doing anything.
-  listenEnabled: false,
+  // Sitewide kill switch for the Listen feature (narrated .mp3 per post, generated ahead of time
+  // with Piper TTS — see lib/audio.js) — a post also needs its own `listen: true` frontmatter to
+  // actually show the button (see components/share.liquid); this flag just lets the whole feature
+  // be pulled instantly without touching every post. Toggling it off hides buttons only; listen.js
+  // stays loaded but no-ops safely since it already checks for the button before doing anything.
+  listenEnabled: true,
   // Empty in development so local/author visits never get tracked or count toward real traffic.
   googleAnalyticsId: process.env.ELEVENTY_ENV === 'development' ? '' : 'G-H2FX392X8T',
   cookieConsentMessage:

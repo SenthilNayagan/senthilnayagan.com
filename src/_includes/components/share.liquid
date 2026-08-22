@@ -3,16 +3,26 @@
   fa-brands whatsapp/x-twitter/linkedin/markdown) — same icon set used on senthilnayagan.net's
   shareAndComment.html, inlined as SVGs rather than loading the whole Font Awesome kit.
 
-  "Listen" (listen.js) uses the browser's own Web Speech API (speechSynthesis) — free, runs
-  entirely client-side, no server/API key. Its actual voice quality varies by visitor's browser/OS
-  (there's no way to guarantee the same voice for everyone), which is the tradeoff against a
-  pre-generated-audio approach — acceptable for a first pass at this feature. Hidden entirely via
-  .post__share-icon[hidden] in browsers without SpeechSynthesis support (very rare today).
+  "Listen" (listen.js) plays a narrated .mp3, generated ahead of time by Piper TTS and committed to
+  the repo (see lib/audio.js, scripts/generate-audio.js) — the same audio for every visitor, played
+  with a plain <audio> element. Nothing about Piper is a reader-side dependency; only whoever
+  generates the audio needs it installed. Opt-in per post (`listen: true` in frontmatter, since a
+  post's narration is a real, committed file — several MB, minutes to generate — not something to
+  turn on for the whole catalog by default) and further gated by the site.listenEnabled kill switch.
+  Hidden entirely via .post__share-icon[hidden] if the audio hasn't been generated for this post yet.
 {%- endcomment -%}
 {%- assign shareUrl = page.url | toAbsoluteUrl -%}
 <div class="post__share">
-  {%- if site.listenEnabled -%}
-  <button type="button" id="listen-button" class="post__share-icon no-icon" title="Listen to this post" aria-label="Listen to this post" hidden>
+  {%- if site.listenEnabled and listen -%}
+  <button
+    type="button"
+    id="listen-button"
+    class="post__share-icon no-icon"
+    title="Listen to this post"
+    aria-label="Listen to this post"
+    data-audio-src="/assets/audio/{{ page.fileSlug }}.mp3"
+    hidden
+  >
     <svg class="listen-icon listen-icon--play" viewBox="0 0 512 512" aria-hidden="true">
       <path d="M0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zM188.3 147.1c-7.6 4.2-12.3 12.3-12.3 20.9l0 176c0 8.7 4.7 16.7 12.3 20.9s16.8 4.1 24.3-.5l144-88c7.1-4.4 11.5-12.1 11.5-20.5s-4.4-16.1-11.5-20.5l-144-88c-7.4-4.5-16.7-4.7-24.3-.5z"></path>
     </svg>

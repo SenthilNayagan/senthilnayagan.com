@@ -170,6 +170,9 @@ export default (eleventyConfig) => {
   eleventyConfig.addPassthroughCopy('src/assets/scripts');
   eleventyConfig.addPassthroughCopy('src/assets/fonts');
   eleventyConfig.addPassthroughCopy('src/assets/giscus-themes');
+  // Narrated .mp3s for the Listen feature — generated ahead of time (see lib/audio.js,
+  // scripts/generate-audio.js) and committed like any other asset, not built by Eleventy itself.
+  eleventyConfig.addPassthroughCopy('src/assets/audio');
   eleventyConfig.addPassthroughCopy('CNAME');
 
   return {

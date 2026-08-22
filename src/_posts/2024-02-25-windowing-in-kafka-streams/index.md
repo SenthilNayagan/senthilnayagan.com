@@ -13,6 +13,7 @@ tags:
   - kafka-streams
   - kafka
   - windowing
+listen: true
 coverImage: ./images/windowing-in-kafka-streams.webp
 imageDescription: >-
   It's a visual metaphor for the nuanced working of Kafka Streams' windowed

@@ -17,6 +17,8 @@
     "build": "npm-run-all clean build:css build:html",
     "build:html": "cross-env ELEVENTY_ENV=production eleventy",
     "build:css": "sass src/assets/styles:_site/assets/styles --style=compressed --no-source-map",
+    "tts:setup": "bash scripts/setup-piper.sh",
+    "tts:generate": "node scripts/generate-audio.js",
     "lint": "npm-run-all lint:*",
     "lint:js": "eslint --cache --fix \"**/*.js\"",
     "lint:css": "stylelint --fix \"src/**/*.scss\"",
