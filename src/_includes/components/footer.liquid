@@ -2,9 +2,7 @@
   <div class="wrapper site-footer__inner">
     <p>&copy; {{ "now" | date: "%Y" }} {{ site.author }}. All rights reserved.</p>
     <ul class="site-footer__links">
-      {%- if site.social.github != "" -%}
-      <li><a href="{{ site.social.github }}" target="_blank" rel="me noopener">GitHub</a></li>
-      {%- endif -%}
+      {%- comment -%}GitHub deliberately excluded here — it's linked from the About Me page instead.{%- endcomment -%}
       {%- if site.social.linkedin != "" -%}
       <li><a href="{{ site.social.linkedin }}" target="_blank" rel="me noopener">LinkedIn</a></li>
       {%- endif -%}
