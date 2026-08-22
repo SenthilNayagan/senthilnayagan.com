@@ -218,22 +218,246 @@ Claude creates one automatically for anything substantial (roughly 15+ lines). I
 
 ## Skills
 
-**Skills** are folders of instructions, scripts, and resources Claude loads on demand for a specific kind of task — expertise packages that teach it how to do something in a repeatable way.
+A **Skill is a reusable package of instructions, resources, and sometimes scripts that teaches Claude how to perform a particular type of task consistently.**
 
-{% include "postImage.html" src: "./images/skills.png", alt: "Skills as folders of instructions Claude loads on demand", description: "<b>Figure 9: </b>A skill is expertise packaged as a folder — loaded on demand for the task at hand." %}
+A simple way to think about a Skill is as a **playbook for Claude**.
 
-- **Anthropic Skills** — built-in, covering things like Excel, Word, PowerPoint, and PDF creation. Claude invokes these automatically; we don't need to do anything.
-- **Custom Skills** — ones we (or our org) build for a specific workflow, like applying brand guidelines to a deck or running a particular data analysis process the same way every time.
+For example, we might create Skills for:
 
-Available on Pro, Max, Team, and Enterprise plans, under **Settings → Capabilities**, once code execution is enabled.
+* Creating presentations using our company guidelines
+* Analyzing Excel files using our standard approach
+* Reviewing pull requests according to our engineering standards
+* Generating API documentation using our templates
+* Performing a specific data analysis workflow
 
-<details>
-  <summary>More on how Skills actually work</summary>
-  <p>A Skill is just a folder with a <code>SKILL.md</code> file at its root — YAML frontmatter (name, description) followed by markdown instructions, plus whatever supporting files it needs (scripts, templates, reference docs).</p>
-  <p>Claude doesn't load the whole thing upfront. It's <strong>progressive disclosure</strong>: only the short frontmatter description sits in context by default, and the full instructions only get read in once Claude decides the skill is actually relevant to what we're doing — the same reason a hundred installed Skills don't quietly eat our context window before we've used any of them.</p>
-  <p>A Skill's frontmatter can also set <code>allowed-tools</code>, restricting which tools Claude is permitted to use while that Skill is active — a guardrail worth having for Skills we didn't write ourselves. And Skills can bundle actual scripts: deterministic code that runs and returns a result, without the script's own internal logic burning through the model's context the way describing the same steps in prose would.</p>
-  <p>Beyond the built-in Anthropic Skills, custom ones are shareable — via a git repo, a plugin, or centrally through enterprise-managed settings, so an org can standardize which Skills are available across every team's Claude Code setup.</p>
-</details>
+The key point is that **Skills are not limited to coding or PR reviews**. We can create a Skill for any repeatable workflow where we want Claude to follow a specific process, use specific resources, or produce a specific type of output.
+
+### Why do we need Skills?
+
+If we repeatedly ask Claude to perform the same type of work, we often have to repeat the same instructions.
+
+For example:
+
+> “When creating a presentation, use our standard structure, terminology, branding guidelines, and approved messaging.”
+
+Instead of providing these instructions every time, we can put them into a **Presentation Skill** once.
+
+Later, when we ask:
+
+> “Create a presentation summarizing our quarterly results.”
+
+Claude can recognize that the Presentation Skill is relevant and apply those instructions.
+
+So the basic idea is:
+
+**Teach once → Reuse whenever relevant**
+
+### What does a Skill contain?
+
+A Skill is essentially a **folder containing a `SKILL.md` file and any supporting resources**.
+
+For example:
+
+```text
+presentation-skill/
+├── SKILL.md
+├── brand-guidelines.md
+├── presentation-template.pptx
+└── examples/
+    └── example-deck.pptx
+```
+
+`SKILL.md` contains the main instructions for the Skill. The folder can also contain:
+
+* Reference documents
+* Templates
+* Examples
+* Scripts
+* Configuration files
+
+Therefore, a Skill is more than just a prompt. It packages the **instructions and resources needed to perform a particular workflow**.
+
+
+### How does Claude know when to use a Skill?
+
+Each Skill has a short **name and description** in the frontmatter of `SKILL.md`.
+
+For example:
+
+```yaml
+---
+name: Presentation Creation
+description: Create presentations using our approved structure,
+terminology, branding, and templates.
+---
+```
+
+When we give Claude a request, Claude can compare the request with the descriptions of the available Skills.
+
+If we ask:
+
+> “Create a presentation explaining our new product.”
+
+Claude can recognize that the **Presentation Creation Skill** is relevant and load its detailed instructions.
+
+### Skills are loaded on demand
+
+Claude does not load the complete instructions for every available Skill into every conversation.
+
+This is important when we have many Skills installed.
+
+The simplified flow is:
+
+```text
+Our request
+    │
+    ▼
+Claude checks available Skill descriptions
+    │
+    ▼
+Is a Skill relevant?
+    │
+    ├── No ──► Continue normally
+    │
+    └── Yes
+          │
+          ▼
+    Load detailed instructions
+          │
+          ▼
+    Perform the task using the Skill
+```
+
+This approach is often called **progressive disclosure**: only the detailed information needed for the current task is loaded.
+
+### Skills can contain scripts
+
+A Skill can contain executable scripts in addition to instructions.
+
+For example:
+
+```text
+data-analysis/
+├── SKILL.md
+├── analysis-guidelines.md
+└── scripts/
+    └── calculate_metrics.py
+```
+
+`SKILL.md` can describe the analysis process, while the Python script can perform calculations deterministically.
+
+This is useful because Claude can use actual code for tasks where deterministic execution is preferable to reproducing the logic through natural-language reasoning.
+
+### Skills can provide guardrails
+
+A Skill can also specify which tools Claude is allowed to use while the Skill is active.
+
+For example, a Skill might allow Claude to read files and run a specific analysis script, while preventing other actions.
+
+This gives us an additional level of control, especially when using Skills created by others.
+
+### Built-in and Custom Skills
+
+There are two broad types of Skills.
+
+#### Built-in Skills
+
+Anthropic provides Skills for common tasks such as:
+
+* Excel
+* Word
+* PowerPoint
+* PDF
+
+Claude can use these when appropriate without us having to create them.
+
+#### Custom Skills
+
+We can create our own Skills for workflows specific to us, our team, or our organization.
+
+Examples include:
+
+* **Presentation Skill** — follow our company presentation guidelines
+* **PR Review Skill** — review code using our engineering standards
+* **Data Analysis Skill** — follow our standard analysis methodology
+* **API Documentation Skill** — use our documentation structure and templates
+
+### Where do Skills live?
+
+#### Personal Skills
+
+Personal Skills can be stored under:
+
+```text
+~/.claude/skills
+```
+
+These can be used across our projects.
+
+#### Project Skills
+
+Project-specific Skills can be stored under:
+
+```text
+.claude/skills
+```
+
+inside the repository.
+
+Because project Skills can be committed to the repository, they can be shared with the rest of the team.
+
+### Skills can be shared
+
+Custom Skills can be distributed through mechanisms such as:
+
+* Git repositories
+* Plugins
+* Enterprise-managed configurations
+
+This allows an organization to create standard Skills and make them available across teams.
+
+For example:
+
+```text
+              Company Skills
+                    │
+       ┌────────────┼────────────┐
+       ▼            ▼            ▼
+   Development   Analytics    Business
+       │            │            │
+   PR Review    Data Analysis  Presentation
+   Security     Reporting      Documentation
+```
+
+Everyone can then follow the same predefined workflows instead of maintaining separate instructions.
+
+## Skills vs. CLAUDE.md vs. Slash Commands
+
+These three mechanisms serve different purposes:
+
+|                | CLAUDE.md                         | Slash Command                | Skill                                 |
+| -------------- | --------------------------------- | ---------------------------- | ------------------------------------- |
+| **Purpose**    | General rules and context         | Explicitly request an action | Reusable expertise/workflow           |
+| **Activation** | Available as project/user context | We invoke it explicitly      | Claude recognizes when it is relevant |
+| **Example**    | “Our project uses Python 3.12.”   | `/review-pr`                 | “Use our standard PR review process.” |
+
+A simple mental model:
+
+> **CLAUDE.md → “These are the general rules Claude should know.”**
+
+> **Slash Command → “Explicitly perform this action.”**
+
+> **Skill → “Use this playbook when this type of work comes up.”**
+
+### The key idea
+
+The simplest way to remember Skills is:
+
+> **A Skill teaches Claude a repeatable process once, so we don't have to explain the same process every time.**
+
+If we repeatedly find ourselves telling Claude **how** to perform a particular type of task, that process is a good candidate for a Skill.
+
+**Teach once → Reuse automatically when relevant.**
 
 ## Enterprise Search
 
