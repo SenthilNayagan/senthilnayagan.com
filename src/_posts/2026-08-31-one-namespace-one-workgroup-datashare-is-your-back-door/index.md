@@ -19,10 +19,9 @@ tags:
   - data-engineering
   - datashare
   - redshift-serverless
-# coverImage: ./images/cover-image.png — add once the cover art is ready, then create the images/
-# folder next to this file (matches this site's other posts' convention).
-# imageDescription: ''
-# imageCredits: ''
+coverImage: ./images/cover-image.png
+imageDescription: 'One Namespace, One Workgroup: Datashare Is Our Back Door'
+# imageCredits: 'Generated using ChatGPT'
 featured: true
 draft: true
 ---
@@ -37,7 +36,7 @@ This post is **not** a Redshift A-to-Z. This post deliberately focuses on **one 
 
 This post has exactly one job: to explain a very specific, very common moment of confusion in **Amazon Redshift Serverless**:
 
-> **“I already have a Redshift Serverless workgroup attached to a namespace. I want another isolated workgroup with its own compute capacity, but I still want that new workload to query and JOIN the existing data. Can I attach the new workgroup to the same namespace?”**
+> **“We already have a Redshift Serverless workgroup attached to a namespace. We want another isolated workgroup with its own compute capacity, but we still want that new workload to query and JOIN the existing data. Can we attach the new workgroup to the same namespace?”**
 
 The short answer is:
 
@@ -45,7 +44,7 @@ The short answer is:
 
 But there is a very useful second question:
 
-> **“If I cannot attach two workgroups to one namespace, how can the second workgroup access the first namespace's data without copying everything?”**
+> **“If we cannot attach two workgroups to one namespace, how can the second workgroup access the first namespace's data without copying everything?”**
 
 That's where **Amazon Redshift Datashare** enters the story.
 
@@ -54,7 +53,7 @@ That's the whole post. We'll cover:
 1. What a **namespace** is.
 2. What a **workgroup** is.
 3. Why the namespace/workgroup relationship matters.
-4. Why you cannot attach a second workgroup to the existing namespace.
+4. Why we cannot attach a second workgroup to the existing namespace.
 5. Why **Datashare** exists, and what problem it's actually solving.
 6. How a **producer namespace** and **consumer namespace** work.
 7. How the consumer workgroup can query and JOIN shared tables.
@@ -115,7 +114,7 @@ In short: the namespace *is* our data estate. It answers the question **"what da
 
 In other words: We can think of it as:
 
-> **“This is where my Redshift data lives.”**
+> **“This is where our Redshift data lives.”**
 
 ---
 
@@ -128,7 +127,7 @@ A **workgroup** is where the compute side of Redshift Serverless comes into play
 - The **query endpoint** our applications and BI tools connect to
 - Usage limits and query queue configuration
 
-In short: The workgroup is simply your compute unit. **It defines our processing power and the network path to access it**.
+In short: The workgroup is simply our compute unit. **It defines our processing power and the network path to access it**.
 
 That's it. That's the whole primer. Now let's get to the actual drama.
 
@@ -148,7 +147,7 @@ We already have a namespace — let's call it `analytics-ns` — happily paired 
 
 Then a new team shows up — say, the **fraud detection** team. They need their own compute so their heavy queries don't compete with (or accidentally throttle) the analytics team's dashboards. Totally reasonable ask. So we think:
 
-> "Easy — I'll just spin up a new workgroup, `fraud-wg`, and point it at the *existing* `analytics-ns` namespace. Same data, dedicated compute. Done!"
+> "Easy — we'll just spin up a new workgroup, `fraud-wg`, and point it at the *existing* `analytics-ns` namespace. Same data, dedicated compute. Done!"
 
 And Redshift Serverless says: **absolutely not.**
 
@@ -174,7 +173,7 @@ And Redshift Serverless says: **absolutely not.**
   <figcaption>Figure 2: One namespace, one partner — analytics-ns is already paired; fraud-wg can't attach to it too.</figcaption>
 </div>
 
-We cannot attach a second workgroup to a namespace that already has one. If you want `fraud-wg` to exist as an *isolated* workgroup, it needs its **own** namespace — let's call it `fraud-ns`.
+We cannot attach a second workgroup to a namespace that already has one. If we want `fraud-wg` to exist as an *isolated* workgroup, it needs its **own** namespace — let's call it `fraud-ns`.
 
 ---
 
@@ -443,57 +442,343 @@ This is genuinely the elegant part of the design: **Datashare decouples "who own
 
 # 4. The Back Door: Sharing Data Without Sharing the Workgroup
 
-Let's make this concrete with the setup described above: an existing `analytics-ns` / `analytics-wg` pair, and a new, isolated `fraud-ns` / `fraud-wg` pair that needs read access to a couple of tables.
+Now let's stop talking about architecture diagrams and actually build the thing.
 
-### Step 1 — Create the Datashare on the Producer Side
+Our scenario is simple.
 
-On `analytics-ns`, connected via `analytics-wg`:
+We already have:
+
+<div class="diagram">
+  <svg viewBox="0 0 400 260" role="img" aria-labelledby="ns10-title ns10-desc">
+    <title id="ns10-title">What we already have: analytics-ns through analytics-wg to its tables</title>
+    <desc id="ns10-desc">analytics-ns points down to analytics-wg, running 24 RPU, which points down to the customers and transactions tables.</desc>
+    <defs>
+      <marker id="va-arrow-10" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M0 0 L10 5 L0 10 Z" fill="var(--color-text)"></path>
+      </marker>
+    </defs>
+    <rect x="80" y="20" width="240" height="46" rx="8" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"></rect>
+    <text x="200" y="48" text-anchor="middle" fill="var(--color-text)" font-size="13" font-weight="700">analytics-ns</text>
+    <line x1="200" y1="66" x2="200" y2="91" stroke="var(--color-text)" stroke-width="2" marker-end="url(#va-arrow-10)"></line>
+    <rect x="80" y="94" width="240" height="60" rx="8" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"></rect>
+    <text x="200" y="118" text-anchor="middle" fill="var(--color-text)" font-size="13" font-weight="700">analytics-wg</text>
+    <text x="200" y="138" text-anchor="middle" fill="var(--color-text-secondary)" font-size="11">24 RPU</text>
+    <line x1="200" y1="154" x2="200" y2="179" stroke="var(--color-text)" stroke-width="2" marker-end="url(#va-arrow-10)"></line>
+    <rect x="80" y="182" width="240" height="60" rx="8" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"></rect>
+    <text x="200" y="208" text-anchor="middle" fill="var(--color-text-secondary)" font-size="11">customers</text>
+    <text x="200" y="226" text-anchor="middle" fill="var(--color-text-secondary)" font-size="11">transactions</text>
+  </svg>
+  <figcaption>Figure 9: What we already have — analytics-ns, its workgroup, and the tables it owns.</figcaption>
+</div>
+
+And we want a **completely separate compute environment** for our fraud detection workload:
+
+<div class="diagram">
+  <svg viewBox="0 0 400 180" role="img" aria-labelledby="ns11-title ns11-desc">
+    <title id="ns11-title">What we want: a new fraud-ns paired with its own fraud-wg</title>
+    <desc id="ns11-desc">fraud-ns points down to fraud-wg, running 32 RPU.</desc>
+    <defs>
+      <marker id="va-arrow-11" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M0 0 L10 5 L0 10 Z" fill="var(--color-text)"></path>
+      </marker>
+    </defs>
+    <rect x="80" y="20" width="240" height="46" rx="8" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"></rect>
+    <text x="200" y="48" text-anchor="middle" fill="var(--color-text)" font-size="13" font-weight="700">fraud-ns</text>
+    <line x1="200" y1="66" x2="200" y2="91" stroke="var(--color-text)" stroke-width="2" marker-end="url(#va-arrow-11)"></line>
+    <rect x="80" y="94" width="240" height="60" rx="8" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"></rect>
+    <text x="200" y="118" text-anchor="middle" fill="var(--color-text)" font-size="13" font-weight="700">fraud-wg</text>
+    <text x="200" y="138" text-anchor="middle" fill="var(--color-text-secondary)" font-size="11">32 RPU</text>
+  </svg>
+  <figcaption>Figure 10: What we want — a brand-new fraud-ns / fraud-wg pair, fully isolated.</figcaption>
+</div>
+
+The catch?
+
+Our fraud workload still needs to read some of the data owned by `analytics-ns`.
+
+We can't attach `fraud-wg` to `analytics-ns`.
+
+So instead, we create a second namespace/workgroup pair and use **Datashare as the bridge**.
+
+Here's what we're about to build:
+
+<div class="diagram">
+  <svg viewBox="0 0 480 390" role="img" aria-labelledby="ns12-title ns12-desc">
+    <title id="ns12-title">The full producer/consumer datashare we're about to build</title>
+    <desc id="ns12-desc">A producer box containing analytics-ns, its workgroup analytics-wg at 24 RPU, and the shared tables public.customers and public.transactions. A Datashare arrow points down to a consumer box containing fraud-ns, its workgroup fraud-wg at 32 RPU, and its own fraud_detection.suspicious_activity table.</desc>
+    <defs>
+      <marker id="va-arrow-12" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M0 0 L10 5 L0 10 Z" fill="var(--color-text)"></path>
+      </marker>
+    </defs>
+    <rect x="40" y="20" width="400" height="150" rx="8" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"></rect>
+    <text x="240" y="40" text-anchor="middle" fill="var(--color-text-secondary)" font-size="11" font-weight="700">PRODUCER</text>
+    <text x="240" y="64" text-anchor="middle" fill="var(--color-text)" font-size="15" font-weight="700">analytics-ns</text>
+    <text x="240" y="84" text-anchor="middle" fill="var(--color-text-secondary)" font-size="13">analytics-wg · 24 RPU</text>
+    <text x="240" y="112" text-anchor="middle" fill="var(--color-text-secondary)" font-size="13">public.customers</text>
+    <text x="240" y="130" text-anchor="middle" fill="var(--color-text-secondary)" font-size="13">public.transactions</text>
+    <line x1="240" y1="175" x2="240" y2="225" stroke="var(--color-text)" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#va-arrow-12)"></line>
+    <text x="255" y="203" fill="var(--color-text)" font-size="13" font-weight="700">Datashare</text>
+    <rect x="40" y="230" width="400" height="140" rx="8" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"></rect>
+    <text x="240" y="250" text-anchor="middle" fill="var(--color-text-secondary)" font-size="11" font-weight="700">CONSUMER</text>
+    <text x="240" y="274" text-anchor="middle" fill="var(--color-text)" font-size="15" font-weight="700">fraud-ns</text>
+    <text x="240" y="294" text-anchor="middle" fill="var(--color-text-secondary)" font-size="13">fraud-wg · 32 RPU</text>
+    <text x="240" y="322" text-anchor="middle" fill="var(--color-text-secondary)" font-size="13">fraud_detection.suspicious_activity</text>
+    <text x="240" y="340" text-anchor="middle" fill="var(--color-text-secondary)" font-size="13">+ shared: customers, transactions</text>
+  </svg>
+  <figcaption>Figure 11: What we're about to build — a producer/consumer datashare between analytics-ns and fraud-ns.</figcaption>
+</div>
+
+Let's open the back door.
+
+## Step 1 — Create the Datashare
+
+First, we connect to the **producer namespace**, `analytics-ns`, through `analytics-wg`.
+
+We create the datashare:
 
 ```sql
--- Create the datashare object
 CREATE DATASHARE fraud_share;
+```
 
--- Add the specific schema and tables we want to expose
+Next, we decide exactly what our fraud workload needs to access.
+
+In our example, that's just two tables:
+
+```sql
 ALTER DATASHARE fraud_share ADD SCHEMA public;
+
 ALTER DATASHARE fraud_share ADD TABLE public.customers;
+
 ALTER DATASHARE fraud_share ADD TABLE public.transactions;
 ```
 
-Notice how specific this is — we are not exposing the whole namespace. we're handing over exactly two tables, nothing more. That's the governance model working as intended.
+That's an important detail.
 
-### Step 2 — Grant Access to the Consumer Namespace
+We're not throwing open the entire namespace and shouting, *“Come on in, everybody!”*
+
+We're explicitly choosing which objects cross the boundary.
+
+<div class="diagram">
+  <svg viewBox="0 0 460 200" role="img" aria-labelledby="ns13-title ns13-desc">
+    <title id="ns13-title">Only two tables in analytics-ns are actually shared</title>
+    <desc id="ns13-desc">analytics-ns branches into five objects. public.customers and public.transactions are marked shared. internal.audit_log, staging.raw_events, and admin.etl_control are marked not shared.</desc>
+    <rect x="140" y="15" width="180" height="44" rx="8" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"></rect>
+    <text x="230" y="42" text-anchor="middle" fill="var(--color-text)" font-size="13" font-weight="700">analytics-ns</text>
+    <line x1="230" y1="59" x2="230" y2="170" stroke="var(--color-text-secondary)" stroke-width="1.5"></line>
+    <text x="278" y="72" fill="var(--color-text-secondary)" font-size="10" font-weight="700">SHARED</text>
+    <line x1="230" y1="82" x2="270" y2="82" stroke="var(--color-text)" stroke-width="1.5"></line>
+    <text x="278" y="86" fill="var(--color-text)" font-size="11" font-weight="700">public.customers</text>
+    <line x1="230" y1="100" x2="270" y2="100" stroke="var(--color-text)" stroke-width="1.5"></line>
+    <text x="278" y="104" fill="var(--color-text)" font-size="11" font-weight="700">public.transactions</text>
+    <text x="278" y="122" fill="var(--color-text-secondary)" font-size="10" font-weight="700">NOT SHARED</text>
+    <line x1="230" y1="132" x2="270" y2="132" stroke="var(--color-text-secondary)" stroke-width="1.5"></line>
+    <text x="278" y="136" fill="var(--color-text-secondary)" font-size="11">internal.audit_log</text>
+    <line x1="230" y1="150" x2="270" y2="150" stroke="var(--color-text-secondary)" stroke-width="1.5"></line>
+    <text x="278" y="154" fill="var(--color-text-secondary)" font-size="11">staging.raw_events</text>
+    <line x1="230" y1="170" x2="270" y2="170" stroke="var(--color-text-secondary)" stroke-width="1.5"></line>
+    <text x="278" y="174" fill="var(--color-text-secondary)" font-size="11">admin.etl_control</text>
+  </svg>
+  <figcaption>Figure 12: The datashare only exposes what's explicitly added — everything else in analytics-ns stays private.</figcaption>
+</div>
+
+The producer remains the owner of the original data.
+
+The datashare simply defines what we're willing to expose.
+
+---
+
+## Step 2 — Give the Consumer an Invitation
+
+Creating the datashare isn't enough. We also need to tell Redshift **which namespace is allowed to consume it**.
 
 Still on `analytics-ns`:
 
 ```sql
-GRANT USAGE ON DATASHARE fraud_share TO NAMESPACE 'fraud-ns-namespace-id';
+GRANT USAGE ON DATASHARE fraud_share
+TO NAMESPACE 'fraud-ns-namespace-id';
 ```
 
-This is the "visiting rights" handshake — you're explicitly naming the one namespace allowed to consume this share. Nobody else gets in.
+Think of this as the guest-list check.
 
-### Step 3 — Consume the Datashare on the Fraud Side
+<div class="diagram">
+  <svg viewBox="0 0 420 270" role="img" aria-labelledby="ns14-title ns14-desc">
+    <title id="ns14-title">Granting usage on the datashare to the consumer namespace</title>
+    <desc id="ns14-desc">analytics-ns points down to fraud_share, which points down to fraud-ns, labeled fraud-ns is allowed in.</desc>
+    <defs>
+      <marker id="va-arrow-14" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M0 0 L10 5 L0 10 Z" fill="var(--color-text)"></path>
+      </marker>
+    </defs>
+    <rect x="110" y="20" width="200" height="44" rx="8" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"></rect>
+    <text x="210" y="47" text-anchor="middle" fill="var(--color-text)" font-size="13" font-weight="700">analytics-ns</text>
+    <line x1="210" y1="64" x2="210" y2="89" stroke="var(--color-text)" stroke-width="2" marker-end="url(#va-arrow-14)"></line>
+    <rect x="110" y="92" width="200" height="44" rx="8" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"></rect>
+    <text x="210" y="119" text-anchor="middle" fill="var(--color-text)" font-size="13" font-weight="700">fraud_share</text>
+    <line x1="210" y1="136" x2="210" y2="196" stroke="var(--color-text)" stroke-width="2" marker-end="url(#va-arrow-14)"></line>
+    <text x="225" y="169" fill="var(--color-text-secondary)" font-size="11">&quot;fraud-ns is allowed in&quot;</text>
+    <rect x="110" y="200" width="200" height="44" rx="8" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"></rect>
+    <text x="210" y="227" text-anchor="middle" fill="var(--color-text)" font-size="13" font-weight="700">fraud-ns</text>
+  </svg>
+  <figcaption>Figure 13: Granting usage on the datashare is the guest-list check — only fraud-ns gets in.</figcaption>
+</div>
 
-Now switch over to `fraud-ns`, connected via `fraud-wg`, and create a local database pointing at the share:
+We're not giving the entire Redshift universe access to the share. We're explicitly granting our consumer namespace access.
+
+---
+
+## Step 3 — The Consumer Accepts the Share
+
+Now we switch sides.
+
+We connect to the **consumer namespace**, `fraud-ns`, through its own workgroup, `fraud-wg`.
+
+We create a database from the datashare:
 
 ```sql
-CREATE DATABASE analytics_shared FROM DATASHARE fraud_share
-  OF NAMESPACE 'analytics-ns-namespace-id';
+CREATE DATABASE analytics_shared
+FROM DATASHARE fraud_share
+OF NAMESPACE 'analytics-ns-namespace-id';
 ```
 
-### Step 4 — Just... Query It
+And just like that, the shared data becomes available from the consumer side.
 
-From this point on, the fraud team can do this, straight from their own workgroup:
+Conceptually, `fraud-ns` now has something like:
+
+<div class="diagram">
+  <svg viewBox="0 0 460 180" role="img" aria-labelledby="ns15-title ns15-desc">
+    <title id="ns15-title">fraud-ns after accepting the datashare</title>
+    <desc id="ns15-desc">fraud-ns branches into its own native table, suspicious_activity, and a shared group giving access to public.customers and public.transactions via the datashare.</desc>
+    <rect x="140" y="15" width="180" height="44" rx="8" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"></rect>
+    <text x="230" y="42" text-anchor="middle" fill="var(--color-text)" font-size="13" font-weight="700">fraud-ns</text>
+    <line x1="230" y1="59" x2="230" y2="146" stroke="var(--color-text-secondary)" stroke-width="1.5"></line>
+    <text x="278" y="72" fill="var(--color-text-secondary)" font-size="10" font-weight="700">OWN TABLE</text>
+    <line x1="230" y1="82" x2="270" y2="82" stroke="var(--color-text)" stroke-width="1.5"></line>
+    <text x="278" y="86" fill="var(--color-text)" font-size="11" font-weight="700">suspicious_activity</text>
+    <text x="278" y="108" fill="var(--color-text-secondary)" font-size="10" font-weight="700">SHARED VIA DATASHARE</text>
+    <line x1="230" y1="118" x2="270" y2="118" stroke="var(--color-text-secondary)" stroke-width="1.5"></line>
+    <text x="278" y="122" fill="var(--color-text-secondary)" font-size="11">public.customers</text>
+    <line x1="230" y1="146" x2="270" y2="146" stroke="var(--color-text-secondary)" stroke-width="1.5"></line>
+    <text x="278" y="150" fill="var(--color-text-secondary)" font-size="11">public.transactions</text>
+  </svg>
+  <figcaption>Figure 14: From fraud-ns, the native suspicious_activity table sits alongside the shared analytics data.</figcaption>
+</div>
+
+Notice what happened.
+
+We didn't create another copy of the `customers` table just so our fraud workload could read it.
+
+We're accessing the data owned by the producer through the share.
+
+---
+
+## Step 4 — Now Let's Do Something Useful With It
+
+This is where the whole architecture starts to pay off.
+
+Suppose our fraud namespace has its own table:
+
+```text
+fraud_detection.suspicious_activity
+```
+
+It contains:
+
+```text
+transaction_id
+customer_id
+flag_reason
+```
+
+Meanwhile, the producer owns:
+
+```text
+public.customers
+```
+
+with:
+
+```text
+customer_id
+customer_name
+risk_score
+```
+
+Our fraud workload can now combine the two:
 
 ```sql
-SELECT f.transaction_id, f.flag_reason, c.customer_name, c.risk_score
+SELECT
+    f.transaction_id,
+    f.flag_reason,
+    c.customer_name,
+    c.risk_score
 FROM fraud_detection.suspicious_activity f
 JOIN analytics_shared.public.customers c
-  ON f.customer_id = c.customer_id;
+    ON f.customer_id = c.customer_id;
 ```
 
-Look closely at that JOIN. One side (`fraud_detection.suspicious_activity`) lives natively in `fraud-ns`. The other side (`analytics_shared.public.customers`) is *shared-in* data physically owned by `analytics-ns`. The query runs entirely on `fraud-wg`'s own RPUs. `analytics-wg` never even knows this query happened.
+And this is the moment to pause and appreciate what's happening.
 
-That's the whole trick. Isolated compute, isolated blast radius, isolated billing — with a clean, governed, live window into someone else's data.
+One side of the JOIN is **native data in `fraud-ns`**.
+
+The other side is **shared data owned by `analytics-ns`**.
+
+Yet the query is submitted through:
+
+```text
+fraud-wg
+```
+
+and uses the consumer workgroup's compute environment.
+
+The producer doesn't need to become the fraud team's compute engine.
+
+The fraud workload doesn't need a second copy of the producer's entire dataset.
+
+We have effectively achieved:
+
+<div class="diagram">
+  <svg viewBox="0 0 460 300" role="img" aria-labelledby="ns16-title ns16-desc">
+    <title id="ns16-title">Data ownership and compute ownership, joined only by the datashare</title>
+    <desc id="ns16-desc">On the left, data ownership: analytics-ns down to the customers and transactions tables. On the right, compute ownership: fraud-ns down to fraud-wg at 32 RPU. Both converge through the datashare into a single query and JOIN.</desc>
+    <defs>
+      <marker id="va-arrow-16" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M0 0 L10 5 L0 10 Z" fill="var(--color-text)"></path>
+      </marker>
+    </defs>
+    <text x="115" y="18" text-anchor="middle" fill="var(--color-text-secondary)" font-size="11" font-weight="700">DATA OWNERSHIP</text>
+    <text x="345" y="18" text-anchor="middle" fill="var(--color-text-secondary)" font-size="11" font-weight="700">COMPUTE OWNERSHIP</text>
+    <rect x="25" y="28" width="180" height="44" rx="8" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"></rect>
+    <text x="115" y="55" text-anchor="middle" fill="var(--color-text)" font-size="13" font-weight="700">analytics-ns</text>
+    <line x1="115" y1="72" x2="115" y2="97" stroke="var(--color-text)" stroke-width="2" marker-end="url(#va-arrow-16)"></line>
+    <rect x="25" y="100" width="180" height="60" rx="8" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"></rect>
+    <text x="115" y="124" text-anchor="middle" fill="var(--color-text-secondary)" font-size="11">customers table</text>
+    <text x="115" y="142" text-anchor="middle" fill="var(--color-text-secondary)" font-size="11">transactions table</text>
+    <rect x="255" y="28" width="180" height="44" rx="8" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"></rect>
+    <text x="345" y="55" text-anchor="middle" fill="var(--color-text)" font-size="13" font-weight="700">fraud-ns</text>
+    <line x1="345" y1="72" x2="345" y2="97" stroke="var(--color-text)" stroke-width="2" marker-end="url(#va-arrow-16)"></line>
+    <rect x="255" y="100" width="180" height="60" rx="8" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"></rect>
+    <text x="345" y="124" text-anchor="middle" fill="var(--color-text)" font-size="13" font-weight="700">fraud-wg</text>
+    <text x="345" y="142" text-anchor="middle" fill="var(--color-text-secondary)" font-size="11">32 RPU</text>
+    <line x1="115" y1="165" x2="230" y2="195" stroke="var(--color-text-secondary)" stroke-width="1.5"></line>
+    <line x1="345" y1="165" x2="230" y2="195" stroke="var(--color-text-secondary)" stroke-width="1.5"></line>
+    <text x="245" y="210" fill="var(--color-text)" font-size="13" font-weight="700">Datashare</text>
+    <line x1="230" y1="197" x2="230" y2="242" stroke="var(--color-text)" stroke-width="2" marker-end="url(#va-arrow-16)"></line>
+    <rect x="140" y="245" width="180" height="44" rx="8" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"></rect>
+    <text x="230" y="272" text-anchor="middle" fill="var(--color-text)" font-size="13" font-weight="700">Query + JOIN</text>
+  </svg>
+  <figcaption>Figure 15: Data ownership stays with analytics-ns; compute ownership stays with fraud-wg — Datashare is the only bridge.</figcaption>
+</div>
+
+**That's the back door.**
+
+We're respecting Redshift Serverless's 1:1 namespace/workgroup model instead of trying to work around it.
+
+The second workgroup gets its own compute environment.
+
+The producer keeps ownership of the original data.
+
+And Datashare provides the controlled path between them.
 
 ---
 
