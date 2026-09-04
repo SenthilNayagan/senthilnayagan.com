@@ -1,5 +1,5 @@
 ---
-title: 'One Namespace, One Workgroup: Datashare Is Our Back Door'
+title: "One Namespace, One Workgroup: Datashare Is Redshift Serverless's Back Door"
 description: >-
   Want a second Redshift Serverless workgroup for isolated compute? We
   can't attach it to the same namespace—the relationship is 1:1. But
@@ -20,7 +20,7 @@ tags:
   - datashare
   - redshift-serverless
 coverImage: ./images/cover-image.png
-imageDescription: 'One Namespace, One Workgroup: Datashare Is Our Back Door'
+imageDescription: "One Namespace, One Workgroup: Datashare Is Redshift Serverless's Back Door"
 # imageCredits: 'Generated using ChatGPT'
 featured: true
 draft: true
