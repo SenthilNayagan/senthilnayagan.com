@@ -23,10 +23,10 @@ scripts:
         {% include "components/breadcrumb.liquid" currentLabel: title %}
         <div class="post__meta">
           <time datetime="{{ page.date | machineDate }}">{{ page.date | readableDate }}</time>
-          <span aria-hidden="true">&middot;</span>
+          <span class="meta-dot" aria-hidden="true">&middot;</span>
           <span>{{ content | readingTime }} min read</span>
           {%- if lastUpdated -%}
-          <span aria-hidden="true">&middot;</span>
+          <span class="meta-dot" aria-hidden="true">&middot;</span>
           <span>Updated {{ lastUpdated | readableDate }}</span>
           {%- endif -%}
         </div>

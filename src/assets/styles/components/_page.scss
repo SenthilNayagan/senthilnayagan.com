@@ -332,25 +332,27 @@
   padding: 0;
   margin: 0;
   font-size: 0.875rem;
-  color: var(--color-text-secondary);
+  color: var(--color-text);
 }
 
+// Full-strength text color (not --color-text-secondary) for the linked crumbs too — at this small
+// font size the muted secondary color read as too faint, in both light and dark mode.
 .breadcrumb__item a {
-  color: var(--color-text-secondary);
+  color: var(--color-text);
   text-decoration: none;
 }
 
 .breadcrumb__item a:hover,
 .breadcrumb__item a:focus-visible {
-  color: var(--color-text);
   text-decoration: underline;
 }
 
-// "/" separator before every crumb except the first ("Blog").
+// "/" separator before every crumb except the first ("Blog") — kept muted so it recedes behind the
+// now-darker crumb text instead of competing with it.
 .breadcrumb__item + .breadcrumb__item::before {
   content: '/';
   margin-right: 0.375rem;
-  color: var(--color-border);
+  color: var(--color-text-secondary);
 }
 
 .breadcrumb__item--current {
@@ -359,6 +361,16 @@
 
 .post__title {
   margin-bottom: 0.75rem;
+}
+
+// The middle-dot separator between meta items (date · reading time [· updated]) — used here and in
+// .post-preview__meta below — renders noticeably smaller than the surrounding text at the same
+// font-size, since U+00B7 is a small glyph in most fonts. Sized up on its own so it reads as a
+// clear separator instead of a faint speck; line-height: 1 keeps the bigger glyph from adding extra
+// height to the flex row it sits in.
+.meta-dot {
+  font-size: 2.25em;
+  line-height: 1;
 }
 
 .post__meta {
