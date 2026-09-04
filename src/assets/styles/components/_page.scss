@@ -316,6 +316,47 @@
   margin-bottom: 2rem;
 }
 
+// "Blog / Category / Subcategory / Post title" trail — shown above the post title (and, on a
+// category archive page, above its own <h1>) whenever the post has a category, i.e. lives in a
+// subfolder under src/_posts/. Renders nothing otherwise (see components/breadcrumb.liquid).
+.breadcrumb {
+  margin-bottom: 1rem;
+}
+
+.breadcrumb__list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.375rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--color-text-secondary);
+}
+
+.breadcrumb__item a {
+  color: var(--color-text-secondary);
+  text-decoration: none;
+}
+
+.breadcrumb__item a:hover,
+.breadcrumb__item a:focus-visible {
+  color: var(--color-text);
+  text-decoration: underline;
+}
+
+// "/" separator before every crumb except the first ("Blog").
+.breadcrumb__item + .breadcrumb__item::before {
+  content: '/';
+  margin-right: 0.375rem;
+  color: var(--color-border);
+}
+
+.breadcrumb__item--current {
+  color: var(--color-text);
+}
+
 .post__title {
   margin-bottom: 0.75rem;
 }

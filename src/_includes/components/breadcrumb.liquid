@@ -1,0 +1,30 @@
+{%- comment -%}
+  Renders "Blog / Category / Subcategory / <current>" from `category` (an array of path segments,
+  e.g. ["Programming", "Rust"]) already in scope from the including page. Pass `currentLabel` for a
+  trailing unlinked crumb (a post's title); omit it on a category archive page itself, where the
+  last category segment is the unlinked "current" crumb instead. Renders nothing for posts with no
+  category (i.e. still directly under src/_posts/).
+{%- endcomment -%}
+{%- if category and category.size > 0 -%}
+<nav class="breadcrumb" aria-label="Breadcrumb">
+  <ol class="breadcrumb__list">
+    <li class="breadcrumb__item"><a href="/blog/">Blog</a></li>
+    {%- assign cumulative = "" -%}
+    {%- for segment in category -%}
+      {%- if forloop.first -%}
+        {%- assign cumulative = segment -%}
+      {%- else -%}
+        {%- assign cumulative = cumulative | append: "/" | append: segment -%}
+      {%- endif -%}
+      {%- if forloop.last and currentLabel == blank -%}
+    <li class="breadcrumb__item breadcrumb__item--current" aria-current="page">{{ segment }}</li>
+      {%- else -%}
+    <li class="breadcrumb__item"><a href="/blog/category/{{ cumulative | slugifyPath }}/">{{ segment }}</a></li>
+      {%- endif -%}
+    {%- endfor -%}
+    {%- if currentLabel -%}
+    <li class="breadcrumb__item breadcrumb__item--current" aria-current="page">{{ currentLabel }}</li>
+    {%- endif -%}
+  </ol>
+</nav>
+{%- endif -%}

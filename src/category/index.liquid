@@ -1,0 +1,14 @@
+---
+title: Categories
+description: Browse posts by category.
+layout: default
+permalink: /blog/category/
+---
+<div class="wrapper page">
+  <h1 class="page__title">Categories</h1>
+  <ul class="tag-list tag-list--large">
+    {%- for category in collections.categoryList -%}
+    <li><a class="tag" href="/blog/category/{{ category | slugifyPath }}/">{{ category }}</a></li>
+    {%- endfor -%}
+  </ul>
+</div>

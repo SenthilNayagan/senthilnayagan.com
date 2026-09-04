@@ -1,0 +1,23 @@
+---
+layout: default
+pagination:
+  data: collections.categoryList
+  size: 1
+  alias: category
+permalink: "/blog/category/{{ category | slugifyPath }}/"
+eleventyComputed:
+  title: "Category: {{ category }}"
+  description: "Posts filed under {{ category }}."
+---
+<div class="wrapper page">
+  {%- assign categorySegments = category | split: "/" -%}
+  {% include "components/breadcrumb.liquid" category: categorySegments %}
+  <h1 class="page__title">{{ category }}</h1>
+  <div class="post-list">
+    {%- for post in collections.posts -%}
+      {%- if post.data.category | inCategory: category -%}
+        {% include "components/post-preview.liquid" %}
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+</div>

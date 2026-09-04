@@ -16,6 +16,8 @@ import {
   limit,
   publicTags,
   slugifyString,
+  slugifyPath,
+  inCategory,
   rfc822Date,
   newestDate,
 } from './lib/filters.js';
@@ -157,6 +159,8 @@ export default (eleventyConfig) => {
   eleventyConfig.addFilter('limit', limit);
   eleventyConfig.addFilter('publicTags', (tags) => publicTags(tags, excludedTags));
   eleventyConfig.addFilter('slugify', slugifyString);
+  eleventyConfig.addFilter('slugifyPath', slugifyPath);
+  eleventyConfig.addFilter('inCategory', inCategory);
   eleventyConfig.addFilter('rfc822Date', rfc822Date);
   eleventyConfig.addFilter('newestDate', newestDate);
   eleventyConfig.addFilter('toJson', JSON.stringify);

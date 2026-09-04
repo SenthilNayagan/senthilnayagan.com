@@ -20,6 +20,7 @@ scripts:
     <aside class="post__toc" id="post-toc"><!--eleventy-toc-slot--></aside>
     <div class="post__main">
       <header class="post__header">
+        {% include "components/breadcrumb.liquid" currentLabel: title %}
         <div class="post__meta">
           <time datetime="{{ page.date | machineDate }}">{{ page.date | readableDate }}</time>
           <span aria-hidden="true">&middot;</span>
