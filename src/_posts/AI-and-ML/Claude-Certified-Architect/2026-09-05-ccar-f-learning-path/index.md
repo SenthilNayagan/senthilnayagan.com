@@ -42,17 +42,7 @@ draft: true
 
 I initially thought the obvious way to prepare for CCAR-F was to study the exam domains one by one.
 
-Start with Domain 1.
-
-Finish it.
-
-Move to Domain 2.
-
-Repeat until all five domains were covered.
-
-Simple, right?
-
-Well... not quite. 😄
+Start with Domain 1. Finish it. Move to Domain 2. Repeat until all five domains were covered. Simple, right? Well... not quite. 😄
 
 The more I looked at the concepts involved, the less convinced I became that the **exam structure should also be our learning structure**.
 
@@ -74,11 +64,7 @@ This page is the map of that journey.
 
 ## The Exam Has a Map. Learning Has a Path.
 
-The CCAR-F exam gives us a useful map of the knowledge areas we need to understand.
-
-But when we're actually learning those concepts, we don't necessarily want to follow that map from top to bottom.
-
-Some concepts naturally depend on others.
+The CCAR-F exam gives us a useful map of the knowledge areas we need to understand. But when we're actually learning those concepts, we don't necessarily want to follow that map from top to bottom. Some concepts naturally depend on others.
 
 For example, it makes sense to understand:
 
@@ -105,9 +91,7 @@ And there's a third piece:
 
 Think of the exam domains as our **toolbox**.
 
-The learning path is the order in which we're learning to use those tools.
-
-The hands-on projects let us use the tools ourselves.
+The learning path is the order in which we're learning to use those tools. The hands-on projects let us use the tools ourselves.
 
 And the scenarios are the projects where we have to decide which tools to use — and why.
 
@@ -115,9 +99,7 @@ And the scenarios are the projects where we have to decide which tools to use �
 
 ## What This Learning Path Is
 
-This page is the **map of my learning journey**.
-
-It isn't intended to teach every concept itself.
+This page is the **map of my learning journey**. It isn't intended to teach every concept itself.
 
 Instead, I'll break the journey into focused articles, with each article covering one major concept or a closely related group of concepts.
 
@@ -243,7 +225,7 @@ It's to build a mental model strong enough that later concepts don't feel like m
 > **Goal:** Understand the basic building blocks behind Claude-powered applications.
 
 **Learning article:**  
-→ *LLM Fundamentals for CCAR-F* — coming soon
+→ <a href="/blog/llm-fundamentals/">LLM Fundamentals</a>
 
 ---
 

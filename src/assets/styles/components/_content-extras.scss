@@ -148,6 +148,45 @@
   font-weight: 600;
 }
 
+// CCAR-F Learning Path navigation, reused across every article in the series (see
+// components/learning-path-nav.liquid). The top variant reuses .post-aside's boxed callout look;
+// the bottom variant is a plain bordered footer instead, since a second boxed callout this close to
+// the article's own closing thoughts would compete with them rather than read as navigation.
+.learning-path-nav__label {
+  font-weight: 700;
+}
+
+.learning-path-nav__step {
+  color: var(--color-text-secondary);
+}
+
+.learning-path-nav__links {
+  font-size: 0.9375rem;
+}
+
+.learning-path-nav--bottom {
+  display: block;
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.learning-path-nav__heading {
+  font-weight: 700;
+  font-size: 1.0625rem;
+  margin-bottom: 0.5rem;
+}
+
+.learning-path-nav__sep {
+  margin: 0 0.5em;
+  color: var(--color-border);
+}
+
+.learning-path-nav__soon {
+  color: var(--color-text-secondary);
+  font-style: italic;
+}
+
 // Numbered "Notes and references" section at the end of a post.
 .references {
   font-size: 0.9375rem;

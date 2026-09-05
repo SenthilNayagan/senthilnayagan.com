@@ -782,6 +782,506 @@ And Datashare provides the controlled path between them.
 
 ---
 
+# 5. What If We Decide to Move the Workload Later?
+
+So far, we have solved the **runtime isolation** problem:
+
+<div class="diagram">
+  <svg viewBox="0 0 460 200" role="img" aria-labelledby="fig16-title fig16-desc">
+    <title id="fig16-title">Namespace and workgroup pairs providing isolated compute environments.</title>
+    <desc id="fig16-desc">Namespace and workgroup pairs providing isolated compute environments.</desc>
+    <defs>
+      <marker id="arrow-16" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M0 0 L10 5 L0 10 Z" fill="var(--color-text)"></path>
+      </marker>
+    </defs>
+    <text x="115" y="18" text-anchor="middle" fill="var(--color-text-secondary)" font-size="11" font-weight="700">EXISTING</text>
+<rect x="25" y="30" width="180" height="55" rx="8" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"/>
+<text x="115" y="63" text-anchor="middle" fill="var(--color-text)" font-size="13" font-weight="700">existing_namespace</text>
+<line x1="205" y1="58" x2="255" y2="58" stroke="var(--color-text)" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="255" y="30" width="180" height="55" rx="8" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"/>
+<text x="345" y="63" text-anchor="middle" fill="var(--color-text)" font-size="13" font-weight="700">existing_workgroup (24 RPU)</text>
+<rect x="25" y="135" width="180" height="55" rx="8" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"/>
+<text x="115" y="120" text-anchor="middle" fill="var(--color-text-secondary)" font-size="11" font-weight="700">NEW / ISOLATED</text>
+<text x="115" y="168" text-anchor="middle" fill="var(--color-text)" font-size="13" font-weight="700">new_app_namespace</text>
+<line x1="205" y1="163" x2="255" y2="163" stroke="var(--color-text)" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="255" y="135" width="180" height="55" rx="8" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"/>
+<text x="345" y="168" text-anchor="middle" fill="var(--color-text)" font-size="13" font-weight="700">new_app_workgroup (32 RPU)</text>
+  </svg>
+  <figcaption style="transform: translateY(0px);">
+    Figure 16: Namespace and workgroup pairs providing isolated compute environments.
+  </figcaption>
+</div>
+
+
+Datashare lets the second environment query data owned by the first.
+
+But there is another very practical scenario worth covering.
+
+What happens if, six months from now, we look at the workload and conclude:
+
+> **“The existing workgroup has enough capacity. We don't need a dedicated workgroup for this application anymore.”**
+
+
+For example, imagine that the the application application starts like this:
+
+```text
+new_app namespace
+        │
+        ▼
+new_app workgroup
+        │
+        ▼
+       8 RPU
+```
+
+<div class="diagram">
+  <svg viewBox="0 0 460 300" role="img" aria-labelledby="fig17-title fig17-desc">
+    <title id="fig17-title">The initial dedicated application namespace and workgroup.</title>
+    <desc id="fig17-desc">The initial dedicated application namespace and workgroup.</desc>
+    <defs>
+      <marker id="arrow-17" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M0 0 L10 5 L0 10 Z" fill="var(--color-text)"></path>
+      </marker>
+    </defs>
+    <text x="230" y="20" text-anchor="middle" fill="var(--color-text-secondary)" font-size="11" font-weight="700">INITIAL DEDICATED ENVIRONMENT</text>
+<rect x="115" y="35" width="230" height="55" rx="8" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"/>
+<text x="230" y="68" text-anchor="middle" fill="var(--color-text)" font-size="13" font-weight="700">new_app namespace</text>
+<line x1="230" y1="90" x2="230" y2="125" stroke="var(--color-text)" stroke-width="2" marker-end="url(#arrow)"/>
+<rect x="115" y="128" width="230" height="55" rx="8" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"/>
+<text x="230" y="161" text-anchor="middle" fill="var(--color-text)" font-size="13" font-weight="700">new_app workgroup</text>
+<line x1="230" y1="183" x2="230" y2="218" stroke="var(--color-text)" stroke-width="2" marker-end="url(#arrow)"/>
+<text x="230" y="248" text-anchor="middle" fill="var(--color-text)" font-size="13" font-weight="700">8 RPU</text>
+  </svg>
+  <figcaption>Figure 17: The initial dedicated application namespace and workgroup.</figcaption>
+</div>
+
+Later, after measuring the workload, we decide that the existing environment can comfortably handle it:
+
+```text
+existing_namespace namespace
+        │
+        ▼
+existing_namespace workgroup
+        │
+        ▼
+       32 RPU
+```
+
+There is an important catch.
+
+We cannot simply point `existing_namespace`'s workgroup at the `new_app` namespace.
+
+The 1:1 relationship still applies.
+
+So the question changes from:
+
+> “Can we move the workgroup?”
+
+to:
+
+> **“How do we move the data from the `new_app` namespace into the `existing_namespace` namespace?”**
+
+This is where Redshift gives us several options.
+
+---
+
+## Option 1 — Datashare: Access the Data Without Moving It
+
+The first option is **Datashare**.
+
+We have already seen this pattern:
+
+```text
+┌───────────────────────┐
+│     new_app           │
+│       namespace       │
+│                       │
+│   the application data│
+└───────────┬───────────┘
+            │
+            │ Datashare
+            ▼
+┌───────────────────────┐
+│   existing_namespace  │
+│       namespace       │
+│                       │
+│  Existing workloads   │
+└───────────────────────┘
+```
+
+<div class="diagram">
+  <svg viewBox="0 0 460 300" role="img" aria-labelledby="fig19-title fig19-desc">
+    <title id="fig19-title">Datashare providing controlled access from the existing namespace to data owned by the new application namespace.</title>
+    <desc id="fig19-desc">Datashare providing controlled access from the existing namespace to data owned by the new application namespace.</desc>
+    <defs>
+      <marker id="arrow-19" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M0 0 L10 5 L0 10 Z" fill="var(--color-text)"></path>
+      </marker>
+    </defs>
+    <text x="115" y="18" text-anchor="middle" fill="var(--color-text-secondary)" font-size="11" font-weight="700">DATA OWNER</text>
+<text x="345" y="18" text-anchor="middle" fill="var(--color-text-secondary)" font-size="11" font-weight="700">CONSUMER</text>
+<rect x="25" y="30" width="180" height="80" rx="8" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"/>
+<text x="115" y="58" text-anchor="middle" fill="var(--color-text)" font-size="13" font-weight="700">new_app</text>
+<text x="115" y="80" text-anchor="middle" fill="var(--color-text-secondary)" font-size="11">namespace</text>
+<text x="115" y="98" text-anchor="middle" fill="var(--color-text-secondary)" font-size="11">application data</text>
+<rect x="255" y="30" width="180" height="80" rx="8" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"/>
+<text x="345" y="58" text-anchor="middle" fill="var(--color-text)" font-size="13" font-weight="700">existing_namespace</text>
+<text x="345" y="80" text-anchor="middle" fill="var(--color-text-secondary)" font-size="11">namespace</text>
+<text x="345" y="98" text-anchor="middle" fill="var(--color-text-secondary)" font-size="11">existing workloads</text>
+<line x1="205" y1="70" x2="255" y2="70" stroke="var(--color-text)" stroke-width="2" marker-end="url(#arrow)"/>
+<text x="230" y="58" text-anchor="middle" fill="var(--color-text-secondary)" font-size="11">Datashare</text>
+  </svg>
+  <figcaption>Figure 19: Datashare providing controlled access from the existing namespace to data owned by the new application namespace.</figcaption>
+</div>
+
+This is particularly useful if the immediate goal is to **test the the application workload on the existing workgroup** before physically moving the data.
+
+The `existing_namespace` workgroup can query the shared the application data using its own compute.
+
+That gives us a useful validation path:
+
+```text
+new_app
+    │
+    │ Datashare
+    ▼
+existing_namespace
+    │
+    ▼
+existing_namespace workgroup
+    │
+    ▼
+Run the application queries
+```
+
+### But Datashare does not migrate the data
+
+This distinction is important.
+
+Datashare means:
+
+> **“Keep the data where it is and let another namespace query it.”**
+
+It does **not** mean:
+
+> **“Move the data into the other namespace.”**
+
+The source `new_app` namespace continues to own the underlying data.
+
+That means Datashare is useful for:
+
+- Workload validation
+- Performance testing
+- Temporary cross-namespace access
+- Avoiding an immediate data copy
+
+But if the final goal is:
+
+```text
+new_app namespace
+        │
+        ▼
+      gone
+```
+
+then Datashare alone is not enough.
+
+The source namespace still needs to exist while it owns the shared data.
+
+AWS documents Serverless data sharing here:
+
+<a href="https://docs.aws.amazon.com/redshift/latest/mgmt/serverless-datasharing.html" target="_blank" rel="noopener">Amazon Redshift Serverless data sharing</a>
+
+There is also an important cost distinction: for data sharing, the **consumer pays the compute required to query the shared data**, while the producer continues to bear the underlying storage cost. For same-Region sharing, AWS does not charge cross-Region data-transfer fees because there is no cross-Region transfer. citeturn0search17
+
+So Datashare can be an excellent **bridge**, but it should not be confused with a **migration mechanism**.
+
+---
+
+## Option 2 — UNLOAD → S3 → COPY: Move the Data
+
+If the goal is to actually move the the application data into the existing `existing_namespace` namespace, the most straightforward approach is:
+
+```text
+new_app
+    │
+    │ UNLOAD
+    ▼
+Amazon S3
+    │
+    │ COPY
+    ▼
+existing_namespace
+```
+
+This is the approach we would generally recommend for the consolidation scenario.
+
+### Step 1 — UNLOAD from the source namespace
+
+From the `new_app` environment, we export the required data to Amazon S3.
+
+For example:
+
+```sql
+UNLOAD ('SELECT * FROM new_app_schema.customers')
+TO 's3://<migration-bucket>/rc-rosters/customers/'
+FORMAT AS PARQUET;
+```
+
+We can control what gets exported using the `SELECT` statement.
+
+That means we can migrate:
+
+- Selected tables
+- Selected columns
+- Filtered data
+- Transformed data, if required
+
+Amazon Redshift writes the query results to one or more files in S3 and is designed to support parallel reloading of those files. citeturn0search5turn0search11
+
+AWS reference:
+
+<a href="https://docs.aws.amazon.com/redshift/latest/dg/r_UNLOAD.html" target="_blank" rel="noopener">UNLOAD — Amazon Redshift SQL Reference</a>
+
+---
+
+### Step 2 — Create the target tables
+
+Before loading the data, we create the required schema and table definitions in `existing_namespace`.
+
+For example:
+
+```sql
+CREATE SCHEMA new_app_schema;
+
+CREATE TABLE new_app_schema.customers
+(
+    customer_id   BIGINT,
+    customer_name VARCHAR(200),
+    risk_score    INTEGER
+);
+```
+
+The target table can be designed to match the application's requirements rather than blindly reproducing every object from the source namespace.
+
+---
+
+### Step 3 — COPY the data into the target namespace
+
+Once the files are in S3, we load them into `existing_namespace`:
+
+```sql
+COPY new_app_schema.customers
+FROM 's3://<migration-bucket>/rc-rosters/customers/'
+FORMAT AS PARQUET;
+```
+
+AWS reference:
+
+<a href="https://docs.aws.amazon.com/redshift/latest/dg/r_COPY.html" target="_blank" rel="noopener">COPY — Amazon Redshift SQL Reference</a>
+
+The resulting architecture becomes:
+
+```text
+┌─────────────────────────────────────┐
+│        existing_namespace           │
+│                                     │
+│  Existing tables                    │
+│                                     │
+│  new_app_schema                     │
+│      ├── customers                  │
+│      ├── rosters                    │
+│      └── transactions               │
+└──────────────────┬──────────────────┘
+                   │
+                   ▼
+        existing_namespace workgroup
+                 32 RPU
+```
+
+Now the the application workload is using the same namespace and workgroup as the existing applications.
+
+### Why this is the recommended option
+
+The biggest advantage is that this is an actual **data migration**, not just data access.
+
+After successful validation:
+
+```text
+new_app data
+      │
+      │ UNLOAD
+      ▼
+     S3
+      │
+      │ COPY
+      ▼
+existing_namespace data
+```
+
+The source namespace can eventually be decommissioned.
+
+It also gives us a controlled migration process:
+
+```text
+Export
+   ↓
+Validate files
+   ↓
+Create target tables
+   ↓
+Load
+   ↓
+Validate row counts
+   ↓
+Validate application queries
+   ↓
+Cut over application
+   ↓
+Decommission source
+```
+
+### The large-data-volume caveat
+
+This approach is straightforward, but data volume matters.
+
+For example:
+
+```text
+500 GB
+  │
+  ▼
+UNLOAD → S3 → COPY
+```
+
+is very different operationally from:
+
+```text
+20 TB
+  │
+  ▼
+UNLOAD → S3 → COPY
+```
+
+Large-volume migrations require planning around:
+
+- UNLOAD duration
+- COPY duration
+- S3 storage during migration
+- S3 request activity
+- Source and target compute consumption
+- Impact on existing workloads
+- Migration window
+- Data changing while the migration is in progress
+- Validation
+- Final cutover
+- Whether multiple migration passes are required
+
+The issue is not that Redshift cannot move large datasets using UNLOAD and COPY.
+
+The issue is that **large datasets turn a simple copy into a migration project**.
+
+For very large the application datasets, we should therefore assess whether the migration window, source-change rate, target workload impact, and validation requirements make this approach practical.
+
+Where network isolation is important, Redshift supports VPC endpoints and enhanced VPC routing so COPY and UNLOAD traffic between a workgroup and S3 can remain within the VPC.
+
+AWS reference:
+
+<a href="https://docs.aws.amazon.com/redshift/latest/mgmt/enhanced-vpc-working-with-endpoints.html" target="_blank" rel="noopener">Controlling database traffic with VPC endpoints</a>
+
+---
+
+## Option 3 — Snapshot / Table Restore
+
+The third option is **snapshot/table restore**.
+
+Redshift Serverless supports restoring a specific table from a snapshot or recovery point into a target database, schema, and new table name.
+
+Conceptually:
+
+```text
+new_app namespace
+        │
+        │ Snapshot
+        ▼
+   Recovery point
+        │
+        │ Restore table
+        ▼
+existing_namespace namespace
+```
+
+For example, we could restore a source table into the existing namespace rather than restoring an entire database.
+
+AWS documents this capability here:
+
+<a href="https://docs.aws.amazon.com/redshift/latest/mgmt/serverless-table-restore.html" target="_blank" rel="noopener">Restoring a table — Amazon Redshift</a>
+
+The important detail is that **table restore is not the same thing as restoring the entire namespace**.
+
+AWS states that a specific table can be restored by specifying the source snapshot/recovery point, source database/schema/table, and target database/schema/table. The restored table gets the source table's column and table attributes, but dependencies such as views and permissions are not automatically applied. citeturn0search0
+
+That makes table restore potentially useful for selected tables.
+
+However, there are practical limitations.
+
+For example:
+
+- Only one table can be restored at a time.
+- Table dependencies need to be considered separately.
+- Views and permissions need to be handled separately.
+- The restored table represents the state captured by the snapshot/recovery point.
+- It does not automatically solve the application cutover problem.
+
+AWS also supports restoring an entire snapshot to a Serverless namespace, but there is a major difference:
+
+> **Restoring a snapshot to a Serverless namespace replaces the current database with the database in the snapshot.**
+
+That is obviously a very different operation from selectively adding the application tables into an already-active `existing_namespace` namespace. citeturn0search1
+
+For that reason, full namespace snapshot restore is not a good fit for this consolidation scenario.
+
+### Recommendation for this option
+
+Snapshot/table restore is a valid Redshift capability, but for our specific scenario it is **not the preferred migration approach**.
+
+The target namespace already contains existing workloads and data.
+
+For a controlled application-data migration, UNLOAD → S3 → COPY gives us more explicit control over what gets moved, how it gets loaded, and how the cutover is managed.
+
+---
+
+## Comparing the Migration Options
+
+Now the three options can be viewed side by side:
+
+| Option | What it does | Data physically moved? | Source namespace still needed? | Best use |
+|:---|:---|:---|:---|:---|
+| **Datashare** | Provides live cross-namespace access | No | Yes | Validation, temporary access, workload testing |
+| **UNLOAD → S3 → COPY** | Exports and loads selected data | Yes | No, after successful migration | **Recommended for consolidation** |
+| **Snapshot / Table Restore** | Restores table data from a snapshot/recovery point | Yes | No, after successful migration | Selected table restoration |
+
+The easiest way to remember the difference:
+
+```text
+Datashare
+─────────
+"Let us query the data where it already lives."
+
+
+UNLOAD → S3 → COPY
+──────────────────
+"Move the data to the new home."
+
+
+Snapshot / Table Restore
+───────────────────────
+"Restore selected data from a point-in-time backup."
+```
+
+---
+
 # Recap: The Two Sentences That Matter
 
 If we remember nothing else from this post, remember these two sentences:
@@ -790,3 +1290,45 @@ If we remember nothing else from this post, remember these two sentences:
 2. **Datashare exists precisely to undo the pain of that isolation** — it lets a new namespace query another namespace's tables live, using its own compute, without copying any data.
 
 Namespace and workgroup can only ever be exclusive. But thanks to Datashare, "exclusive" doesn't have to mean "isolated from everyone else's data forever." It just means everyone brings their own compute to the table.
+
+And if the workload eventually needs to move into an existing namespace, we have a second path:
+
+```text
+Validate with Datashare
+          │
+          ▼
+If consolidation makes sense
+          │
+          ▼
+UNLOAD → S3 → COPY
+          │
+          ▼
+Move the data
+          │
+          ▼
+Run on the existing workgroup
+```
+
+That is the important distinction:
+
+> **Datashare is the bridge for accessing data across namespace boundaries. UNLOAD → S3 → COPY is the bridge for actually moving data across those boundaries.**
+
+If we remember nothing else from this post, remember these two sentences:
+
+1.  **A workgroup and a namespace are locked into a strict 1:1 relationship** — if we want a new, isolated workgroup, we need a new, isolated namespace to go with it.
+2.  **Datashare exists precisely to undo the pain of that isolation** — it lets a new namespace query another namespace's tables live, using its own compute, without copying any data.
+
+Namespace and workgroup can only ever be exclusive. But thanks to Datashare, "exclusive" doesn't have to mean "isolated from everyone else's data forever." It just means everyone brings their own compute to the table.
+
+---
+
+# References
+
+1. <a href="https://docs.aws.amazon.com/redshift/latest/mgmt/serverless-workgroup-namespace.html" target="_blank" rel="noopener">Workgroups and namespaces — Amazon Redshift</a>
+2. <a href="https://docs.aws.amazon.com/redshift/latest/mgmt/serverless-datasharing.html" target="_blank" rel="noopener">Data sharing in Amazon Redshift Serverless</a>
+3. <a href="https://docs.aws.amazon.com/redshift/latest/dg/r_UNLOAD.html" target="_blank" rel="noopener">UNLOAD — Amazon Redshift SQL Reference</a>
+4. <a href="https://docs.aws.amazon.com/redshift/latest/dg/r_COPY.html" target="_blank" rel="noopener">COPY — Amazon Redshift SQL Reference</a>
+5. <a href="https://docs.aws.amazon.com/redshift/latest/mgmt/serverless-table-restore.html" target="_blank" rel="noopener">Restoring a table — Amazon Redshift</a>
+6. <a href="https://docs.aws.amazon.com/redshift/latest/mgmt/serverless-snapshot-restore.html" target="_blank" rel="noopener">Restoring a snapshot — Amazon Redshift</a>
+7. <a href="https://docs.aws.amazon.com/redshift/latest/mgmt/serverless-snapshots-recovery-points.html" target="_blank" rel="noopener">Snapshots and recovery points — Amazon Redshift</a>
+8. <a href="https://docs.aws.amazon.com/redshift/latest/mgmt/enhanced-vpc-working-with-endpoints.html" target="_blank" rel="noopener">Controlling database traffic with VPC endpoints — Amazon Redshift</a>

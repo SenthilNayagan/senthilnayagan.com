@@ -348,7 +348,7 @@ We'll start with the foundations and gradually move towards architecture and sce
 
 I've created a separate page for this:
 
-> **Start the learning path → <a href="http://localhost:8080/blog/ccar-f-learning-path/" target="_blank" rel="noopener">CCAR-F Learning Path: From LLM Fundamentals to Architecture</a>**
+> **Start the learning path → <a href="/blog/ccar-f-learning-path/" target="_blank" rel="noopener">CCAR-F Learning Path: From LLM Fundamentals to Architecture</a>**
 
 That page will act as the map for the concepts I'm learning and the order in which I'm approaching them.
 
@@ -488,7 +488,7 @@ We'll cover only the foundations that help us understand the CCAR-F material com
 
 We'll start with the basics, build the mental models, and then join the main learning path.
 
-> **Start here → <a href="http://localhost:8080/blog/ccar-f-foundations/" target="_blank" rel="noopener">CCAR-F Foundations: The Basics We Need to Know</a>**
+> **Start here → <a href="/blog/ccar-f-foundations/" target="_blank" rel="noopener">CCAR-F Foundations: The Basics We Need to Know</a>**
 
 This path is **optional**.
 
@@ -502,7 +502,7 @@ If we're already comfortable with Claude, LLMs, agents, tool use, MCP and the su
 
 We can skip the foundations and go straight to the learning path.
 
-> **Continue here → <a href="http://localhost:8080/blog/ccar-f-learning-path/" target="_blank" rel="noopener">CCAR-F Learning Path: From LLM Fundamentals to Architecture</a>**
+> **Continue here → <a href="/blog/ccar-f-learning-path/" target="_blank" rel="noopener">CCAR-F Learning Path: From LLM Fundamentals to Architecture</a>**
 
 From there, we'll move through the concepts in the order that makes the most sense for building our understanding — rather than simply following the order of the exam domains.
 
