@@ -308,7 +308,7 @@ And that brings us to the next question:
 
 # How I'm Going to Prepare
 
-Now we know what CCAR-F is, what it tests, and what the actual exam looks like.
+Now we know what CCAR-F is, what it tests, and what the exam is asking us to do.
 
 So the obvious question is:
 
@@ -320,25 +320,71 @@ I don't want to treat **five domains + seven courses + six scenarios** as twelve
 
 That would make the certification look like a small PhD with a registration fee. 😄
 
-Instead, I'm thinking about the preparation as a few connected pieces:
+Instead, I'm going to separate the preparation into a few connected layers.
 
-## The Five Domains — What We Need to Know
+The most important one is the **learning path**.
 
-The **five exam domains** are going to be our main study roadmap.
+---
 
-I'll take each domain separately in its own article and break it down into simple language:
+## The Learning Path — What We Learn and in What Order
+
+The certification domains tell us **what the exam expects us to know**.
+
+But I don't think they necessarily tell us **the best order in which to learn those concepts**.
+
+Some concepts naturally depend on others.
+
+It's much easier to reason about agentic architecture once we understand things like LLM fundamentals, context, APIs, prompting and tool use.
+
+Similarly, understanding tool use makes it easier to understand agentic loops, task decomposition and multi-agent systems.
+
+So rather than simply going:
+
+> Domain 1 → Domain 2 → Domain 3 → Domain 4 → Domain 5
+
+I'm going to build the knowledge in a **dependency-based learning sequence**.
+
+We'll start with the foundations and gradually move towards architecture and scenario-based reasoning.
+
+I've created a separate page for this:
+
+> **Start the learning path → <a href="http://localhost:8080/blog/ccar-f-learning-path/" target="_blank" rel="noopener">CCAR-F Learning Path: From LLM Fundamentals to Architecture</a>**
+
+That page will act as the map for the concepts I'm learning and the order in which I'm approaching them.
+
+And rather than putting every concept into one enormous article, I'll break the learning path into individual articles as I work through each major topic.
+
+---
+
+## The Five Domains — The Exam Map
+
+The **five exam domains** still matter — a lot.
+
+But I'm changing the way I'm going to use them.
+
+Instead of treating the domains as the order in which I have to learn everything, I'll use them as a **map of what the certification is assessing**.
+
+As I learn each concept, I'll connect it back to the relevant domain or domains.
+
+This gives us a useful distinction:
+
+> **The learning path tells us how to build the knowledge.**  
+> **The domains tell us where that knowledge fits in the exam.**
+
+I'll still document the domains separately, breaking down:
 
 - What does this domain actually mean?
-- What should we understand?
-- Why does it matter in a real system?
-- What kind of architectural decisions might we need to make?
+- What concepts are involved?
+- Why do those concepts matter in a real system?
+- What architectural decisions might we need to make?
+- How does this connect to the other domains?
 - Can we build a small example to make the idea stick?
 
 I'll use Anthropic's official learning material and documentation as the foundation, then add my own explanations, examples, illustrations and hands-on experiments.
 
 And when something sounds like it was written specifically to confuse perfectly innocent engineers, we'll translate that too. 😄
 
-I'll document each domain as a separate article, so we can go as deep as needed without turning this post into a 30,000-word study guide.
+---
 
 ## The Seven Free Courses — Where We Learn It
 
@@ -348,16 +394,25 @@ I'm going to work through them as part of my preparation, but I don't want to tr
 
 Think of it this way:
 
-> **The domains tell us what we need to know.**  
-> **The courses give us places to learn it.**
+> **The learning path tells us what to learn and in what order.**  
+> **The courses give us places to learn it.**  
+> **The domains tell us where that knowledge fits into the exam.**
 
-I'll have a separate article covering all seven courses, including what each course covers, which domains it helps with, and my experience as I work through them.
+I'll have a separate article covering the courses, including what each course covers, which parts of my learning path they support, and my experience as I work through them.
 
-## The Six Scenarios — Where We Put It Together
+That way, the courses become resources within the preparation rather than another checklist we have to complete.
+
+---
+
+## The Six Scenarios — Where We Put It All Together
 
 Knowing individual concepts isn't enough.
 
-The exam puts those concepts into realistic scenarios, so I'll use the six scenarios to bring multiple domains together.
+Architecture is about bringing those concepts together in the context of a real problem.
+
+That's where the scenarios come in.
+
+Rather than treating the scenarios as another set of topics to memorize, I'll use them as **integration exercises**.
 
 For example, instead of learning agent orchestration in isolation, we'll ask:
 
@@ -367,13 +422,21 @@ Or instead of learning MCP as a standalone technology:
 
 > **How would we use tools and MCP in a customer-support agent?**
 
-This is where the individual pieces start becoming architecture.
+The point is to start connecting the individual pieces.
+
+A scenario might require us to think about **agents, tools, context, orchestration, reliability, security and trade-offs** at the same time.
+
+That's where the learning starts turning into architecture.
+
+---
 
 ## Hands-On Practice — Where We Find Out If We Actually Understand It
 
 And finally, I'll build small examples along the way.
 
-Not giant production systems. Just enough to turn:
+Not giant production systems.
+
+Just enough to turn:
 
 > "I think I understand this..."
 
@@ -381,13 +444,19 @@ into:
 
 > "Okay, now I understand why this works."
 
-I'll also use scenario-based practice questions to test the most important part of the exam: **our ability to make the right architectural decision when several answers look reasonable.**
+I'll use hands-on experiments to make the concepts concrete and to discover the gaps that aren't obvious when we're simply reading documentation.
+
+I'll also use scenario-based practice questions to test the most important skill we're trying to develop:
+
+> **Can we make a sound architectural decision when several answers look reasonable?**
+
+That's a very different skill from simply remembering what a particular technology does.
 
 ---
 
 ## So What's the Plan?
 
-In simple terms:
+Putting all of that together:
 
 > **Learn → Understand → Build → Apply → Practise → Revisit the weak spots**
 
@@ -407,7 +476,7 @@ So I'm keeping **two entry points** into the preparation.
 
 ---
 
-## Path 1: We Need the Basics First
+### Path 1: We Need the Basics First
 
 If concepts such as **LLMs, context windows, tool use, agents, MCP, structured output or Claude Code** are still new to us, it's worth building those foundations first.
 
@@ -417,9 +486,9 @@ The goal isn't to turn this into a three-month course on the history of artifici
 
 We'll cover only the foundations that help us understand the CCAR-F material comfortably.
 
-We'll start with the basics, build the mental models, and then come back to the certification domains.
+We'll start with the basics, build the mental models, and then join the main learning path.
 
-> **Start here → [CCAR-F Foundations: The Basics We Need to Know](/blog/ccar-f-foundations/)**
+> **Start here → <a href="http://localhost:8080/blog/ccar-f-foundations/" target="_blank" rel="noopener">CCAR-F Foundations: The Basics We Need to Know</a>**
 
 This path is **optional**.
 
@@ -427,31 +496,52 @@ It's there to remove the terminology barrier, not to add another syllabus to our
 
 ---
 
-## Path 2: We Already Know the Basics
+### Path 2: We Already Know the Basics
 
 If we're already comfortable with Claude, LLMs, agents, tool use, MCP and the surrounding concepts, there's no reason to take the scenic route.
 
-We can skip the foundations and go straight into the certification preparation.
+We can skip the foundations and go straight to the learning path.
 
-We'll start with the biggest exam domain:
+> **Continue here → <a href="http://localhost:8080/blog/ccar-f-learning-path/" target="_blank" rel="noopener">CCAR-F Learning Path: From LLM Fundamentals to Architecture</a>**
 
-> **Agentic Architecture & Orchestration — 27%**
-
-This is where we'll take the official material apart, translate it into plain English, build examples, explore architectural trade-offs and document what we learn along the way.
-
-> **Continue the CCAR-F preparation → [Domain 1: Agentic Architecture & Orchestration](/blog/ccar-f-domain-1-agentic-architecture-orchestration/)**
+From there, we'll move through the concepts in the order that makes the most sense for building our understanding — rather than simply following the order of the exam domains.
 
 ---
 
-## Where Do Both Paths Lead?
+### Where Do the Pieces Fit Together?
 
-Whichever path we choose, the destination is the same.
+At this point, we have several different things in front of us, so let's make the relationship explicit.
 
-We'll work through the **five exam domains**, use Anthropic's recommended courses and documentation to fill the gaps, build small hands-on examples, and then bring everything together through the **six exam scenarios**.
+> **Learning Path = HOW we build the knowledge**  
+> **Domains = WHAT the exam expects us to know**  
+> **Courses & Documentation = WHERE we learn the concepts**  
+> **Hands-On Projects = HOW we make the concepts concrete**  
+> **Scenarios = WHERE we bring the concepts together**  
+> **Practice Questions = HOW we test our judgement**
+
+These aren't competing study plans.
+
+They're different pieces of the same preparation process.
+
+Think of the domains as our **toolbox**.
+
+The learning path is the **order in which we learn to use those tools**.
+
+The hands-on projects let us **use the tools ourselves**.
+
+And the scenarios are the **realistic projects where we have to decide which tools to use — and why**.
+
+---
+
+### The Goal
 
 The goal isn't simply to finish courses or tick boxes.
 
-It's to reach the point where, when we're given a scenario and several possible architectural approaches, we can look at the problem and say:
+It isn't to memorize every Anthropic documentation page either.
+
+It's to gradually build enough understanding that we can look at an architectural problem, identify the important constraints, consider the available approaches, understand the trade-offs, and make a reasoned decision.
+
+Eventually, when we're given a scenario and several possible architectural approaches, we want to be able to say:
 
 > **"Here's what I'd choose — and here's why."**
 
