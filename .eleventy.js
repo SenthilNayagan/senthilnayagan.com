@@ -7,6 +7,7 @@ import { eleventyImageTransformPlugin } from '@11ty/eleventy-img';
 import syntaxHighlight from '@11ty/eleventy-plugin-syntaxhighlight';
 
 import { extractPostContent, buildMarkdownExport } from './lib/markdownExport.js';
+import { renderIcon } from './lib/icons.js';
 import {
   toISOString,
   toAbsoluteUrl,
@@ -117,6 +118,25 @@ export default (eleventyConfig) => {
   // A pull-quote/callout box, used as {% aside %}...{% endaside %} around a block of Markdown.
   eleventyConfig.addPairedShortcode('aside', (content) => {
     return `<aside role="note" class="post-aside">${markdownLib.render(content.trim())}</aside>`;
+  });
+
+  // A single reusable icon, from the shared registry in lib/icons.js — {% icon "lightbulb" %}, or
+  // {% icon "lightbulb", "callout-icon" %} to attach a class.
+  eleventyConfig.addShortcode('icon', renderIcon);
+
+  // "Idea/note" callout: an icon fixed to the left, with the rest rendered inline on the same
+  // row as the (possibly multi-line) note text — {% note %}...{% endnote %} around a block of
+  // Markdown. Reuses the lightbulb from lib/icons.js rather than a one-off inline SVG per post.
+  eleventyConfig.addPairedShortcode('note', (content, iconName = 'lightbulb') => {
+    return `<aside role="note" class="callout-note"><span class="callout-note__icon">${renderIcon(iconName)}</span><span class="callout-note__body">${markdownLib.render(content.trim())}</span></aside>`;
+  });
+
+  // Caution/warning/error callout — {% warning %}...{% endwarning %} around a block of Markdown.
+  // Same shape as {% note %} (icon fixed left, text alongside it), just the triangle-exclamation
+  // icon and a slightly heavier accent border instead of the lightbulb, since this site's palette
+  // has no actual "warning color" to switch to (--color-accent is just var(--color-text)).
+  eleventyConfig.addPairedShortcode('warning', (content) => {
+    return `<aside role="note" class="callout-note callout-note--warning"><span class="callout-note__icon">${renderIcon('triangle-exclamation')}</span><span class="callout-note__body">${markdownLib.render(content.trim())}</span></aside>`;
   });
 
   // Builds a table of contents out of the heading anchors left behind by markdown-it-anchor.

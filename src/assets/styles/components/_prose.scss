@@ -86,6 +86,16 @@
   font-style: italic;
 }
 
+// Belt-and-braces on top of the global `strong, b { font-weight: 700 }` (_base.scss) — in some
+// browsers, plain `font-weight` doesn't reliably push this variable font's `wght` axis once
+// `font-style: italic` is also in play (the italic face is a separate font file — see _fonts.scss),
+// so it's set directly via font-variation-settings too, which isn't subject to that ambiguity.
+.prose blockquote strong,
+.prose blockquote b {
+  font-weight: 900;
+  font-variation-settings: 'wght' 900;
+}
+
 .prose img,
 .prose video {
   // Without this, images render at their native pixel size (eleventy-img sets width/height attributes
@@ -154,7 +164,12 @@
   text-align: center;
 }
 
-.prose .diagram svg {
+// Scoped to a direct child of .diagram (or of the .image-frame diagram-download.js wraps it in)
+// rather than a plain descendant selector — a plain ".prose .diagram svg" would also catch the
+// download button's own icon svg nested inside it, which needs to stay at icon size, not scale up
+// to fill the diagram.
+.prose .diagram > svg,
+.prose .diagram > .image-frame > svg {
   width: 100%;
   height: auto;
   max-width: 34rem;

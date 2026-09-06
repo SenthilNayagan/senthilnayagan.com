@@ -225,7 +225,7 @@ It's to build a mental model strong enough that later concepts don't feel like m
 > **Goal:** Understand the basic building blocks behind Claude-powered applications.
 
 **Learning article:**  
-→ <a href="/blog/llm-fundamentals/">LLM Fundamentals</a>
+→ <a href="/blog/llm-fundamentals/" target="_blank" rel="noopener">LLM Fundamentals</a>
 
 ---
 
