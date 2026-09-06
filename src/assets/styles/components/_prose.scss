@@ -96,6 +96,18 @@
   font-variation-settings: 'wght' 900;
 }
 
+// An icon dropped inline in running text via {% icon "name", "icon-inline" %} (e.g. a tick/cross
+// next to a Yes/No answer) — sized and baseline-aligned to sit inline with surrounding text.
+// currentcolor, not a fixed green/red: this site's palette is strictly monochrome (--color-accent
+// is just var(--color-text)), so a check vs. a cross is distinguished by shape, not color.
+.icon-inline {
+  display: inline-block; // overrides the global `svg { display: block }` reset (_reset.scss)
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.125em;
+  fill: currentcolor;
+}
+
 .prose img,
 .prose video {
   // Without this, images render at their native pixel size (eleventy-img sets width/height attributes

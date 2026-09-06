@@ -404,11 +404,41 @@ A token might be:
 - whitespace-related text
 - or another piece of the input representation
 
-```text
-"unbelievable"  →  [un] [believ] [able]     (3 tokens)
-"cat"           →  [cat]                    (1 token)
-"ChatGPT"       →  [Chat] [G] [PT]          (3 tokens — an unusual word)
-```
+<div class="diagram">
+  <svg viewBox="0 0 560 170" role="img" aria-labelledby="tok-example-title tok-example-desc">
+    <title id="tok-example-title">Three words split into tokens</title>
+    <desc id="tok-example-desc">"unbelievable" splits into un, believ, able — 3 tokens. "cat" stays whole — 1 token. "ChatGPT" splits into Chat, G, PT — 3 tokens, an unusual word.</desc>
+    <defs>
+      <marker id="tok-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M0 0 L10 5 L0 10 Z" fill="var(--color-text)"></path>
+      </marker>
+    </defs>
+    <text x="20" y="36" fill="var(--color-text)" font-size="13" font-weight="700">unbelievable</text>
+    <line x1="150" y1="30" x2="178" y2="30" stroke="var(--color-text)" stroke-width="2" marker-end="url(#tok-arrow)"></line>
+    <rect x="188" y="15" width="36" height="30" rx="4" fill="var(--color-bg)" stroke="var(--color-text-secondary)" stroke-width="1.5"></rect>
+    <text x="206" y="35" text-anchor="middle" fill="var(--color-text)" font-family="var(--font-mono)" font-size="11">un</text>
+    <rect x="230" y="15" width="66" height="30" rx="4" fill="var(--color-bg)" stroke="var(--color-text-secondary)" stroke-width="1.5"></rect>
+    <text x="263" y="35" text-anchor="middle" fill="var(--color-text)" font-family="var(--font-mono)" font-size="11">believ</text>
+    <rect x="302" y="15" width="50" height="30" rx="4" fill="var(--color-bg)" stroke="var(--color-text-secondary)" stroke-width="1.5"></rect>
+    <text x="327" y="35" text-anchor="middle" fill="var(--color-text)" font-family="var(--font-mono)" font-size="11">able</text>
+    <text x="364" y="35" fill="var(--color-text-secondary)" font-size="11">(3 tokens)</text>
+    <text x="20" y="81" fill="var(--color-text)" font-size="13" font-weight="700">cat</text>
+    <line x1="150" y1="75" x2="178" y2="75" stroke="var(--color-text)" stroke-width="2" marker-end="url(#tok-arrow)"></line>
+    <rect x="188" y="60" width="50" height="30" rx="4" fill="var(--color-bg)" stroke="var(--color-text-secondary)" stroke-width="1.5"></rect>
+    <text x="213" y="80" text-anchor="middle" fill="var(--color-text)" font-family="var(--font-mono)" font-size="11">cat</text>
+    <text x="250" y="80" fill="var(--color-text-secondary)" font-size="11">(1 token)</text>
+    <text x="20" y="126" fill="var(--color-text)" font-size="13" font-weight="700">ChatGPT</text>
+    <line x1="150" y1="120" x2="178" y2="120" stroke="var(--color-text)" stroke-width="2" marker-end="url(#tok-arrow)"></line>
+    <rect x="188" y="105" width="54" height="30" rx="4" fill="var(--color-bg)" stroke="var(--color-text-secondary)" stroke-width="1.5"></rect>
+    <text x="215" y="125" text-anchor="middle" fill="var(--color-text)" font-family="var(--font-mono)" font-size="11">Chat</text>
+    <rect x="248" y="105" width="30" height="30" rx="4" fill="var(--color-bg)" stroke="var(--color-text-secondary)" stroke-width="1.5"></rect>
+    <text x="263" y="125" text-anchor="middle" fill="var(--color-text)" font-family="var(--font-mono)" font-size="11">G</text>
+    <rect x="284" y="105" width="38" height="30" rx="4" fill="var(--color-bg)" stroke="var(--color-text-secondary)" stroke-width="1.5"></rect>
+    <text x="303" y="125" text-anchor="middle" fill="var(--color-text)" font-family="var(--font-mono)" font-size="11">PT</text>
+    <text x="334" y="125" fill="var(--color-text-secondary)" font-size="11">(3 tokens — an unusual word)</text>
+  </svg>
+  <figcaption>Figure 7: The same idea, three different word lengths — tokens don't map cleanly to words.</figcaption>
+</div>
 
 {% note %}
 <strong>Rough rule of thumb:</strong> 1 token ≈ ¾ of an English word. 100 words ≈ 130–140 tokens. But don't rely on this as an exact conversion—the actual count varies by model (e.g., Claude vs. GPT-4 vs. Llama all tokenize differently), by language, and by word frequency. So this is just the rough estimate; we don't need to hand-tokenize anything.
@@ -422,14 +452,24 @@ The important thing to know is:
 
 Tokens have practical consequences.
 
-```text
-                    TOKENS
-                       │
-          ┌────────────┼────────────┐
-          │            │            │
-          ▼            ▼            ▼
-       Context        Cost        Latency
-```
+<div class="diagram">
+  <svg viewBox="0 0 460 200" role="img" aria-labelledby="tok-effects-title tok-effects-desc">
+    <title id="tok-effects-title">Tokens affect context, cost, and latency</title>
+    <desc id="tok-effects-desc">A box labeled Tokens branches down into three boxes: Context, Cost, and Latency.</desc>
+    <rect x="160" y="15" width="140" height="40" rx="7" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"></rect>
+    <text x="230" y="41" text-anchor="middle" fill="var(--color-text)" font-size="13" font-weight="700">TOKENS</text>
+    <line x1="230" y1="55" x2="95" y2="105" stroke="var(--color-text)" stroke-width="1.5"></line>
+    <line x1="230" y1="55" x2="230" y2="105" stroke="var(--color-text)" stroke-width="1.5"></line>
+    <line x1="230" y1="55" x2="365" y2="105" stroke="var(--color-text)" stroke-width="1.5"></line>
+    <rect x="30" y="108" width="130" height="44" rx="7" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"></rect>
+    <text x="95" y="135" text-anchor="middle" fill="var(--color-text)" font-size="13" font-weight="700">Context</text>
+    <rect x="165" y="108" width="130" height="44" rx="7" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"></rect>
+    <text x="230" y="135" text-anchor="middle" fill="var(--color-text)" font-size="13" font-weight="700">Cost</text>
+    <rect x="300" y="108" width="130" height="44" rx="7" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"></rect>
+    <text x="365" y="135" text-anchor="middle" fill="var(--color-text)" font-size="13" font-weight="700">Latency</text>
+  </svg>
+  <figcaption>Figure 8: Why tokens matter — they directly affect context, cost, and latency.</figcaption>
+</div>
 
 ### 4.1.1 Tokens affect context
 
@@ -447,27 +487,55 @@ For API-based applications, usage is generally measured in tokens. In other word
 
 So this:
 
-```text
-Small request
-      ↓
-Fewer tokens
-      ↓
-Less input/output usage
-```
+<div class="diagram">
+  <svg viewBox="0 0 360 250" role="img" aria-labelledby="small-req-title small-req-desc">
+    <title id="small-req-title">A small request keeps token usage low</title>
+    <desc id="small-req-desc">Small request points down to fewer tokens, which points down to less input/output usage.</desc>
+    <defs>
+      <marker id="sr-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M0 0 L10 5 L0 10 Z" fill="var(--color-text)"></path>
+      </marker>
+    </defs>
+    <rect x="80" y="20" width="200" height="46" rx="8" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"></rect>
+    <text x="180" y="48" text-anchor="middle" fill="var(--color-text)" font-size="13" font-weight="700">Small request</text>
+    <line x1="180" y1="66" x2="180" y2="99" stroke="var(--color-text)" stroke-width="2" marker-end="url(#sr-arrow)"></line>
+    <rect x="80" y="102" width="200" height="46" rx="8" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"></rect>
+    <text x="180" y="130" text-anchor="middle" fill="var(--color-text)" font-size="13" font-weight="700">Fewer tokens</text>
+    <line x1="180" y1="148" x2="180" y2="181" stroke="var(--color-text)" stroke-width="2" marker-end="url(#sr-arrow)"></line>
+    <rect x="80" y="184" width="200" height="46" rx="8" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"></rect>
+    <text x="180" y="212" text-anchor="middle" fill="var(--color-text)" font-size="13" font-weight="700">Less input/output usage</text>
+  </svg>
+  <figcaption>Figure 9: A small request stays cheap and fast — fewer tokens all the way down.</figcaption>
+</div>
 
 can be very different from:
 
-```text
-Huge prompt
-   +
-Large documents
-   +
-Long history
-   +
-Large tool results
-      ↓
-Lots of tokens
-```
+<div class="diagram">
+  <svg viewBox="0 0 320 300" role="img" aria-labelledby="stack-tokens-title stack-tokens-desc">
+    <title id="stack-tokens-title">Several inputs add up to lots of tokens</title>
+    <desc id="stack-tokens-desc">Huge prompt, plus large documents, plus long history, plus large tool results, all add up to lots of tokens.</desc>
+    <defs>
+      <marker id="stk-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M0 0 L10 5 L0 10 Z" fill="var(--color-text)"></path>
+      </marker>
+    </defs>
+    <rect x="40" y="15" width="240" height="32" rx="6" fill="var(--color-bg)" stroke="var(--color-text-secondary)" stroke-width="1.5"></rect>
+    <text x="160" y="36" text-anchor="middle" fill="var(--color-text)" font-size="12" font-weight="700">Huge prompt</text>
+    <text x="160" y="63" text-anchor="middle" fill="var(--color-text-secondary)" font-size="13" font-weight="700">+</text>
+    <rect x="40" y="69" width="240" height="32" rx="6" fill="var(--color-bg)" stroke="var(--color-text-secondary)" stroke-width="1.5"></rect>
+    <text x="160" y="90" text-anchor="middle" fill="var(--color-text)" font-size="12" font-weight="700">Large documents</text>
+    <text x="160" y="117" text-anchor="middle" fill="var(--color-text-secondary)" font-size="13" font-weight="700">+</text>
+    <rect x="40" y="123" width="240" height="32" rx="6" fill="var(--color-bg)" stroke="var(--color-text-secondary)" stroke-width="1.5"></rect>
+    <text x="160" y="144" text-anchor="middle" fill="var(--color-text)" font-size="12" font-weight="700">Long history</text>
+    <text x="160" y="171" text-anchor="middle" fill="var(--color-text-secondary)" font-size="13" font-weight="700">+</text>
+    <rect x="40" y="177" width="240" height="32" rx="6" fill="var(--color-bg)" stroke="var(--color-text-secondary)" stroke-width="1.5"></rect>
+    <text x="160" y="198" text-anchor="middle" fill="var(--color-text)" font-size="12" font-weight="700">Large tool results</text>
+    <line x1="160" y1="209" x2="160" y2="239" stroke="var(--color-text)" stroke-width="2" marker-end="url(#stk-arrow)"></line>
+    <rect x="40" y="242" width="240" height="42" rx="7" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="2"></rect>
+    <text x="160" y="268" text-anchor="middle" fill="var(--color-text)" font-size="13" font-weight="700">Lots of tokens</text>
+  </svg>
+  <figcaption>Figure 10: Stack enough inputs together and the token count adds up fast.</figcaption>
+</div>
 
 ### 4.1.3 Tokens affect latency
 
@@ -475,13 +543,27 @@ More information generally means more work for the system. In other words, large
 
 So:
 
-```text
-More tokens
-    ↓
-More processing
-    ↓
-Potentially higher latency
-```
+<div class="diagram">
+  <svg viewBox="0 0 360 250" role="img" aria-labelledby="latency-title latency-desc">
+    <title id="latency-title">More tokens can mean higher latency</title>
+    <desc id="latency-desc">More tokens points down to more processing, which points down to potentially higher latency.</desc>
+    <defs>
+      <marker id="lt-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M0 0 L10 5 L0 10 Z" fill="var(--color-text)"></path>
+      </marker>
+    </defs>
+    <rect x="80" y="20" width="200" height="46" rx="8" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"></rect>
+    <text x="180" y="48" text-anchor="middle" fill="var(--color-text)" font-size="13" font-weight="700">More tokens</text>
+    <line x1="180" y1="66" x2="180" y2="99" stroke="var(--color-text)" stroke-width="2" marker-end="url(#lt-arrow)"></line>
+    <rect x="80" y="102" width="200" height="46" rx="8" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"></rect>
+    <text x="180" y="130" text-anchor="middle" fill="var(--color-text)" font-size="13" font-weight="700">More processing</text>
+    <line x1="180" y1="148" x2="180" y2="181" stroke="var(--color-text)" stroke-width="2" marker-end="url(#lt-arrow)"></line>
+    <rect x="80" y="184" width="200" height="46" rx="8" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"></rect>
+    <text x="180" y="208" text-anchor="middle" fill="var(--color-text)" font-size="12" font-weight="700">Potentially higher</text>
+    <text x="180" y="223" text-anchor="middle" fill="var(--color-text)" font-size="12" font-weight="700">latency</text>
+  </svg>
+  <figcaption>Figure 11: More tokens generally mean more processing — and potentially higher latency.</figcaption>
+</div>
 
 This isn't an absolute rule for every system configuration, but it is an important architectural consideration.
 
@@ -562,27 +644,42 @@ Other application-provided information
 
 Here's a concrete example of what a full context might look like for a customer support application:
 
-```
-┌──────────────────────────────────────┐
-│ System instructions                  │  ← "You are a helpful support agent..."
-├──────────────────────────────────────┤
-│ Relevant conversation history        │  ← Previous 5 exchanges with the customer
-├──────────────────────────────────────┤
-│ Customer profile                     │  ← Name, account tier, region
-├──────────────────────────────────────┤
-│ Order information                    │  ← Order ID, date, items, total
-├──────────────────────────────────────┤
-│ Refund policy                        │  ← Relevant policy section
-├──────────────────────────────────────┤
-│ Current customer request             │  ← "Where is my order?"
-└──────────────────────────────────────┘
-                  │
-                  ▼
-                LLM
-                  │
-                  ▼
-           Generated response
-```
+<div class="diagram">
+  <svg viewBox="0 0 500 430" role="img" aria-labelledby="support-context-title support-context-desc">
+    <title id="support-context-title">Everything in a real customer-support request's context</title>
+    <desc id="support-context-desc">A box listing six items: system instructions, relevant conversation history, customer profile, order information, refund policy, and the current customer request. It points down to the LLM, which points down to the generated response.</desc>
+    <defs>
+      <marker id="sc-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M0 0 L10 5 L0 10 Z" fill="var(--color-text)"></path>
+      </marker>
+    </defs>
+    <rect x="20" y="20" width="460" height="240" rx="8" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"></rect>
+    <line x1="20" y1="60" x2="480" y2="60" stroke="var(--color-border)" stroke-width="1"></line>
+    <line x1="20" y1="100" x2="480" y2="100" stroke="var(--color-border)" stroke-width="1"></line>
+    <line x1="20" y1="140" x2="480" y2="140" stroke="var(--color-border)" stroke-width="1"></line>
+    <line x1="20" y1="180" x2="480" y2="180" stroke="var(--color-border)" stroke-width="1"></line>
+    <line x1="20" y1="220" x2="480" y2="220" stroke="var(--color-border)" stroke-width="1"></line>
+    <text x="35" y="36" fill="var(--color-text)" font-size="11" font-weight="700">System instructions</text>
+    <text x="35" y="51" fill="var(--color-text-secondary)" font-size="9">"You are a helpful support agent..."</text>
+    <text x="35" y="76" fill="var(--color-text)" font-size="11" font-weight="700">Relevant conversation history</text>
+    <text x="35" y="91" fill="var(--color-text-secondary)" font-size="9">Previous 5 exchanges with the customer</text>
+    <text x="35" y="116" fill="var(--color-text)" font-size="11" font-weight="700">Customer profile</text>
+    <text x="35" y="131" fill="var(--color-text-secondary)" font-size="9">Name, account tier, region</text>
+    <text x="35" y="156" fill="var(--color-text)" font-size="11" font-weight="700">Order information</text>
+    <text x="35" y="171" fill="var(--color-text-secondary)" font-size="9">Order ID, date, items, total</text>
+    <text x="35" y="196" fill="var(--color-text)" font-size="11" font-weight="700">Refund policy</text>
+    <text x="35" y="211" fill="var(--color-text-secondary)" font-size="9">Relevant policy section</text>
+    <text x="35" y="236" fill="var(--color-text)" font-size="11" font-weight="700">Current customer request</text>
+    <text x="35" y="251" fill="var(--color-text-secondary)" font-size="9">"Where is my order?"</text>
+    <line x1="250" y1="260" x2="250" y2="290" stroke="var(--color-text)" stroke-width="2" marker-end="url(#sc-arrow)"></line>
+    <rect x="190" y="293" width="120" height="44" rx="8" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="2"></rect>
+    <text x="250" y="320" text-anchor="middle" fill="var(--color-text)" font-size="13" font-weight="700">LLM</text>
+    <line x1="250" y1="337" x2="250" y2="367" stroke="var(--color-text)" stroke-width="2" marker-end="url(#sc-arrow)"></line>
+    <rect x="150" y="370" width="200" height="44" rx="8" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"></rect>
+    <text x="250" y="397" text-anchor="middle" fill="var(--color-text)" font-size="12" font-weight="700">Generated response</text>
+  </svg>
+  <figcaption>Figure 12: A real customer-support request — everything the LLM sees before it can respond.</figcaption>
+</div>
 
 The LLM can use all of this information to generate a relevant, accurate response.
 
@@ -604,19 +701,30 @@ In a filing cabinet.
 
 So our mental model looks like this:
 
-```
-                 Application
-                     │
-          ┌──────────┴──────────┐
-          │                     │
-          ▼                     ▼
-      Context                Memory
-    "on the desk"        "stored elsewhere"
-          │                     │
-          ▼                     ▼
-       LLM                  Database /
-                           Storage system
-```
+<div class="diagram">
+  <svg viewBox="0 0 460 250" role="img" aria-labelledby="ctx-mem-title ctx-mem-desc">
+    <title id="ctx-mem-title">Context and memory lead to different places</title>
+    <desc id="ctx-mem-desc">Application branches into Context, on the desk, which points down to the LLM, and Memory, stored elsewhere, which points down to a database or storage system.</desc>
+    <rect x="160" y="15" width="140" height="40" rx="7" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"></rect>
+    <text x="230" y="41" text-anchor="middle" fill="var(--color-text)" font-size="13" font-weight="700">Application</text>
+    <line x1="230" y1="55" x2="115" y2="100" stroke="var(--color-text)" stroke-width="1.5"></line>
+    <line x1="230" y1="55" x2="345" y2="100" stroke="var(--color-text)" stroke-width="1.5"></line>
+    <rect x="45" y="100" width="140" height="55" rx="7" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"></rect>
+    <text x="115" y="123" text-anchor="middle" fill="var(--color-text)" font-size="13" font-weight="700">Context</text>
+    <text x="115" y="140" text-anchor="middle" fill="var(--color-text-secondary)" font-size="10">"on the desk"</text>
+    <rect x="275" y="100" width="140" height="55" rx="7" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"></rect>
+    <text x="345" y="123" text-anchor="middle" fill="var(--color-text)" font-size="13" font-weight="700">Memory</text>
+    <text x="345" y="140" text-anchor="middle" fill="var(--color-text-secondary)" font-size="10">"stored elsewhere"</text>
+    <line x1="115" y1="155" x2="115" y2="185" stroke="var(--color-text)" stroke-width="2"></line>
+    <line x1="345" y1="155" x2="345" y2="185" stroke="var(--color-text)" stroke-width="2"></line>
+    <rect x="45" y="188" width="140" height="40" rx="7" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"></rect>
+    <text x="115" y="213" text-anchor="middle" fill="var(--color-text)" font-size="13" font-weight="700">LLM</text>
+    <rect x="275" y="188" width="140" height="40" rx="7" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"></rect>
+    <text x="345" y="207" text-anchor="middle" fill="var(--color-text)" font-size="11" font-weight="700">Database /</text>
+    <text x="345" y="221" text-anchor="middle" fill="var(--color-text)" font-size="11" font-weight="700">Storage system</text>
+  </svg>
+  <figcaption>Figure 13: Context and memory lead to different places — context feeds the LLM directly; memory sits in storage until retrieved.</figcaption>
+</div>
 
 ### What's the Difference?
 
@@ -702,11 +810,11 @@ Every order ever placed
 
 **Question:** Did we give the model **more** information?
 
-✅ Yes.
+{% icon "check", "icon-inline" %} Yes.
 
 **Question:** Did we give it **better** information?
 
-❌ Probably not.
+{% icon "xmark", "icon-inline" %} Probably not.
 
 We created noise. The relevant order status is buried somewhere in that pile, but the LLM now has to work through thousands of tokens of irrelevant content to find it. The useful signal is drowned out by the noise.
 
@@ -725,32 +833,40 @@ Let's compare these two desks:
 
 ### Desk A (Focused)
 
-```
-┌───────────────────────┐
-│ Order status          │
-│ Customer request      │
-│ Refund policy         │
-│ Customer ID           │
-└───────────────────────┘
-```
+<div class="diagram">
+  <svg viewBox="0 0 360 200" role="img" aria-labelledby="desk-a-title desk-a-desc">
+    <title id="desk-a-title">Desk A — a focused context</title>
+    <desc id="desk-a-desc">A box containing only four relevant items: order status, customer request, refund policy, and customer ID.</desc>
+    <rect x="40" y="20" width="280" height="160" rx="8" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"></rect>
+    <text x="180" y="58" text-anchor="middle" fill="var(--color-text)" font-size="13" font-weight="700">Order status</text>
+    <text x="180" y="88" text-anchor="middle" fill="var(--color-text)" font-size="13" font-weight="700">Customer request</text>
+    <text x="180" y="118" text-anchor="middle" fill="var(--color-text)" font-size="13" font-weight="700">Refund policy</text>
+    <text x="180" y="148" text-anchor="middle" fill="var(--color-text)" font-size="13" font-weight="700">Customer ID</text>
+  </svg>
+  <figcaption>Figure 14: Desk A — focused. Everything on it is relevant to the request.</figcaption>
+</div>
 
 Everything is relevant and easy to find. The LLM can quickly identify the key facts and generate a response.
 
 ### Desk B (Overstuffed)
 
-```
-┌─────────────────────────────────────────┐
-│ 500 pages of documentation              │
-│ 300 old conversations                   │
-│ 1,000 API responses                     │
-│ Product catalogue                       │
-│ Internal handbook                       │
-│ Old shipping policies                   │
-│ Current order status                    │  ← The information we need
-│ Customer request                        │  ← The information we need
-│ ...                                     │
-└─────────────────────────────────────────┘
-```
+<div class="diagram">
+  <svg viewBox="0 0 400 340" role="img" aria-labelledby="desk-b-title desk-b-desc">
+    <title id="desk-b-title">Desk B — an overstuffed context</title>
+    <desc id="desk-b-desc">A box crammed with nine items: 500 pages of documentation, 300 old conversations, 1,000 API responses, product catalogue, internal handbook, old shipping policies, current order status (needed), customer request (needed), and more. The two needed items are buried among the rest.</desc>
+    <rect x="20" y="15" width="360" height="290" rx="8" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"></rect>
+    <text x="35" y="44" fill="var(--color-text-secondary)" font-size="11">500 pages of documentation</text>
+    <text x="35" y="75" fill="var(--color-text-secondary)" font-size="11">300 old conversations</text>
+    <text x="35" y="106" fill="var(--color-text-secondary)" font-size="11">1,000 API responses</text>
+    <text x="35" y="137" fill="var(--color-text-secondary)" font-size="11">Product catalogue</text>
+    <text x="35" y="168" fill="var(--color-text-secondary)" font-size="11">Internal handbook</text>
+    <text x="35" y="199" fill="var(--color-text-secondary)" font-size="11">Old shipping policies</text>
+    <text x="35" y="230" font-size="11"><tspan fill="var(--color-text)" font-weight="700">Current order status</tspan><tspan fill="var(--color-text-secondary)" font-size="9"> — needed</tspan></text>
+    <text x="35" y="261" font-size="11"><tspan fill="var(--color-text)" font-weight="700">Customer request</tspan><tspan fill="var(--color-text-secondary)" font-size="9"> — needed</tspan></text>
+    <text x="35" y="292" fill="var(--color-text-secondary)" font-size="11" font-style="italic">...</text>
+  </svg>
+  <figcaption>Figure 15: Desk B — overstuffed. The information we need is still there, just buried.</figcaption>
+</div>
 
 The important information is still there — it's just buried. Finding it and correctly using it becomes harder. The model might get distracted by irrelevant policies, outdated information, or conflicting examples.
 
