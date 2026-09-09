@@ -25,7 +25,7 @@ tags:
   - claude
   - ccar-f
   - claude-certified-architect
-# coverImage: ./images/cover-image.png — add once the AI-generated cover art is ready, then create
+coverImage: ./images/cover-image.png
 # the images/ folder next to this file (matches the series' other posts' convention).
 # imageCredits: AI-generated image.
 featured: false
@@ -63,19 +63,81 @@ Think about a horse pulling a cart.
 
 The horse provides the strength to pull the cart. But the horse isn't directly connected to the cart. A **harness** connects the horse to the cart and gives us a way to guide and control the horse.
 
-```text
-      ┌───────────┐
-      │  Harness  │
-      └─────┬─────┘
-            │
-            ▼
-        ┌───────┐
-        │ Horse │
-        └───┬───┘
-            │
-            ▼
-           Cart
-```
+<!-- {% include "postImage.html" src: "./images/harness-horse-cart.png", alt: "Harness -> Horse -> Cart", description: "<b>Figure 1:</b> Harness -> Horse -> Cart.", className: "post-image--narrow" %} -->
+
+<!-- <div class="diagram">
+  <svg viewBox="0 0 430 300">
+    <defs>
+      <marker id="arrow"
+              viewBox="0 0 10 10"
+              refX="8"
+              refY="5"
+              markerWidth="7"
+              markerHeight="7"
+              orient="auto-start-reverse">
+        <path d="M0 0 L10 5 L0 10 Z"
+              fill="var(--color-text)">
+        </path>
+      </marker>
+    </defs>
+
+    <rect x="95" y="20" width="240" height="45" rx="7"
+          fill="var(--color-bg)"
+          stroke="var(--color-text)"
+          stroke-width="1.5">
+    </rect>
+
+    <text x="215" y="48"
+          text-anchor="middle"
+          fill="var(--color-text)"
+          font-size="13"
+          font-weight="700">
+      Harness
+    </text>
+
+    <line x1="215" y1="67"
+          x2="215" y2="108"
+          stroke="var(--color-text)"
+          stroke-width="2"
+          marker-end="url(#arrow)">
+    </line>
+
+    <rect x="95" y="110" width="240" height="45" rx="7"
+          fill="var(--color-bg)"
+          stroke="var(--color-text)"
+          stroke-width="1.5">
+    </rect>
+
+    <text x="215" y="138"
+          text-anchor="middle"
+          fill="var(--color-text)"
+          font-size="13"
+          font-weight="700">
+      LLM
+    </text>
+
+    <line x1="215" y1="157"
+          x2="215" y2="198"
+          stroke="var(--color-text)"
+          stroke-width="2"
+          marker-end="url(#arrow)">
+    </line>
+
+    <rect x="95" y="200" width="240" height="50" rx="7"
+          fill="var(--color-bg)"
+          stroke="var(--color-text)"
+          stroke-width="1.5">
+    </rect>
+
+    <text x="215" y="230"
+          text-anchor="middle"
+          fill="var(--color-text)"
+          font-size="13"
+          font-weight="700">
+      Real-World Actions
+    </text>
+  </svg>
+</div> -->
 
 The harness doesn't do the pulling.
 
