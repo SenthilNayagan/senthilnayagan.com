@@ -110,21 +110,21 @@ An IAM Role works in a very similar way:
 
 ```text
               You / Application / AWS Service
-                          │
-                          │
+                          |
+                          |
                    "Can I use this role?"
-                          │
-                          ▼
-                    ┌───────────┐
-                    │ IAM Role  │
-                    └─────┬─────┘
-                          │
+                          |
+                          v
+                    +-----------+
+                    | IAM Role  |
+                    +-----+-----+
+                          |
                   If you're allowed
-                          │
-                          ▼
+                          |
+                          v
               Temporary credentials
-                          │
-                          ▼
+                          |
+                          v
                   Access AWS resources
 ```
 
