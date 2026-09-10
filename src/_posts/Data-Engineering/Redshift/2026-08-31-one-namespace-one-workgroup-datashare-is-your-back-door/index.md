@@ -787,30 +787,30 @@ And Datashare provides the controlled path between them.
 So far, we have solved the **runtime isolation** problem:
 
 <div class="diagram">
-  <svg viewBox="0 0 460 200" role="img" aria-labelledby="fig16-title fig16-desc">
-    <title id="fig16-title">Namespace and workgroup pairs providing isolated compute environments.</title>
-    <desc id="fig16-desc">Namespace and workgroup pairs providing isolated compute environments.</desc>
+  <svg viewBox="0 0 480 210" role="img" aria-labelledby="fig16-title fig16-desc">
+    <title id="fig16-title">Namespace and workgroup pairs providing isolated compute environments</title>
+    <desc id="fig16-desc">Two rows. Top row: existing_namespace box connected by an arrow to existing_workgroup at 24 RPU. Bottom row: new_app_namespace box connected by an arrow to new_app_workgroup at 32 RPU. Left labels read EXISTING and NEW / ISOLATED.</desc>
     <defs>
       <marker id="arrow-16" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
         <path d="M0 0 L10 5 L0 10 Z" fill="var(--color-text)"></path>
       </marker>
     </defs>
     <text x="115" y="18" text-anchor="middle" fill="var(--color-text-secondary)" font-size="11" font-weight="700">EXISTING</text>
-<rect x="25" y="30" width="180" height="55" rx="8" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"/>
-<text x="115" y="63" text-anchor="middle" fill="var(--color-text)" font-size="13" font-weight="700">existing_namespace</text>
-<line x1="205" y1="58" x2="255" y2="58" stroke="var(--color-text)" stroke-width="2" marker-end="url(#arrow)"/>
-<rect x="255" y="30" width="180" height="55" rx="8" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"/>
-<text x="345" y="63" text-anchor="middle" fill="var(--color-text)" font-size="13" font-weight="700">existing_workgroup (24 RPU)</text>
-<rect x="25" y="135" width="180" height="55" rx="8" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"/>
-<text x="115" y="120" text-anchor="middle" fill="var(--color-text-secondary)" font-size="11" font-weight="700">NEW / ISOLATED</text>
-<text x="115" y="168" text-anchor="middle" fill="var(--color-text)" font-size="13" font-weight="700">new_app_namespace</text>
-<line x1="205" y1="163" x2="255" y2="163" stroke="var(--color-text)" stroke-width="2" marker-end="url(#arrow)"/>
-<rect x="255" y="135" width="180" height="55" rx="8" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"/>
-<text x="345" y="168" text-anchor="middle" fill="var(--color-text)" font-size="13" font-weight="700">new_app_workgroup (32 RPU)</text>
+    <rect x="25" y="28" width="180" height="50" rx="8" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"></rect>
+    <text x="115" y="58" text-anchor="middle" fill="var(--color-text)" font-size="13" font-weight="700">existing_namespace</text>
+    <line x1="205" y1="53" x2="255" y2="53" stroke="var(--color-text)" stroke-width="2" marker-end="url(#arrow-16)"></line>
+    <rect x="255" y="28" width="200" height="50" rx="8" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"></rect>
+    <text x="355" y="50" text-anchor="middle" fill="var(--color-text)" font-size="13" font-weight="700">existing_workgroup</text>
+    <text x="355" y="68" text-anchor="middle" fill="var(--color-text-secondary)" font-size="11">24 RPU</text>
+    <text x="115" y="118" text-anchor="middle" fill="var(--color-text-secondary)" font-size="11" font-weight="700">NEW / ISOLATED</text>
+    <rect x="25" y="128" width="180" height="50" rx="8" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"></rect>
+    <text x="115" y="158" text-anchor="middle" fill="var(--color-text)" font-size="13" font-weight="700">new_app_namespace</text>
+    <line x1="205" y1="153" x2="255" y2="153" stroke="var(--color-text)" stroke-width="2" marker-end="url(#arrow-16)"></line>
+    <rect x="255" y="128" width="200" height="50" rx="8" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"></rect>
+    <text x="355" y="150" text-anchor="middle" fill="var(--color-text)" font-size="13" font-weight="700">new_app_workgroup</text>
+    <text x="355" y="168" text-anchor="middle" fill="var(--color-text-secondary)" font-size="11">32 RPU</text>
   </svg>
-  <figcaption style="transform: translateY(0px);">
-    Figure 16: Namespace and workgroup pairs providing isolated compute environments.
-  </figcaption>
+  <figcaption><strong>Figure 16:</strong> Two isolated namespace/workgroup pairs — each with its own dedicated compute.</figcaption>
 </div>
 
 
@@ -825,35 +825,27 @@ What happens if, six months from now, we look at the workload and conclude:
 
 For example, imagine that the the application application starts like this:
 
-```text
-new_app namespace
-        │
-        ▼
-new_app workgroup
-        │
-        ▼
-       8 RPU
-```
 
 <div class="diagram">
-  <svg viewBox="0 0 460 300" role="img" aria-labelledby="fig17-title fig17-desc">
-    <title id="fig17-title">The initial dedicated application namespace and workgroup.</title>
-    <desc id="fig17-desc">The initial dedicated application namespace and workgroup.</desc>
+  <svg viewBox="0 0 360 260" role="img" aria-labelledby="fig17-title fig17-desc">
+    <title id="fig17-title">The initial dedicated application namespace and workgroup</title>
+    <desc id="fig17-desc">new_app namespace points down to new_app workgroup, which points down to 8 RPU. Labelled INITIAL DEDICATED ENVIRONMENT at the top.</desc>
     <defs>
       <marker id="arrow-17" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
         <path d="M0 0 L10 5 L0 10 Z" fill="var(--color-text)"></path>
       </marker>
     </defs>
-    <text x="230" y="20" text-anchor="middle" fill="var(--color-text-secondary)" font-size="11" font-weight="700">INITIAL DEDICATED ENVIRONMENT</text>
-<rect x="115" y="35" width="230" height="55" rx="8" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"/>
-<text x="230" y="68" text-anchor="middle" fill="var(--color-text)" font-size="13" font-weight="700">new_app namespace</text>
-<line x1="230" y1="90" x2="230" y2="125" stroke="var(--color-text)" stroke-width="2" marker-end="url(#arrow)"/>
-<rect x="115" y="128" width="230" height="55" rx="8" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"/>
-<text x="230" y="161" text-anchor="middle" fill="var(--color-text)" font-size="13" font-weight="700">new_app workgroup</text>
-<line x1="230" y1="183" x2="230" y2="218" stroke="var(--color-text)" stroke-width="2" marker-end="url(#arrow)"/>
-<text x="230" y="248" text-anchor="middle" fill="var(--color-text)" font-size="13" font-weight="700">8 RPU</text>
+    <text x="180" y="18" text-anchor="middle" fill="var(--color-text-secondary)" font-size="11" font-weight="700">INITIAL DEDICATED ENVIRONMENT</text>
+    <rect x="80" y="30" width="200" height="50" rx="8" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"></rect>
+    <text x="180" y="60" text-anchor="middle" fill="var(--color-text)" font-size="13" font-weight="700">new_app namespace</text>
+    <line x1="180" y1="80" x2="180" y2="110" stroke="var(--color-text)" stroke-width="2" marker-end="url(#arrow-17)"></line>
+    <rect x="80" y="113" width="200" height="50" rx="8" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"></rect>
+    <text x="180" y="143" text-anchor="middle" fill="var(--color-text)" font-size="13" font-weight="700">new_app workgroup</text>
+    <line x1="180" y1="163" x2="180" y2="193" stroke="var(--color-text)" stroke-width="2" marker-end="url(#arrow-17)"></line>
+    <rect x="80" y="196" width="200" height="50" rx="8" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"></rect>
+    <text x="180" y="226" text-anchor="middle" fill="var(--color-text)" font-size="13" font-weight="700">8 RPU</text>
   </svg>
-  <figcaption>Figure 17: The initial dedicated application namespace and workgroup.</figcaption>
+  <figcaption><strong>Figure 17:</strong> The initial dedicated application namespace and workgroup.</figcaption>
 </div>
 
 Later, after measuring the workload, we decide that the existing environment can comfortably handle it:
@@ -892,47 +884,30 @@ The first option is **Datashare**.
 
 We have already seen this pattern:
 
-```text
-┌───────────────────────┐
-│     new_app           │
-│       namespace       │
-│                       │
-│   the application data│
-└───────────┬───────────┘
-            │
-            │ Datashare
-            ▼
-┌───────────────────────┐
-│   existing_namespace  │
-│       namespace       │
-│                       │
-│  Existing workloads   │
-└───────────────────────┘
-```
 
 <div class="diagram">
-  <svg viewBox="0 0 460 300" role="img" aria-labelledby="fig19-title fig19-desc">
-    <title id="fig19-title">Datashare providing controlled access from the existing namespace to data owned by the new application namespace.</title>
-    <desc id="fig19-desc">Datashare providing controlled access from the existing namespace to data owned by the new application namespace.</desc>
+  <svg viewBox="0 0 480 200" role="img" aria-labelledby="fig19-title fig19-desc">
+    <title id="fig19-title">Datashare providing controlled access from the existing namespace to data owned by the new application namespace</title>
+    <desc id="fig19-desc">On the left, new_app namespace box labelled DATA OWNER. On the right, existing_namespace box labelled CONSUMER. A horizontal Datashare arrow points from left to right.</desc>
     <defs>
       <marker id="arrow-19" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
         <path d="M0 0 L10 5 L0 10 Z" fill="var(--color-text)"></path>
       </marker>
     </defs>
     <text x="115" y="18" text-anchor="middle" fill="var(--color-text-secondary)" font-size="11" font-weight="700">DATA OWNER</text>
-<text x="345" y="18" text-anchor="middle" fill="var(--color-text-secondary)" font-size="11" font-weight="700">CONSUMER</text>
-<rect x="25" y="30" width="180" height="80" rx="8" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"/>
-<text x="115" y="58" text-anchor="middle" fill="var(--color-text)" font-size="13" font-weight="700">new_app</text>
-<text x="115" y="80" text-anchor="middle" fill="var(--color-text-secondary)" font-size="11">namespace</text>
-<text x="115" y="98" text-anchor="middle" fill="var(--color-text-secondary)" font-size="11">application data</text>
-<rect x="255" y="30" width="180" height="80" rx="8" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"/>
-<text x="345" y="58" text-anchor="middle" fill="var(--color-text)" font-size="13" font-weight="700">existing_namespace</text>
-<text x="345" y="80" text-anchor="middle" fill="var(--color-text-secondary)" font-size="11">namespace</text>
-<text x="345" y="98" text-anchor="middle" fill="var(--color-text-secondary)" font-size="11">existing workloads</text>
-<line x1="205" y1="70" x2="255" y2="70" stroke="var(--color-text)" stroke-width="2" marker-end="url(#arrow)"/>
-<text x="230" y="58" text-anchor="middle" fill="var(--color-text-secondary)" font-size="11">Datashare</text>
+    <text x="365" y="18" text-anchor="middle" fill="var(--color-text-secondary)" font-size="11" font-weight="700">CONSUMER</text>
+    <rect x="25" y="28" width="180" height="80" rx="8" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"></rect>
+    <text x="115" y="58" text-anchor="middle" fill="var(--color-text)" font-size="13" font-weight="700">new_app</text>
+    <text x="115" y="78" text-anchor="middle" fill="var(--color-text-secondary)" font-size="11">namespace</text>
+    <text x="115" y="96" text-anchor="middle" fill="var(--color-text-secondary)" font-size="11">application data</text>
+    <rect x="275" y="28" width="180" height="80" rx="8" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"></rect>
+    <text x="365" y="58" text-anchor="middle" fill="var(--color-text)" font-size="13" font-weight="700">existing_namespace</text>
+    <text x="365" y="78" text-anchor="middle" fill="var(--color-text-secondary)" font-size="11">namespace</text>
+    <text x="365" y="96" text-anchor="middle" fill="var(--color-text-secondary)" font-size="11">existing workloads</text>
+    <line x1="205" y1="68" x2="275" y2="68" stroke="var(--color-text)" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#arrow-19)"></line>
+    <text x="240" y="58" text-anchor="middle" fill="var(--color-text)" font-size="11" font-weight="700">Datashare</text>
   </svg>
-  <figcaption>Figure 19: Datashare providing controlled access from the existing namespace to data owned by the new application namespace.</figcaption>
+  <figcaption><strong>Figure 19:</strong> Datashare providing controlled access from the existing namespace to data owned by the new application namespace.</figcaption>
 </div>
 
 This is particularly useful if the immediate goal is to **test the the application workload on the existing workgroup** before physically moving the data.
@@ -941,19 +916,30 @@ The `existing_namespace` workgroup can query the shared the application data usi
 
 That gives us a useful validation path:
 
-```text
-new_app
-    │
-    │ Datashare
-    ▼
-existing_namespace
-    │
-    ▼
-existing_namespace workgroup
-    │
-    ▼
-Run the application queries
-```
+<div class="diagram">
+  <svg viewBox="0 0 360 260" role="img" aria-labelledby="fig18-title fig18-desc">
+    <title id="fig18-title">Datashare as a validation bridge before committing to consolidation</title>
+    <desc id="fig18-desc">new_app namespace points down via a Datashare arrow to existing_namespace, which points down to existing_namespace workgroup, which points down to Run the application queries.</desc>
+    <defs>
+      <marker id="arrow-18" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M0 0 L10 5 L0 10 Z" fill="var(--color-text)"></path>
+      </marker>
+    </defs>
+    <rect x="80" y="15" width="200" height="46" rx="8" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"></rect>
+    <text x="180" y="43" text-anchor="middle" fill="var(--color-text)" font-size="13" font-weight="700">new_app</text>
+    <line x1="180" y1="61" x2="180" y2="86" stroke="var(--color-text)" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#arrow-18)"></line>
+    <text x="195" y="77" fill="var(--color-text)" font-size="11" font-weight="700">Datashare</text>
+    <rect x="80" y="89" width="200" height="46" rx="8" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"></rect>
+    <text x="180" y="117" text-anchor="middle" fill="var(--color-text)" font-size="13" font-weight="700">existing_namespace</text>
+    <line x1="180" y1="135" x2="180" y2="160" stroke="var(--color-text)" stroke-width="2" marker-end="url(#arrow-18)"></line>
+    <rect x="80" y="163" width="200" height="46" rx="8" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"></rect>
+    <text x="180" y="191" text-anchor="middle" fill="var(--color-text)" font-size="13" font-weight="700">existing workgroup</text>
+    <line x1="180" y1="209" x2="180" y2="234" stroke="var(--color-text)" stroke-width="2" marker-end="url(#arrow-18)"></line>
+    <rect x="80" y="237" width="200" height="18" rx="4" fill="none" stroke="none"></rect>
+    <text x="180" y="250" text-anchor="middle" fill="var(--color-text-secondary)" font-size="11">Run the application queries</text>
+  </svg>
+  <figcaption><strong>Figure 18:</strong> Datashare as a validation bridge — test the workload on the existing workgroup before physically moving any data.</figcaption>
+</div>
 
 ### But Datashare does not migrate the data
 
@@ -1003,17 +989,28 @@ So Datashare can be an excellent **bridge**, but it should not be confused with 
 
 If the goal is to actually move the the application data into the existing `existing_namespace` namespace, the most straightforward approach is:
 
-```text
-new_app
-    │
-    │ UNLOAD
-    ▼
-Amazon S3
-    │
-    │ COPY
-    ▼
-existing_namespace
-```
+<div class="diagram">
+  <svg viewBox="0 0 300 280" role="img" aria-labelledby="fig20-title fig20-desc">
+    <title id="fig20-title">UNLOAD to S3 then COPY into the target namespace</title>
+    <desc id="fig20-desc">new_app points down via UNLOAD to Amazon S3, which points down via COPY to existing_namespace.</desc>
+    <defs>
+      <marker id="arrow-20" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M0 0 L10 5 L0 10 Z" fill="var(--color-text)"></path>
+      </marker>
+    </defs>
+    <rect x="50" y="15" width="200" height="46" rx="8" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"></rect>
+    <text x="150" y="43" text-anchor="middle" fill="var(--color-text)" font-size="13" font-weight="700">new_app</text>
+    <line x1="150" y1="61" x2="150" y2="96" stroke="var(--color-text)" stroke-width="2" marker-end="url(#arrow-20)"></line>
+    <text x="165" y="82" fill="var(--color-text)" font-size="11" font-weight="700">UNLOAD</text>
+    <rect x="50" y="99" width="200" height="46" rx="8" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"></rect>
+    <text x="150" y="127" text-anchor="middle" fill="var(--color-text)" font-size="13" font-weight="700">Amazon S3</text>
+    <line x1="150" y1="145" x2="150" y2="180" stroke="var(--color-text)" stroke-width="2" marker-end="url(#arrow-20)"></line>
+    <text x="165" y="166" fill="var(--color-text)" font-size="11" font-weight="700">COPY</text>
+    <rect x="50" y="183" width="200" height="46" rx="8" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"></rect>
+    <text x="150" y="211" text-anchor="middle" fill="var(--color-text)" font-size="13" font-weight="700">existing_namespace</text>
+  </svg>
+  <figcaption><strong>Figure 20:</strong> The UNLOAD → S3 → COPY migration path — data physically moves from the source namespace to the target.</figcaption>
+</div>
 
 This is the approach we would generally recommend for the consolidation scenario.
 
