@@ -17,7 +17,7 @@ tags:
 coverImage: ./images/cover-image.png
 # folder next to this file (matches this series' other posts' convention).
 imageDescription: "A Beginner's Introduction to Linear Algebra"
-# imageCredits: ''
+# imageCredits: ""
 featured: false
 draft: true
 ---
