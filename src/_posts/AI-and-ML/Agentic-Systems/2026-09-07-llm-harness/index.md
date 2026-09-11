@@ -25,7 +25,7 @@ tags:
   - claude
   - ccar-f
   - claude-certified-architect
-# coverImage: ./images/cover-image.png — add once the AI-generated cover art is ready, then create
+coverImage: ./images/cover-image.png
 # the images/ folder next to this file (matches the series' other posts' convention).
 # imageCredits: AI-generated image.
 featured: false
@@ -64,17 +64,19 @@ Think about a horse pulling a cart.
 The horse provides the strength to pull the cart. But the horse isn't directly connected to the cart. A **harness** connects the horse to the cart and gives us a way to guide and control the horse.
 
 ```text
-      ┌───────────┐
-      │  Harness  │
-      └─────┬─────┘
-            │
-            ▼
-        ┌───────┐
-        │ Horse │
-        └───┬───┘
-            │
-            ▼
-           Cart
+        +------------------------+
+        |        Harness         |
+        +-----------+------------+
+                    |
+                    v
+        +------------------------+
+        |          LLM           |
+        +-----------+------------+
+                    |
+                    v
+        +------------------------+
+        |   Real-World Actions   |
+        +------------------------+
 ```
 
 The harness doesn't do the pulling.
@@ -138,13 +140,13 @@ Now let's put an LLM into the picture.
 At its simplest, an LLM does this:
 
 ```text
-Input / Context
-      │
-      ▼
-    LLM
-      │
-      ▼
-Generated Output
+      Input / Context
+            │
+            ▼
+          LLM
+            │
+            ▼
+      Generated Output
 ```
 
 The model receives context and generates an output.
@@ -182,46 +184,46 @@ But it cannot, by itself:
 The harness connects the model's decisions to those real operations.
 
 ```text
-User
- │
- │ "Fix the failing test"
- ▼
-Harness
- │
- │ Gives relevant context
- ▼
-LLM
- │
- │ "Read payment.py"
- ▼
-Harness
- │
- │ Executes read_file()
- ▼
-LLM
- │
- │ "Modify payment.py"
- ▼
-Harness
- │
- │ Executes edit_file()
- ▼
-LLM
- │
- │ "Run the tests"
- ▼
-Harness
- │
- │ Executes pytest
- ▼
-Test Results
- │
- ▼
-LLM
- │
- │ Decides what to do next
- ▼
-...
+        User
+        │
+        │ "Fix the failing test"
+        ▼
+        Harness
+        │
+        │ Gives relevant context
+        ▼
+        LLM
+        │
+        │ "Read payment.py"
+        ▼
+        Harness
+        │
+        │ Executes read_file()
+        ▼
+        LLM
+        │
+        │ "Modify payment.py"
+        ▼
+        Harness
+        │
+        │ Executes edit_file()
+        ▼
+        LLM
+        │
+        │ "Run the tests"
+        ▼
+        Harness
+        │
+        │ Executes pytest
+        ▼
+        Test Results
+        │
+        ▼
+        LLM
+        │
+        │ Decides what to do next
+        ▼
+        ...
 ```
 
 The important distinction is:
@@ -243,19 +245,19 @@ Input → LLM → Output
 we have:
 
 ```text
-Reason
-  ↓
-Act
-  ↓
-Observe
-  ↓
-Reason
-  ↓
-Act
-  ↓
-Observe
-  ↓
-...
+          Reason
+            ↓
+          Act
+            ↓
+          Observe
+            ↓
+          Reason
+            ↓
+          Act
+            ↓
+          Observe
+            ↓
+          ...
 ```
 
 The model reasons about the task and proposes an action.
@@ -313,35 +315,35 @@ Our agent harness can provide a Gmail tool.
 The flow becomes:
 
 ```text
-User
- │
- ▼
-Harness
- │
- ▼
-LLM
- │
- │ "Search Gmail for Acme contract emails"
- ▼
-Harness
- │
- ▼
-Gmail Tool
- │
- ▼
-Gmail
- │
- ▼
-Search Results
- │
- ▼
-Harness
- │
- ▼
-LLM
- │
- ▼
-Summary
+            User
+            │
+            ▼
+            Harness
+            │
+            ▼
+            LLM
+            │
+            │ "Search Gmail for Acme contract emails"
+            ▼
+            Harness
+            │
+            ▼
+            Gmail Tool
+            │
+            ▼
+            Gmail
+            │
+            ▼
+            Search Results
+            │
+            ▼
+            Harness
+            │
+            ▼
+            LLM
+            │
+            ▼
+            Summary
 ```
 
 The model decides that Gmail needs to be searched.
@@ -372,21 +374,21 @@ A useful mental model is:
 
 ```text
              AGENT
-        ┌───────────────┐
-        │               │
-        │    HARNESS    │
-        │               │
-        │     ┌─────┐   │
-        │     │ LLM │   │
-        │     └─────┘   │
-        │               │
-        │ Tools         │
-        │ Memory        │
-        │ Workspace     │
-        │ Guardrails    │
-        │ Agent Loop    │
-        │ Verification  │
-        └───────────────┘
+        +---------------+
+        |               |
+        |    HARNESS    |
+        |               |
+        |     +-----+   |
+        |     | LLM |   |
+        |     +-----+   |
+        |               |
+        | Tools         |
+        | Memory        |
+        | Workspace     |
+        | Guardrails    |
+        | Agent Loop    |
+        | Verification  |
+        +---------------+
 ```
 
 So we can use this as a useful shorthand:
@@ -462,17 +464,17 @@ Orchestration is about coordinating multiple operations.
 For example:
 
 ```text
-LLM
- ↓
-Search
- ↓
-LLM
- ↓
-Database
- ↓
-LLM
- ↓
-Email
+          LLM
+          ↓
+          Search
+          ↓
+          LLM
+          ↓
+          Database
+          ↓
+          LLM
+          ↓
+          Email
 ```
 
 The software coordinating those steps is performing orchestration.
@@ -555,15 +557,15 @@ The question becomes:
 > **“What information should the model see, and when?”**
 
 ```text
-Prompt
-+
-Documents
-+
-Memory
-+
-Tool Results
-      ↓
-     LLM
+        Prompt
+        +
+        Documents
+        +
+        Memory
+        +
+        Tool Results
+              ↓
+            LLM
 ```
 
 ## Harness Engineering
@@ -574,20 +576,20 @@ The question expands further:
 
 ```text
               HARNESS
-┌─────────────────────────────┐
-│ Prompts                     │
-│ Context                     │
-│ Memory                      │
-│ Tools                       │
-│ Execution                   │
-│ Agent Loop                  │
-│ Sandboxing                  │
-│ Guardrails                  │
-│ Verification                │
-│ Observability               │
-│                             │
-│            LLM              │
-└─────────────────────────────┘
+        +-----------------------------+
+        | Prompts                     |
+        | Context                     |
+        | Memory                      |
+        | Tools                       |
+        | Execution                   |
+        | Agent Loop                  |
+        | Sandboxing                  |
+        | Guardrails                  |
+        | Verification                |
+        | Observability               |
+        |                             |
+        |            LLM              |
+        +-----------------------------+
 ```
 
 So we can summarize the progression as:
@@ -613,17 +615,17 @@ But generating those words doesn't mean `pytest` actually ran.
 The harness turns that request into an actual operation:
 
 ```text
-LLM
- ↓
-"Run pytest"
- ↓
-Harness
- ↓
-pytest
- ↓
-Test Results
- ↓
-LLM
+        LLM
+        ↓
+        "Run pytest"
+        ↓
+        Harness
+        ↓
+        pytest
+        ↓
+        Test Results
+        ↓
+        LLM
 ```
 
 Likewise, an LLM can generate a request such as:
@@ -690,40 +692,40 @@ If we remember only one thing, let it be this:
 
 ```text
                   AI AGENT
-        ┌─────────────────────────┐
-        │       AGENT HARNESS     │
-        │                         │
-        │ Context                 │
-        │ Memory                  │
-        │ Tools                   │
-        │ Workspace               │
-        │ Permissions             │
-        │ Guardrails              │
-        │ Verification            │
-        │ Observability           │
-        │                         │
-        │        ┌─────┐          │
-        │        │ LLM │          │
-        │        └─────┘          │
-        │           │             │
-        │       Decides           │
-        │           │             │
-        │           ▼             │
-        │      Action Request     │
-        │           │             │
-        │           ▼             │
-        │        Harness          │
-        │           │             │
-        │           ▼             │
-        │     Tool / API /        │
-        │     Sandbox / System    │
-        │           │             │
-        │           ▼             │
-        │         Result          │
-        │           │             │
-        │           └──────► LLM  │
-        │                         │
-        └─────────────────────────┘
+        +-------------------------+
+        |       AGENT HARNESS     |
+        |                         |
+        | Context                 |
+        | Memory                  |
+        | Tools                   |
+        | Workspace               |
+        | Permissions             |
+        | Guardrails              |
+        | Verification            |
+        | Observability           |
+        |                         |
+        |        +-----+          |
+        |        | LLM |          |
+        |        +-----+          |
+        |           |             |
+        |        Decides          |
+        |           |             |
+        |           v             |
+        |     Action Request      |
+        |           |             |
+        |           v             |
+        |        Harness          |
+        |           |             |
+        |           v             |
+        |    Tool / API /         |
+        |    Sandbox / System     |
+        |           |             |
+        |           v             |
+        |         Result          |
+        |           |             |
+        |           +-------> LLM |
+        |                         |
+        +-------------------------+
 ```
 
 The loop is:

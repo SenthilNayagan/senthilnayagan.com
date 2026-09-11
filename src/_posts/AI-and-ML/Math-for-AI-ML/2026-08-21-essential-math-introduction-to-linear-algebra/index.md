@@ -14,10 +14,10 @@ tags:
   - linear-algebra
   - math-for-ai-ml
   - essential-math-for-ai-ml
-# coverImage: ./images/cover-image.png — add once the cover art is ready, then create the images/
+coverImage: ./images/cover-image.png
 # folder next to this file (matches this series' other posts' convention).
-# imageDescription: ''
-# imageCredits: ''
+imageDescription: "A Beginner's Introduction to Linear Algebra"
+# imageCredits: ""
 featured: false
 draft: true
 ---

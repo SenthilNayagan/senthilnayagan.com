@@ -23,10 +23,10 @@ tags:
   - trust-policy
   - aws-security
   - cloud
-# coverImage: ./images/cover-image.png
+coverImage: ./images/cover-image.png
 # imageCredits: AI-generated image.
 featured: false
-draft: true
+draft: false
 ---
 
 {% include "toc.md" %}
@@ -110,21 +110,21 @@ An IAM Role works in a very similar way:
 
 ```text
               You / Application / AWS Service
-                          │
-                          │
+                          |
+                          |
                    "Can I use this role?"
-                          │
-                          ▼
-                    ┌───────────┐
-                    │ IAM Role  │
-                    └─────┬─────┘
-                          │
+                          |
+                          v
+                    +-----------+
+                    | IAM Role  |
+                    +-----+-----+
+                          |
                   If you're allowed
-                          │
-                          ▼
+                          |
+                          v
               Temporary credentials
-                          │
-                          ▼
+                          |
+                          v
                   Access AWS resources
 ```
 
@@ -159,7 +159,7 @@ Before the security desk hands over the badge, it needs to check:
  to receive this badge?"
 ```
 
-Similarly, before AWS allows someone to assume a role, it checks the role's **trust policy**.
+Similarly, when a principal tries to assume an IAM Role, AWS checks the role's **trust policy** to determine whether that principal is trusted to assume the role.
 
 The trust policy essentially tells AWS:
 
@@ -183,6 +183,347 @@ For example:
              Temporary credentials
 ```
 
+But there is an important detail we should understand here.
+
+### Is the Trust Policy Authentication?
+
+At this point, we might be wondering:
+
+> **"If the trust policy checks who is allowed to assume the role, isn't that authentication?"**
+
+It's an understandable assumption, but technically, **no**.
+
+Authentication and authorization answer two different questions:
+
+**Authentication** answers:
+
+> **"Who are we?"**
+
+**Authorization** answers:
+
+> **"What are we allowed to do?"**
+
+When we try to assume an IAM Role, AWS first needs to establish **who or what is making the request**. This is the authentication part.
+
+Once AWS has established the identity of the requesting principal, AWS evaluates the role's **trust policy** to determine whether that principal is **authorized to assume the role**.
+
+So, a more accurate way to think about the process is:
+
+```text
+          +---------------------------------------------------------+
+          | 1. AUTHENTICATION                                       |
+          |                                                         |
+          |    "Who is making this request?"                        |
+          |                                                         |
+          |    AWS establishes the identity of the caller.          |
+          +------------------------+--------------------------------+
+                                  |
+                                  v
+          +---------------------------------------------------------+
+          | 2. TRUST POLICY                                         |
+          |                                                         |
+          |    "Is this principal authorized to assume this role?" |
+          |                                                         |
+          |    The trust policy determines whether the principal   |
+          |    is allowed to perform the role-assumption operation. |
+          +------------------------+--------------------------------+
+                                  |
+                              Allowed
+                                  |
+                                  v
+          +---------------------------------------------------------+
+          | 3. TEMPORARY CREDENTIALS                                |
+          |                                                         |
+          |    AWS STS provides temporary security credentials.     |
+          +------------------------+--------------------------------+
+                                  |
+                                  v
+          +---------------------------------------------------------+
+          | 4. PERMISSION POLICY                                    |
+          |                                                         |
+          |    "What is this role session authorized to do?"        |
+          |                                                         |
+          |    The role's permissions determine which AWS actions   |
+          |    and resources can be accessed.                       |
+          +---------------------------------------------------------+
+```
+
+In other words:
+
+> **Authentication establishes who or what is making the request. The trust policy then authorizes whether that principal can assume the role. Once the role is assumed, the role's permissions determine what the resulting role session can do.**
+
+### Where Does STS Come Into the Picture?
+
+This is where **AWS Security Token Service (STS)** comes in.
+
+When we assume a role using the standard `AssumeRole` operation, the request is made to AWS STS:
+
+```text
+sts:AssumeRole
+```
+
+STS evaluates the target role's trust policy and determines whether the requesting principal is allowed to assume that role.
+
+If the request is allowed, STS issues **temporary security credentials**.
+
+Conceptually:
+
+```text
+            +-----------+
+            | Principal |
+            +-----+-----+
+                  |
+                  | sts:AssumeRole
+                  v
+            +-----------+
+            |  AWS STS  |
+            +-----+-----+
+                  |
+                  | Checks
+                  v
+            +-------------+
+            | Trust Policy|
+            +------+------+ 
+                   |
+                "Allowed?"
+                /       \
+              YES        NO
+               |          |
+               v          v
+    +----------------+  +-------------+
+    |    Temporary   |  | AccessDenied|
+    |   credentials  |  +-------------+
+    +-------+--------+
+            |
+            v
+        +-------------+
+        | Role session|
+        +------+------+
+               |
+               v
+        +-------------+
+        | AWS API     |
+        |   calls     |
+        +-------------+
+```
+
+This is why the trust policy isn't simply another permission policy.
+
+The trust policy is a **resource-based policy attached to the IAM Role**. Its purpose is to control **who or what is allowed to assume that role**.
+
+For the standard role-assumption flow, it governs the `sts:AssumeRole` operation.
+
+Other role-assumption mechanisms use related STS operations, such as:
+
+- `sts:AssumeRoleWithSAML`
+- `sts:AssumeRoleWithWebIdentity`
+
+The underlying idea remains the same:
+
+> **The trust policy controls who is trusted to obtain the role's temporary credentials.**
+
+### So What Does the Permission Policy Do?
+
+Once the role has been successfully assumed, we have temporary credentials representing a **role session**.
+
+Now AWS needs to answer a different question:
+
+> **"What is this role session allowed to do?"**
+
+That's where the **permission policy** comes in.
+
+For example, our role might have permissions that say:
+
+```text
+This role can:
+    ├── Read objects from S3
+    ├── Query DynamoDB
+    └── Invoke Lambda functions
+```
+
+The trust policy does **not** grant these permissions.
+
+Likewise, the permission policy does **not** decide who can assume the role.
+
+We need to satisfy both sides:
+
+```text
+             TRUST POLICY
+                   │
+                   │
+          "Can we assume
+             the role?"
+                   │
+                   ▼
+              Role assumed
+                   │
+                   ▼
+          Temporary credentials
+                   │
+                   ▼
+          PERMISSION POLICY
+                   │
+                   │
+          "What can this
+           role session do?"
+                   │
+                   ▼
+             AWS resources
+```
+
+This gives us a very simple rule:
+
+> **Trust gets us the badge. Permissions determine which doors the badge can open.**
+
+### A Simple Way to Remember It
+
+Think about our visitor badge again.
+
+Imagine we arrive at an office building.
+
+The security desk has two separate responsibilities.
+
+First, it needs to determine:
+
+> **"Are we allowed to receive this badge?"**
+
+That's the **trust side**.
+
+Once we receive the badge, the next question is:
+
+> **"Which areas of the building can this badge give us access to?"**
+
+That's the **permission side**.
+
+So we can think of it like this:
+
+```text
+       "Can we get the badge?"
+                  │
+                  ▼
+            TRUST POLICY
+                  │
+                  ▼
+          We get the badge
+                  │
+                  ▼
+       "What can the badge open?"
+                  │
+                  ▼
+         PERMISSION POLICY
+```
+
+Or, even more simply:
+
+> **Trust gets us the badge. Permissions determine which doors the badge can open.**
+
+This distinction is extremely important.
+
+A role can have a permission policy that says:
+
+```text
+This role can:
+    ├── Read from S3
+    ├── Write to DynamoDB
+    └── Invoke Lambda functions
+```
+
+But that doesn't automatically mean that **we, EC2, Lambda, or another AWS account** can use the role.
+
+The requesting principal must first be **trusted to assume it**.
+
+On the other hand, being trusted to assume a role doesn't automatically give us unlimited access to AWS resources.
+
+For example, the role might trust EC2:
+
+```text
+Trust Policy:
+    "I trust EC2 to assume me."
+```
+
+while its permission policy says:
+
+```text
+Permission Policy:
+    "Once assumed, we can only read
+     from this S3 bucket."
+```
+
+So the two policies answer completely different questions:
+
+```text
+                 IAM ROLE
+                     │
+          ┌──────────┴──────────┐
+          │                     │
+          ▼                     ▼
+    TRUST POLICY         PERMISSION POLICY
+          │                     │
+          ▼                     ▼
+     "Who can              "What can the
+     assume me?"            role do?"
+          │                     │
+          ▼                     ▼
+    Role assumption        AWS API access
+          │                     │
+          ▼                     ▼
+    Temporary             S3 / DynamoDB /
+    credentials            Lambda / etc.
+```
+
+### The Key Distinction
+
+If we want to map this to the familiar **authentication vs. authorization** terminology, the cleanest mental model is:
+
+```text
+        Authentication
+            │
+            │ "Who are we?"
+            ▼
+        Trust Policy
+            │
+            │ "Are we authorized to assume
+            │  this role?"
+            ▼
+        Temporary Credentials
+            │
+            │ "Now we're acting as
+            │  this role session."
+            ▼
+        Permission Policy
+            │
+            │ "What are we authorized
+            │  to do?"
+            ▼
+        AWS Resources
+```
+
+So we should **not** think of the model as:
+
+```text
+Trust Policy       = Authentication
+Permission Policy  = Authorization
+```
+
+Instead, the more accurate model is:
+
+```text
+Authentication
+    → Establishes our identity
+
+Trust Policy
+    → Authorizes our role assumption
+
+Permission Policy
+    → Authorizes actions performed using the role
+```
+
+This distinction becomes especially useful when we're troubleshooting IAM problems.
+
+If the role assumption itself fails, we should investigate the **trust relationship** and the `sts:AssumeRole` request.
+
+If the role has been successfully assumed but an operation such as `s3:GetObject` fails, we should investigate the **permissions** that govern that operation.
+
 And this is the key idea we'll carry throughout the rest of this article:
 
 > **An IAM Role has two important sides:**
@@ -200,13 +541,13 @@ We'll now focus on the first question — **the Trust Policy** — and understan
 Think of an IAM Role as a **keycard** that unlocks specific doors in a hotel.
 
 ```
-            ┌─────────────────────────────────────┐
-            │       HOTEL KEYCARD (Role)          │
-            │  "This card grants access to:"      │
-            │     - 3rd floor meeting rooms       │
-            │     - The business center printer   │
-            │     - The rooftop lounge            │
-            └─────────────────────────────────────┘
+        ┌─────────────────────────────────────┐
+        │       HOTEL KEYCARD (Role)          │
+        │  "This card grants access to:"      │
+        │     - 3rd floor meeting rooms       │
+        │     - The business center printer   │
+        │     - The rooftop lounge            │
+        └─────────────────────────────────────┘
               ▲                        ▲
               │                        │
     ┌─────────┴─────────┐   ┌──────────┴───────────┐
@@ -244,7 +585,7 @@ We don't become the wristband—we just wear it temporarily and it expires at mi
 
 # Step 3: What Does a Trust Policy Actually Look Like?
 
-Here's a real trust policy — the kind we'd see on a role meant for EC2:
+Here's a real **trust policy** — the kind we'd see on a role meant for EC2:
 
 ```json
 {
@@ -273,7 +614,7 @@ Let's break this into three plain-English pieces:
 
 Notice something important: **there is no `Resource` field about S3 buckets or EC2 instances here.** That's because a trust policy has nothing to do with AWS resources like buckets or databases — it's purely about **identity**: who gets to borrow this role.
 
-Compare that to a permission policy attached to the same role:
+Compare that to a **permission policy** attached to the same role:
 
 ```json
 {
@@ -281,27 +622,178 @@ Compare that to a permission policy attached to the same role:
   "Statement": [
     {
       "Effect": "Allow",
-      "Action": ["s3:GetObject", "s3:PutObject"],
-      "Resource": "arn:aws:s3:::my-app-bucket/*"
+      "Action": ["s3:ListBucket", "s3:GetObject"],
+      "Resource": [
+        "arn:aws:s3:::my-app-bucket",
+        "arn:aws:s3:::my-app-bucket/*"
+      ]
     }
   ]
 }
 ```
 
+Here, the two permissions allow the role to:
+
+- `s3:ListBucket` → List the contents/files in the bucket (requires the bucket ARN without `/*` because `s3:ListBucket` operates at the bucket level)
+- `s3:GetObject` → Read any file from the bucket (requires the object ARN with `/*` because `s3:GetObject` operates at the object level)
+
+Together, these permissions mean the role can both browse the bucket's contents AND read the actual data from any file.
+
 Here there's **no `Principal` field at all** — because by the time this policy is checked, AWS already knows who we are (we've already borrowed the keycard). This policy only answers **"what we can do now?"**.
 
 **Side-by-side, the difference becomes obvious:**
+
+{% include "postImage.html" src: "./images/aws-iam-role-trust-relationships.png", alt: "AWS Console showing the Trust relationships tab of an IAM Role", description: "<b>Figure 1:</b> The Trust relationships tab in the AWS Console — this is where the trust policy lives, separate from the Permissions tab that controls what the role can do." %}
 
 | | Trust Policy | Permission Policy |
 |---|---|---|
 | Lives in | "Trust relationships" tab | "Permissions" tab |
 | Answers | Who can assume this role? | What can this role do? |
 | Key field | `Principal` + `Action: sts:AssumeRole` | `Action` + `Resource` |
-| Involves | `sts:AssumeRole` only | Service actions like `s3:GetObject`, `ec2:RunInstances`, etc. |
+| Involves | `sts:AssumeRole` only | Service actions like `s3:ListBucket`, `s3:GetObject`, etc. |
 | Checked | Before the role is assumed | After the role is assumed, on every action |
 
 ---
 
 # Step 4: Why Is Trust Policy Mandatory?
 
-TODO
+Here's the part most people miss: **we cannot create an IAM Role without a trust policy.** AWS forces us to define one the moment we create a role — there's no skipping it.
+
+**However, there's a catch:** In many workflows, we don't have to write it ourselves. When we create a role through the AWS console, CLI, or a managed service like Lambda or EC2, AWS **automatically** creates the trust policy for us behind the scenes. That's why we might have created dozens of roles without ever opening the "Trust relationships" tab — the policy was already there, we just didn't see it.
+
+## Why does AWS require it at all?
+
+Go back to the hotel analogy. A hotel room without a guest list would mean **anyone off the street could walk in, sleep in the bed, and use the minibar.** AWS can't allow that. Since a role has no fixed owner (unlike an IAM User, which is a permanent identity tied to one person), AWS *must* have a gatekeeping mechanism to control who's allowed to borrow that identity.
+
+## Wait, Why Don't IAM Users Need a Trust Policy?
+
+**IAM Users don't need trust policies** because an IAM User is a primary identity authenticated directly with its own permanent credentials. We don't "assume" a user — We log into it. 
+
+An IAM Role, however, is an unattached identity designed to be borrowed. Because anyone could potentially try to use a role, AWS needs a gatekeeping mechanism to control who is allowed to borrow it. Trust policies exist solely to define those rules for temporary identity assumption.
+
+For example:
+
+- **IAM User:** We log into the AWS Console using our own username `alice` and password. We don't ask permission to "be" Alice — we authenticate directly as Alice.
+
+- **IAM Role:** An EC2 server needs to read from an S3 bucket. The server isn't a human with a password, so it asks AWS: *"Can I borrow the `S3-Reader-Role`?"* AWS checks the role's trust policy to verify EC2 is on the guest list before issuing temporary keys.
+
+---
+
+# Step 5: How the Two Policies Work Together — Step by Step
+
+Let's trace a real request end-to-end. Suppose an application running on an EC2 instance named `TestEC2Instance` needs to read a file from an S3 bucket.
+
+Before launching the instance, we attach a specific role to it — `AppS3ReaderRole` (ARN: `arn:aws:iam::123456789012:role/AppS3ReaderRole`).
+
+## Step 1: Borrowing the Identity (Trust Policy Check)
+
+*Handled by AWS Security Token Service (STS)*
+
+- **The Request:** The application (or AWS SDK) running on `TestEC2Instance` sends an `sts:AssumeRole` request to AWS STS, specifying the target role: `arn:aws:iam::123456789012:role/AppS3ReaderRole`.
+
+- **The Evaluation:** AWS STS opens **AppS3ReaderRole's Trust Policy** and asks: *"Is the requesting service (`ec2.amazonaws.com`) listed on the guest list (Principal)?"*
+
+- **The Result:** If **YES**, AWS STS issues short-lived temporary security credentials (`AccessKeyId`, `SecretAccessKey`, `SessionToken`) to `TestEC2Instance` via its local Instance Metadata Service (IMDS).
+
+## Step 2: Accessing the Target Resource (Permission Policy Check)
+
+*Handled by Amazon S3*
+
+- **The Request:** The application makes an `s3:GetObject` API request to S3, signing the HTTP request using the temporary credentials acquired in Step 1.
+
+- **The Evaluation:** Amazon S3 inspects the request signature, identifies that `TestEC2Instance` is acting as `AppS3ReaderRole`, and checks **AppS3ReaderRole's Permission Policy**: *"Does this role have `s3:GetObject` permission on this S3 bucket?"*
+
+- **The Result:** If **YES**, S3 authorizes the request and streams the requested file back to `TestEC2Instance`.
+
+{% include "postImage.html" src: "./images/aws-iam-role-assumption-and-s3-access-flow.png", alt: "Two-step flow: EC2 assumes AppS3ReaderRole via STS (trust policy check), then reads from S3 (permission policy check)", description: "<b>Figure 2:</b> Using an IAM role from an EC2 instance: Step 1 — EC2 requests the role via STS, which checks the trust policy and issues temporary keys. Step 2 — the app uses those keys to call S3, which checks the permission policy before returning the file." %}
+
+## Key Summary of Differences
+
+Two completely separate checks, driven by two distinct JSON documents attached to the target role, evaluated at two different moments:
+
+1. **Trust policy is checked once** — at the moment of assuming the role (`sts:AssumeRole`).
+2. **Permission policy is checked every single time** an action is attempted, for as long as the temporary credentials are valid.
+
+If either check fails, the whole thing fails.
+
+Here's a side-by-side comparison of the two checks:
+
+| Feature | Trust Policy Check (Step 1) | Permission Policy Check (Step 2) |
+| :--- | :--- | :--- |
+| **Question Answered** | *"Who is allowed to borrow this role's identity?"* | *"What is this role allowed to do once borrowed?"* |
+| **AWS Service Responsible** | **AWS STS** (Security Token Service) | **Target Service** (Amazon S3, DynamoDB, etc.) |
+| **Key JSON Block Checked** | `"Principal": { "Service": "ec2.amazonaws.com" }` | `"Action": ["s3:GetObject"]`, `"Resource": [...]` |
+| **Evaluation Frequency** | Evaluated **once** when acquiring/refreshing temporary keys. | Evaluated **on every single API call** made using those keys. |
+| **Failure Result** | `AccessDenied` on `sts:AssumeRole` (Credentials not issued). | `AccessDenied` on `s3:GetObject` (Operation blocked). |
+
+---
+
+# Step 6: The Debugging Shortcut
+
+Once we internalize this split, debugging IAM issues becomes much faster:
+
+- **Error mentions `sts:AssumeRole` / "not authorized to assume role"** → Our **trust policy** is the problem. Wrong principal, wrong account ID, missing condition, etc.
+- **Error mentions a specific service action** like `s3:GetObject`, `dynamodb:Query`, `lambda:InvokeFunction` *after* the role was successfully assumed → Our **permission policy** is the problem. The role got the key to the room, but that item isn't in the room.
+
+This one distinction resolves the vast majority of "why isn't this working" IAM tickets.
+
+---
+
+# Step 7: Real-World Examples Where Trust Policy Actually Matters
+
+### Example A — Service Roles (most common)
+Every time a service like Lambda, ECS, or Glue needs to act on our behalf, its trust policy must explicitly name that service:
+
+```json
+"Principal": { "Service": "lambda.amazonaws.com" }
+```
+
+Without this, Lambda literally cannot assume the role — even if the permission policy is perfectly written.
+
+### Example B — Cross-Account Access
+Say Account A (111111111111) wants to let a role in Account B (222222222222) access its resources:
+
+```json
+"Principal": { "AWS": "arn:aws:iam::222222222222:root" }
+```
+
+This is the backbone of how AWS Organizations, cross-account CI/CD pipelines, and third-party SaaS integrations (like monitoring tools) securely access our account without sharing long-term credentials.
+
+### Example C — GitHub Actions via OIDC (increasingly common)
+Modern CI/CD pipelines avoid storing AWS access keys as GitHub secrets entirely. Instead, the trust policy trusts GitHub's OIDC identity provider, often scoped to a specific repo and branch:
+
+```json
+"Principal": { "Federated": "arn:aws:iam::123456789012:oidc-provider/token.actions.githubusercontent.com" },
+"Condition": {
+  "StringEquals": {
+    "token.actions.githubusercontent.com:sub": "repo:my-org/my-repo:ref:refs/heads/main"
+  }
+}
+```
+
+This is trust policy doing something permission policy simply *cannot* do — restricting **who** gets in based on identity federation, not just what actions are allowed.
+
+---
+
+# Step 8: Cheat Sheet — Keep This in Your Back Pocket
+
+| Question | Answer |
+|---|---|
+| Is trust policy optional? | **No — mandatory** for every IAM Role |
+| What does it control? | **Who** can assume the role |
+| What does permission policy control? | **What** the role can do once assumed |
+| Which is checked first? | Trust policy (at `AssumeRole` time) |
+| Which is checked more often? | Permission policy (on every action) |
+| Does trust policy mention S3/EC2/etc.? | No — only identities (`Principal`) |
+| Does permission policy mention `Principal`? | No — only actions and resources |
+| Do IAM Users have trust policies? | No — only roles do, since only roles are "assumed" |
+
+---
+
+# Wrapping Up
+
+The reason trust policy feels confusing at first is that AWS's console groups it separately from "Permissions" — as if it's a lesser, optional detail. In reality, it's the **front door** to the role, while the permission policy is everything **inside**.
+
+Once we see an IAM Role as *two questions* — "who's allowed in?" and "what can they do once they're in?" — instead of one big block of "permissions," the entire access model across EC2, Lambda, cross-account setups, and OIDC-based CI/CD suddenly makes a lot more sense.
+
+Next time we open the "Trust relationships" tab, we'll know exactly what we're looking at — and exactly why it has to be there.
